@@ -10,22 +10,32 @@
     h1 { text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 5px; }
     .subtitle { text-align: center; color: #7f8c8d; font-size: 0.9rem; margin-bottom: 25px; }
     
-    .categoria-titulo { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 5px; margin-top: 35px; font-size: 1.5rem; text-transform: uppercase; }
+    /* Pantalla de Selección de Categorías (Inicio) */
+    #seccion-categorias { display: block; }
+    .categorias-inicio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
+    .cat-inicio-card { background: white; border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border-bottom: 4px solid var(--accent); }
+    .cat-inicio-card:active { transform: scale(0.95); }
+    .cat-inicio-card h3 { color: var(--primary); margin: 10px 0 0 0; font-size: 1.1rem; }
+    .cat-icono { font-size: 2.2rem; }
+
+    /* Contenedor de Platos de una Categoría */
+    #seccion-platos { display: none; }
+    .btn-volver { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 5px; }
+    
+    .categoria-titulo { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 5px; margin-top: 10px; font-size: 1.5rem; text-transform: uppercase; }
     .platos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 15px; }
     .plato-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: box-shadow 0.3s ease; }
-    .plato-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
     
     .img-container { width: 100%; height: 140px; overflow: hidden; }
     .plato-img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
     .plato-card:hover .plato-img { transform: scale(1.1); }
-    .plato-img:active { transform: scale(0.95); }
     
     .plato-info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
     .plato-info h3 { margin: 0 0 5px 0; font-size: 1.05rem; color: var(--primary); }
     .plato-info p { margin: 0 0 10px 0; font-size: 0.85rem; color: #666; flex-grow: 1; line-height: 1.3;}
     .precio-fila { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
     .precio { font-weight: bold; color: var(--primary); font-size: 1.1rem; }
-    .btn-add { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+    .btn-add { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
     .btn-add:active { background: #c0392b; transform: scale(0.95); }
 
     /* Barra del carrito */
@@ -34,18 +44,16 @@
 
     /* Modal de la Cesta Detallada */
     .modal-cesta { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: flex-end; align-items: flex-end; z-index: 150; }
-    .cesta-content { background: white; width: 100%; max-height: 80vh; border-radius: 20px 20px 0 0; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; box-sizing: border-box; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .cesta-content { background: white; width: 100%; max-height: 80vh; border-radius: 20px 20px 0 0; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); box-sizing: border-box; }
     .cesta-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
     .cesta-lista { overflow-y: auto; max-height: 45vh; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
     .cesta-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px 15px; border-radius: 10px; }
     .controles-item { display: flex; align-items: center; gap: 10px; }
     .btn-control { background: #ddd; border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-    .btn-control:active { background: #ccc; }
 
     /* Camarero IA */
     .ia-btn { position: fixed; bottom: 85px; right: 15px; background: linear-gradient(135deg, #6dd5ed, #2193b0); color: white; border: none; border-radius: 50px; padding: 12px 20px; font-weight: bold; box-shadow: 0 4px 12px rgba(33, 147, 176, 0.4); cursor: pointer; z-index: 99; display: flex; align-items: center; gap: 8px; }
-    .chat-window { display: none; position: fixed; bottom: 85px; right: 15px; width: 320px; height: 380px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); z-index: 101; overflow: hidden; flex-direction: column; border: 2px solid #2193b0; }
+    .chat-window { display: none; position: fixed; bottom: 85px; right: 15px; width: 320px; height: 400px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); z-index: 101; overflow: hidden; flex-direction: column; border: 2px solid #2193b0; }
     .chat-header { background: #2193b0; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
     .chat-body { padding: 15px; flex-grow: 1; overflow-y: auto; background: #f9f9f9; font-size: 0.9rem; display: flex; flex-direction: column; gap: 10px; }
     .bot-msg { background: #e0e0e0; padding: 10px; border-radius: 10px 10px 10px 0; max-width: 85%; line-height: 1.4; }
@@ -56,7 +64,7 @@
 
     /* Modales generales */
     .img-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 200; }
-    .img-modal img { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .img-modal img { max-width: 90%; max-height: 80%; border-radius: 10px; }
     .modal-mesa { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 200; }
     .modal-content { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; }
     .modal-content input { width: 80%; padding: 10px; font-size: 1.2rem; margin: 15px 0; border: 1px solid #ccc; border-radius: 8px; text-align: center; }
@@ -67,7 +75,19 @@
   <h1>Pizzería Plaza</h1>
   <div class="subtitle">Carta Digital Interactiva</div>
 
-  <div id="contenedor-carta"></div>
+  <!-- VISTA 1: Selector de Categorías -->
+  <div id="seccion-categorias">
+    <h2 style="color: var(--primary); font-size: 1.2rem; text-align: center; margin-top: 20px;">¿Qué te apetece hoy?</h2>
+    <div class="categorias-inicio-grid" id="gridCategoriasInicio">
+      <!-- Se generan automáticamente desde JavaScript -->
+    </div>
+  </div>
+
+  <!-- VISTA 2: Platos de la categoría seleccionada -->
+  <div id="seccion-platos">
+    <button class="btn-volver" onclick="mostrarCategorias()">← Volver a Categorías</button>
+    <div id="contenedor-carta"></div>
+  </div>
 
   <!-- Botón Camarero IA -->
   <button class="ia-btn" onclick="toggleChat()">✨ Camarero IA</button>
@@ -130,6 +150,7 @@
     const menuData = [
       {
         categoria: "Entrantes",
+        icono: "🧆",
         platos: [
           { nombre: "Pan de pizza", descripcion: "", precio: 5.35, img: "https://images.unsplash.com/photo-1599507684074-13e2bb9e7631?w=500&q=80" },
           { nombre: "Pan con 'all i oli'", descripcion: "", precio: 2.75, img: "https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=500&q=80" },
@@ -146,6 +167,7 @@
       },
       {
         categoria: "Ensaladas",
+        icono: "🥗",
         platos: [
           { nombre: "Ensalada mixta con jamón york", descripcion: "", precio: 10.60, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80" },
           { nombre: "Ensalada 'Capresse'", descripcion: "", precio: 13.95, img: "https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=500&q=80" },
@@ -157,6 +179,7 @@
       },
       {
         categoria: "Woks",
+        icono: "🥢",
         platos: [
           { nombre: "Wok de pollo", descripcion: "", precio: 16.05, img: "https://images.unsplash.com/photo-1552611052-33e04de081de?w=500&q=80" },
           { nombre: "Wok de pollo y gambas", descripcion: "", precio: 19.30, img: "https://images.unsplash.com/photo-1604908177453-7462950a6a3b?w=500&q=80" },
@@ -168,6 +191,7 @@
       },
       {
         categoria: "Pastas",
+        icono: "🍝",
         platos: [
           { nombre: "Espaguetis a la boloñesa", descripcion: "", precio: 12.00, img: "https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=500&q=80" },
           { nombre: "Espaguetis napolitana", descripcion: "", precio: 10.90, img: "https://images.unsplash.com/photo-1588013273468-315fd88ea34c?w=500&q=80" },
@@ -196,6 +220,7 @@
       },
       {
         categoria: "Postres y Batidos",
+        icono: "🍨",
         platos: [
           { nombre: "Banana split", descripcion: "Plátano, helado de fresa, helado de chocolate, helado de vainilla, nata y fresas.", precio: 6.75, img: "https://images.unsplash.com/photo-1553787762-b5f528e0e989?w=500&q=80" },
           { nombre: "Batidos", descripcion: "Fresa, vainilla, chocolate, almendra, stracciatella y plátano", precio: 4.35, img: "https://images.unsplash.com/photo-1572656306390-40a9af38901c?w=500&q=80" }
@@ -203,6 +228,7 @@
       },
       {
         categoria: "Fruta",
+        icono: "🍍",
         platos: [
           { nombre: "Piña natural", descripcion: "", precio: 5.85, img: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=500&q=80" },
           { nombre: "Fresas con nata", descripcion: "", precio: 5.75, img: "https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=500&q=80" },
@@ -212,6 +238,7 @@
       },
       {
         categoria: "Frappes",
+        icono: "🥤",
         platos: [
           { nombre: "Frappuccino", descripcion: "Capuccino helado", precio: 4.50, img: "https://images.unsplash.com/photo-1461023058943-0708e52235eb?w=500&q=80" },
           { nombre: "Frappechoc", descripcion: "Café con chocolate", precio: 4.50, img: "https://images.unsplash.com/photo-1572490122747-3968b75bf699?w=500&q=80" },
@@ -221,6 +248,7 @@
       },
       {
         categoria: "Café y Té",
+        icono: "☕",
         platos: [
           { nombre: "Café solo o descafeinado", descripcion: "", precio: 1.60, img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=80" },
           { nombre: "Cortado", descripcion: "", precio: 1.80, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80" },
@@ -241,13 +269,58 @@
       }
     ];
 
-    const contenedor = document.getElementById('contenedor-carta');
-    menuData.forEach(seccion => {
+    // Generar botones de categorías en la pantalla de inicio
+    function inicializarCategorias() {
+      const grid = document.getElementById('gridCategoriasInicio');
+      grid.innerHTML = `
+        <div class="cat-inicio-card" onclick="mostrarTodosPlatos()">
+          <div class="cat-icono">📋</div>
+          <h3>Ver Todo</h3>
+        </div>`;
+      
+      menuData.forEach((seccion, index) => {
+        grid.innerHTML += `
+          <div class="cat-inicio-card" onclick="mostrarCategoria(${index})">
+            <div class="cat-icono">${seccion.icono}</div>
+            <h3>${seccion.categoria}</h3>
+          </div>`;
+      });
+    }
+
+    function mostrarCategoria(index) {
+      document.getElementById('seccion-categorias').style.display = 'none';
+      document.getElementById('seccion-platos').style.display = 'block';
+      
+      const contenedor = document.getElementById('contenedor-carta');
+      contenedor.innerHTML = "";
+      
+      let seccion = menuData[index];
+      renderizarSeccion(seccion, contenedor);
+      window.scrollTo(0, 0);
+    }
+
+    function mostrarTodosPlatos() {
+      document.getElementById('seccion-categorias').style.display = 'none';
+      document.getElementById('seccion-platos').style.display = 'block';
+      
+      const contenedor = document.getElementById('contenedor-carta');
+      contenedor.innerHTML = "";
+      
+      menuData.forEach(seccion => {
+        renderizarSeccion(seccion, contenedor);
+      });
+      window.scrollTo(0, 0);
+    }
+
+    function renderizarSeccion(seccion, contenedor) {
       let titulo = document.createElement('h2');
-      titulo.className = 'categoria-titulo'; titulo.innerText = seccion.categoria;
+      titulo.className = 'categoria-titulo'; 
+      titulo.innerText = seccion.categoria;
       contenedor.appendChild(titulo);
+      
       let grid = document.createElement('div');
       grid.className = 'platos-grid';
+      
       seccion.platos.forEach(plato => {
         let precioFormat = plato.precio.toFixed(2).replace('.', ',') + ' €';
         let descHtml = plato.descripcion ? `<p>${plato.descripcion}</p>` : `<p></p>`;
@@ -264,7 +337,13 @@
           </div>`;
       });
       contenedor.appendChild(grid);
-    });
+    }
+
+    function mostrarCategorias() {
+      document.getElementById('seccion-platos').style.display = 'none';
+      document.getElementById('seccion-categorias').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
 
     function agregarAlCarrito(nombre, precio, esSugerencia = false) {
       let encontrado = carrito.find(item => item.nombre === nombre);
@@ -380,6 +459,8 @@
       if (nombreMin.includes("pizza") || nombreMin.includes("pasta") || nombreMin.includes("espaguetis")) { sugerencia = { nombre: "Mozarillo 'Plaza'", precio: 6.40 }; } 
       else if (nombreMin.includes("wok")) { sugerencia = { nombre: "Pan de pizza", precio: 5.35 }; } 
       else if (nombreMin.includes("ensalada")) { sugerencia = { nombre: "Aceitunas", precio: 2.25 }; }
+      else if (nombreMin.includes("mozarillo") || nombreMin.includes("entrante")) { sugerencia = { nombre: "Espaguetis carbonara", precio: 12.90 }; }
+      else if (nombreMin.includes("postre") || nombreMin.includes("banana")) { sugerencia = { nombre: "Frappebaileys", precio: 6.50 }; }
 
       const chat = document.getElementById('chatWindow'); chat.style.display = 'flex';
       const chatBody = document.getElementById('chatBody'); const idMensaje = "msg-" + Date.now();
@@ -388,7 +469,7 @@
           ¡Gran elección el <b>${nombrePlato}</b>! 👨‍🍳 <br><br>
           ¿Te gustaría acompañarlo con nuestra ración de <b>${sugerencia.nombre}</b> por solo ${sugerencia.precio.toFixed(2).replace('.',',')} €?
           <div id="${idMensaje}" style="margin-top: 10px;">
-            <button onclick="agregarAlCarrito('${sugerencia.nombre}', ${sugerencia.precio}, true); document.getElementById('${idMensaje}').innerHTML = '<span style=\\'color: green; font-weight: bold;\\'>✅ ¡Añadido!</span>';" 
+            <button onclick="agregarAlCarrito('${sugerencia.nombre}', ${sugerencia.precio}, true); document.getElementById('${idMensaje}').innerHTML = '<span style=\\'color: green; font-weight: bold;\\'>✅ ¡Añadido a la cesta! Te sugiero también probar un postre o café para terminar.</span>';" 
               style="background:var(--accent); color:white; border:none; padding:8px 12px; border-radius:15px; cursor:pointer; font-weight:bold; width:100%;">
               + Añadir a la cuenta
             </button>
@@ -448,6 +529,11 @@
 
     function ampliarImagen(src) { document.getElementById('imgAmpliada').src = src; document.getElementById('imgModal').style.display = 'flex'; }
     function cerrarImagen() { document.getElementById('imgModal').style.display = 'none'; }
+
+    // Arrancar la pantalla de categorías al cargar la página
+    window.onload = function() {
+      inicializarCategorias();
+    };
   </script>
 </body>
 </html>
