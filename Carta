@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurante Pizzería Plaza - Carta Digital</title>
+  <style>
+    :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --card-bg: #ffffff; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); margin: 0; padding: 15px; padding-bottom: 120px; color: #333; }
+    h1 { text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 5px; }
+    .subtitle { text-align: center; color: #7f8c8d; font-size: 0.9rem; margin-bottom: 25px; }
+    
+    .categoria-titulo { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 5px; margin-top: 35px; font-size: 1.5rem; text-transform: uppercase; }
+    .platos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 15px; }
+    .plato-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: box-shadow 0.3s ease; }
+    .plato-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+    
+    .img-container { width: 100%; height: 140px; overflow: hidden; }
+    .plato-img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .plato-card:hover .plato-img { transform: scale(1.1); }
+    .plato-img:active { transform: scale(0.95); }
+    
+    .plato-info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+    .plato-info h3 { margin: 0 0 5px 0; font-size: 1.05rem; color: var(--primary); }
+    .plato-info p { margin: 0 0 10px 0; font-size: 0.85rem; color: #666; flex-grow: 1; line-height: 1.3;}
+    .precio-fila { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .precio { font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+    .btn-add { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+    .btn-add:active { background: #c0392b; transform: scale(0.95); }
+
+    .carrito-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: var(--primary); color: white; border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; }
+    .btn-pedir { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+    /* Camarero IA */
+    .ia-btn { position: fixed; bottom: 80px; right: 15px; background: linear-gradient(135deg, #6dd5ed, #2193b0); color: white; border: none; border-radius: 50px; padding: 12px 20px; font-weight: bold; box-shadow: 0 4px 12px rgba(33, 147, 176, 0.4); cursor: pointer; z-index: 99; display: flex; align-items: center; gap: 8px; }
+    .chat-window { display: none; position: fixed; bottom: 80px; right: 15px; width: 300px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 101; overflow: hidden; flex-direction: column; border: 2px solid #2193b0; }
+    .chat-header { background: #2193b0; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
+    .chat-body { padding: 15px; height: 250px; overflow-y: auto; background: #f9f9f9; font-size: 0.9rem; }
+    .bot-msg { background: #e0e0e0; padding: 10px; border-radius: 10px 10px 10px 0; margin-bottom: 10px; width: 85%; animation: fadeIn 0.3s ease; }
+    .user-msg { background: #2193b0; color: white; padding: 10px; border-radius: 10px 10px 0 10px; margin-bottom: 10px; width: 85%; align-self: flex-end; margin-left: auto; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Modales */
+    .img-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 200; }
+    .img-modal img { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    
+    .modal-mesa { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 200; }
+    .modal-content { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; }
+    .modal-content input { width: 80%; padding: 10px; font-size: 1.2rem; margin: 15px 0; border: 1px solid #ccc; border-radius: 8px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <h1>Pizzería Plaza</h1>
+  <div class="subtitle">Carta Digital Interactiva</div>
+
+  <div id="contenedor-carta"></div>
+
+  <!-- Botón Camarero IA -->
+  <button class="ia-btn" onclick="toggleChat()" id="botonIA">✨ Camarero IA</button>
+
+  <!-- Ventana Chatbot -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      Camarero Virtual 
+      <span onclick="toggleChat()" style="cursor:pointer; font-size: 1.2rem;">✖</span>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="bot-msg">¡Hola! Soy el asistente virtual de Pizzería Plaza. Selecciona tus platos y yo me encargaré de recomendarte los mejores acompañamientos. 😊</div>
+    </div>
+  </div>
+
+  <!-- Barra inferior -->
+  <div class="carrito-bar" id="carritoBar" style="display:none;">
+    <div><span id="cantPlatos">0</span> platos | <strong id="totalPrecio">0.00 €</strong></div>
+    <button class="btn-pedir" onclick="abrirModalMesa()">Hacer Pedido</button>
+  </div>
+
+  <!-- Modal para pedir número de mesa -->
+  <div class="modal-mesa" id="modalMesa">
+    <div class="modal-content">
+      <h3>¿En qué mesa estás?</h3>
+      <input type="number" id="numMesa" placeholder="Ej: 4" min="1">
+      <br>
+      <button class="btn-pedir" style="width:100%; margin-bottom:10px;" onclick="enviarPedidoACocina()">Enviar a Cocina</button>
+      <button onclick="document.getElementById('modalMesa').style.display='none'" style="background:none; border:none; color:#666; cursor:pointer;">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Modal para fotos -->
+  <div class="img-modal" id="imgModal" onclick="cerrarImagen()"><img id="imgAmpliada" src=""></div>
+
+  <script>
+    const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
+    let carrito = [];
+
+    const menuData = [
+      {
+        categoria: "Entrantes",
+        platos: [
+          { nombre: "Pan de pizza", descripcion: "", precio: 5.35, img: "https://images.unsplash.com/photo-1599507684074-13e2bb9e7631?w=500&q=80" },
+          { nombre: "Pan con 'all i oli'", descripcion: "", precio: 2.75, img: "https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=500&q=80" },
+          { nombre: "Aceitunas", descripcion: "", precio: 2.25, img: "https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=500&q=80" },
+          { nombre: "Mozarillo 'Plaza'", descripcion: "", precio: 6.40, img: "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&q=80" },
+          { nombre: "Surtido de croquetas", descripcion: "Pollo, jamón, espinacas y bacalao", precio: 10.60, img: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=500&q=80" },
+          { nombre: "Dátiles con bacon", descripcion: "", precio: 10.60, img: "https://images.unsplash.com/photo-1628191137573-dee64e727614?w=500&q=80" },
+          { nombre: "Calamarines", descripcion: "", precio: 14.00, img: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&q=80" },
+          { nombre: "Calamar a la romana", descripcion: "", precio: 14.00, img: "https://images.unsplash.com/photo-1599487405270-8e12eb046274?w=500&q=80" },
+          { nombre: "Nachos a los tres quesos", descripcion: "", precio: 10.60, img: "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=500&q=80" },
+          { nombre: "Tostadas de mozzarella ahumada", descripcion: "", precio: 12.85, img: "https://images.unsplash.com/photo-1506280754576-f6fa8a873ce4?w=500&q=80" },
+          { nombre: "Carpaccio de ternera", descripcion: "", precio: 16.80, img: "https://images.unsplash.com/photo-1608897013039-887f214b985c?w=500&q=80" }
+        ]
+      },
+      {
+        categoria: "Ensaladas",
+        platos: [
+          { nombre: "Ensalada mixta con jamón york", descripcion: "", precio: 10.60, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80" },
+          { nombre: "Ensalada 'Capresse'", descripcion: "", precio: 13.95, img: "https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=500&q=80" },
+          { nombre: "Ensalada templada", descripcion: "Chipirones y gulas con vinagre balsámico", precio: 16.00, img: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500&q=80" },
+          { nombre: "Ensalada de endivias", descripcion: "Aguacate, queso fresco y salmón ahumado", precio: 16.00, img: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=500&q=80" },
+          { nombre: "Ensalada 'Española'", descripcion: "Jamón serrano, parmesano, espárragos verdes, anchoas, nueces y tomate cherry", precio: 15.50, img: "https://images.unsplash.com/photo-1604908177525-ce69db0a852f?w=500&q=80" },
+          { nombre: "Ensalada 'Otoño'", descripcion: "Nueces, queso azul, manzana, zanahoria y miel", precio: 14.00, img: "https://images.unsplash.com/photo-1529312266912-b33cfce2eefd?w=500&q=80" }
+        ]
+      },
+      {
+        categoria: "Woks",
+        platos: [
+          { nombre: "Wok de pollo", descripcion: "", precio: 16.05, img: "https://images.unsplash.com/photo-1552611052-33e04de081de?w=500&q=80" },
+          { nombre: "Wok de pollo y gambas", descripcion: "", precio: 19.30, img: "https://images.unsplash.com/photo-1604908177453-7462950a6a3b?w=500&q=80" },
+          { nombre: "Wok de solomillo de cerdo agridulce", descripcion: "", precio: 16.05, img: "https://images.unsplash.com/photo-1543826173-1beeb97525d8?w=500&q=80" },
+          { nombre: "Wok de calamar con gambas", descripcion: "", precio: 20.35, img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500&q=80" },
+          { nombre: "Wok de pulpo", descripcion: "", precio: 20.35, img: "https://images.unsplash.com/photo-1599487405270-8e12eb046274?w=500&q=80" },
+          { nombre: "Wok vegetariano", descripcion: "", precio: 15.40, img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=500&q=80" }
+        ]
+      },
+      {
+        categoria: "Pastas",
+        platos: [
+          { nombre: "Espaguetis a la boloñesa", descripcion: "", precio: 12.00, img: "https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=500&q=80" },
+          { nombre: "Espaguetis napolitana", descripcion: "", precio: 10.90, img: "https://images.unsplash.com/photo-1588013273468-315fd88ea34c?w=500&q=80" },
+          { nombre: "Espaguetis al pesto", descripcion: "", precio: 10.90, img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500&q=80" },
+          { nombre: "Espaguetis peperoncini", descripcion: "", precio: 10.90, img: "https://images.unsplash.com/photo-1621996316220-7214aa27d2c3?w=500&q=80" },
+          { nombre: "Espaguetis carbonara", descripcion: "", precio: 12.90, img: "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&q=80" },
+          { nombre: "Espaguetis con gambas", descripcion: "", precio: 18.00, img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=500&q=80" },
+          { nombre: "Espaguetis frutti di mare", descripcion: "", precio: 20.45, img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=500&q=80" },
+          { nombre: "Tagliatelle con nata y jamón york", descripcion: "", precio: 12.90, img: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=500&q=80" },
+          { nombre: "Tagliatelle con salmón", descripcion: "", precio: 16.90, img: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&q=80" },
+          { nombre: "Tagliatelle Mediterráneo", descripcion: "Gambas, champiñones y parmesano", precio: 18.25, img: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500&q=80" },
+          { nombre: "Tortellini 'Manolito'", descripcion: "Nata, jamón york y champiñones", precio: 16.25, img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500&q=80" },
+          { nombre: "Fetuccini al pulpo", descripcion: "", precio: 19.50, img: "https://images.unsplash.com/photo-1626844131082-256783844137?w=500&q=80" },
+          { nombre: "Ravioli ricota", descripcion: "Con un salsa a escoger", precio: 16.50, img: "https://images.unsplash.com/photo-1587740908075-9d2450215da7?w=500&q=80" },
+          { nombre: "Ravioli a los tres quesos", descripcion: "", precio: 16.50, img: "https://images.unsplash.com/photo-1587740908075-9d2450215da7?w=500&q=80" },
+          { nombre: "Paccheri a la rabiata con pecorino", descripcion: "", precio: 14.00, img: "https://images.unsplash.com/photo-1608897013039-887f214b985c?w=500&q=80" },
+          { nombre: "Lasaña boloñesa", descripcion: "", precio: 15.00, img: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=500&q=80" },
+          { nombre: "Canelones Rossini", descripcion: "", precio: 15.00, img: "https://images.unsplash.com/photo-1621996316220-7214aa27d2c3?w=500&q=80" },
+          { nombre: "Canelones con espinacas", descripcion: "", precio: 14.50, img: "https://images.unsplash.com/photo-1621996316220-7214aa27d2c3?w=500&q=80" },
+          { nombre: "Gnocchis a los tres quesos", descripcion: "", precio: 13.90, img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500&q=80" },
+          { nombre: "Calamarata", descripcion: "Calamar, gambas, tomate cherry y fumet de marisco", precio: 21.00, img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=500&q=80" },
+          { nombre: "Espaguetis Nero", descripcion: "Tinta de calamar y gambas", precio: 19.50, img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500&q=80" },
+          { nombre: "Paccheri a la pugliese", descripcion: "Burrata, calabacín, cherry y puré de pistacho", precio: 19.50, img: "https://images.unsplash.com/photo-1608897013039-887f214b985c?w=500&q=80" },
+          { nombre: "Tagliatelle Porcino", descripcion: "Boletus, guanciale y pecorino romano", precio: 19.50, img: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=500&q=80" }
+        ]
+      },
+      {
+        categoria: "Postres y Batidos",
+        platos: [
+          { nombre: "Banana split", descripcion: "Plátano, helado de fresa, helado de chocolate, helado de vainilla, nata y fresas.", precio: 6.75, img: "https://images.unsplash.com/photo-1553787762-b5f528e0e989?w=500&q=80" },
+          { nombre: "Batidos", descripcion: "Fresa, vainilla, chocolate, almendra, stracciatella y plátano", precio: 4.35, img: "https://images.unsplash.com/photo-1572656306390-40a9af38901c?w=500&q=80" }
+        ]
+      },
+      {
+        categoria: "Fruta",
+        platos: [
+          { nombre: "Piña natural", descripcion: "", precio: 5.85, img: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=500&q=80" },
+          { nombre: "Fresas con nata", descripcion: "", precio: 5.75, img: "https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=500&q=80" },
+          { nombre: "Fresas con zumo de naranja", descripcion: "", precio: 5.75, img: "https://images.unsplash.com/photo-1516684732162-798a0062be99?w=500&q=80" },
+          { nombre: "Ensalada de fruta natural", descripcion: "", precio: 4.75, img: "https://images.unsplash.com/photo-1490474418585-ba9f52fce136?w=500&q=80" }
+        ]
+      },
+      {
+        categoria: "Frappes",
+        platos: [
+          { nombre: "Frappuccino", descripcion: "Capuccino helado", precio: 4.50, img: "https://images.unsplash.com/photo-1461023058943-0708e52235eb?w=500&q=80" },
+          { nombre: "Frappechoc", descripcion: "Café con chocolate", precio: 4.50, img: "https://images.unsplash.com/photo-1572490122747-3968b75bf699?w=500&q=80" },
+          { nombre: "Frappemelo", descripcion: "Café y caramelo", precio: 4.50, img: "https://images.unsplash.com/photo-1578314675249-a694eb746173?w=500&q=80" },
+          { nombre: "Frappebaileys", descripcion: "Gran carajillo de baileys con hielo", precio: 6.50, img: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=500&q=80" }
+        ]
+      },
+      {
+        categoria: "Café y Té",
+        platos: [
+          { nombre: "Café solo o descafeinado", descripcion: "", precio: 1.60, img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=80" },
+          { nombre: "Cortado", descripcion: "", precio: 1.80, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80" },
+          { nombre: "Café con leche", descripcion: "", precio: 2.20, img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500&q=80" },
+          { nombre: "Carajillo", descripcion: "", precio: 3.85, img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&q=80" },
+          { nombre: "Carajillo de whisky", descripcion: "", precio: 4.20, img: "https://images.unsplash.com/photo-1595834019448-f0cc78c2537c?w=500&q=80" },
+          { nombre: "Capuccino italiano", descripcion: "", precio: 3.50, img: "https://images.unsplash.com/photo-1534687201944-7db3e1a6c401?w=500&q=80" },
+          { nombre: "Café con helado", descripcion: "", precio: 4.25, img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=500&q=80" },
+          { nombre: "Irish coffee", descripcion: "", precio: 4.75, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80" },
+          { nombre: "Café bombón", descripcion: "", precio: 2.50, img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=80" },
+          { nombre: "Té verde", descripcion: "", precio: 2.90, img: "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=500&q=80" },
+          { nombre: "Té rojo", descripcion: "", precio: 2.90, img: "https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?w=500&q=80" },
+          { nombre: "Rooibos flor de desierto", descripcion: "", precio: 2.75, img: "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=500&q=80" },
+          { nombre: "Manzanilla", descripcion: "", precio: 2.90, img: "https://images.unsplash.com/photo-1599839619722-39751411ea63?w=500&q=80" },
+          { nombre: "Poleo menta", descripcion: "", precio: 2.75, img: "https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?w=500&q=80" },
+          { nombre: "Tila", descripcion: "", precio: 2.90, img: "https://images.unsplash.com/photo-1599839619722-39751411ea63?w=500&q=80" }
+        ]
+      }
+    ];
+
+    const contenedor = document.getElementById('contenedor-carta');
+    menuData.forEach(seccion => {
+      let titulo = document.createElement('h2');
+      titulo.className = 'categoria-titulo'; titulo.innerText = seccion.categoria;
+      contenedor.appendChild(titulo);
+      let grid = document.createElement('div');
+      grid.className = 'platos-grid';
+      seccion.platos.forEach(plato => {
+        let precioFormat = plato.precio.toFixed(2).replace('.', ',') + ' €';
+        let descHtml = plato.descripcion ? `<p>${plato.descripcion}</p>` : `<p></p>`;
+        grid.innerHTML += `
+          <div class="plato-card">
+            <div class="img-container"><img src="${plato.img}" class="plato-img" onclick="ampliarImagen(this.src)"></div>
+            <div class="plato-info">
+              <h3>${plato.nombre}</h3>${descHtml}
+              <div class="precio-fila">
+                <div class="precio">${precioFormat}</div>
+                <button class="btn-add" onclick="agregarAlCarrito('${plato.nombre}', ${plato.precio})">+ Añadir</button>
+              </div>
+            </div>
+          </div>`;
+      });
+      contenedor.appendChild(grid);
+    });
+
+    function agregarAlCarrito(nombre, precio, esSugerencia = false) {
+      carrito.push({ nombre, precio });
+      actualizarBarraCarrito();
+      if(!esSugerencia) lanzarSugerencia(nombre);
+    }
+
+    function actualizarBarraCarrito() {
+      const bar = document.getElementById('carritoBar');
+      if(carrito.length > 0) {
+        bar.style.display = 'flex';
+        document.getElementById('cantPlatos').innerText = carrito.length;
+        document.getElementById('totalPrecio').innerText = carrito.reduce((sum, item) => sum + item.precio, 0).toFixed(2).replace('.',',') + ' €';
+      } else { bar.style.display = 'none'; }
+    }
+
+    function lanzarSugerencia(nombrePlato) {
+      let nombreMin = nombrePlato.toLowerCase();
+      let sugerencia = { nombre: "Pan con 'all i oli'", precio: 2.75 };
+      if (nombreMin.includes("pizza") || nombreMin.includes("pasta") || nombreMin.includes("espaguetis")) { sugerencia = { nombre: "Mozarillo 'Plaza'", precio: 6.40 }; } 
+      else if (nombreMin.includes("wok")) { sugerencia = { nombre: "Pan de pizza", precio: 5.35 }; } 
+      else if (nombreMin.includes("ensalada")) { sugerencia = { nombre: "Aceitunas", precio: 2.25 }; }
+
+      const chat = document.getElementById('chatWindow'); chat.style.display = 'flex';
+      const chatBody = document.getElementById('chatBody'); const idMensaje = "msg-" + Date.now();
+      chatBody.innerHTML += `
+        <div class="bot-msg">
+          ¡Gran elección el <b>${nombrePlato}</b>! 👨‍🍳 <br><br>
+          ¿Te gustaría acompañarlo con nuestra ración de <b>${sugerencia.nombre}</b> por solo ${sugerencia.precio.toFixed(2).replace('.',',')} €?
+          <div id="${idMensaje}" style="margin-top: 10px;">
+            <button onclick="agregarAlCarrito('${sugerencia.nombre}', ${sugerencia.precio}, true); document.getElementById('${idMensaje}').innerHTML = '<span style=\\'color: green; font-weight: bold;\\'>✅ ¡Añadido!</span>';" 
+              style="background:var(--accent); color:white; border:none; padding:8px 12px; border-radius:15px; cursor:pointer; font-weight:bold; width:100%;">
+              + Añadir a la cuenta
+            </button>
+          </div>
+        </div>`;
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function abrirModalMesa() { document.getElementById('modalMesa').style.display = 'flex'; }
+    function ampliarImagen(src) { document.getElementById('imgAmpliada').src = src; document.getElementById('imgModal').style.display = 'flex'; }
+    function cerrarImagen() { document.getElementById('imgModal').style.display = 'none'; }
+    function toggleChat() { const chat = document.getElementById('chatWindow'); chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex'; }
+
+    function enviarPedidoACocina() {
+      const mesa = document.getElementById('numMesa').value;
+      if(!mesa) return alert("Por favor, introduce tu número de mesa.");
+      const boton = document.querySelector('#modalMesa .btn-pedir');
+      boton.innerText = "Enviando...";
+      const totalPedido = carrito.reduce((sum, item) => sum + item.precio, 0);
+      
+      const datosPedido = { mesa: mesa, platos: carrito, total: totalPedido, hora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
+
+      fetch(DB_URL, { method: 'POST', body: JSON.stringify(datosPedido) })
+      .then(() => {
+        alert("✅ ¡Tu pedido se ha enviado a la cocina!");
+        carrito = []; actualizarBarraCarrito();
+        document.getElementById('modalMesa').style.display = 'none';
+        boton.innerText = "Enviar a Cocina"; document.getElementById('numMesa').value = '';
+      }).catch(err => { alert("Hubo un error."); boton.innerText = "Enviar a Cocina"; });
+    }
+  </script>
+</body>
+</html>
