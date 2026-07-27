@@ -6,7 +6,7 @@
   <title>Restaurante Pizzería Plaza - Carta Digital</title>
   <style>
     :root { --primary: #2c3e50; --accent: #e74c3c; --bg: #f4f7f6; --card-bg: #ffffff; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); margin: 0; padding: 15px; padding-bottom: 120px; color: #333; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); margin: 0; padding: 15px; padding-bottom: 130px; color: #333; }
     h1 { text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 5px; }
     .subtitle { text-align: center; color: #7f8c8d; font-size: 0.9rem; margin-bottom: 25px; }
     
@@ -28,25 +28,35 @@
     .btn-add { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
     .btn-add:active { background: #c0392b; transform: scale(0.95); }
 
-    .carrito-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: var(--primary); color: white; border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; }
+    /* Barra del carrito */
+    .carrito-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: var(--primary); color: white; border-radius: 30px; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; cursor: pointer; }
     .btn-pedir { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
-    /* Camarero IA flotante y chat completo */
-    .ia-btn { position: fixed; bottom: 80px; right: 15px; background: linear-gradient(135deg, #6dd5ed, #2193b0); color: white; border: none; border-radius: 50px; padding: 12px 20px; font-weight: bold; box-shadow: 0 4px 12px rgba(33, 147, 176, 0.4); cursor: pointer; z-index: 99; display: flex; align-items: center; gap: 8px; }
-    .chat-window { display: none; position: fixed; bottom: 80px; right: 15px; width: 320px; height: 400px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); z-index: 101; overflow: hidden; flex-direction: column; border: 2px solid #2193b0; }
+    /* Modal de la Cesta Detallada */
+    .modal-cesta { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: flex-end; align-items: flex-end; z-index: 150; }
+    .cesta-content { background: white; width: 100%; max-height: 80vh; border-radius: 20px 20px 0 0; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 -5px 25px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; box-sizing: border-box; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .cesta-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+    .cesta-lista { overflow-y: auto; max-height: 45vh; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+    .cesta-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px 15px; border-radius: 10px; }
+    .controles-item { display: flex; align-items: center; gap: 10px; }
+    .btn-control { background: #ddd; border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    .btn-control:active { background: #ccc; }
+
+    /* Camarero IA */
+    .ia-btn { position: fixed; bottom: 85px; right: 15px; background: linear-gradient(135deg, #6dd5ed, #2193b0); color: white; border: none; border-radius: 50px; padding: 12px 20px; font-weight: bold; box-shadow: 0 4px 12px rgba(33, 147, 176, 0.4); cursor: pointer; z-index: 99; display: flex; align-items: center; gap: 8px; }
+    .chat-window { display: none; position: fixed; bottom: 85px; right: 15px; width: 320px; height: 380px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); z-index: 101; overflow: hidden; flex-direction: column; border: 2px solid #2193b0; }
     .chat-header { background: #2193b0; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
     .chat-body { padding: 15px; flex-grow: 1; overflow-y: auto; background: #f9f9f9; font-size: 0.9rem; display: flex; flex-direction: column; gap: 10px; }
     .bot-msg { background: #e0e0e0; padding: 10px; border-radius: 10px 10px 10px 0; max-width: 85%; line-height: 1.4; }
     .user-msg { background: #2193b0; color: white; padding: 10px; border-radius: 10px 10px 0 10px; max-width: 85%; align-self: flex-end; margin-left: auto; line-height: 1.4; }
-    
     .chat-input-area { display: flex; padding: 10px; background: white; border-top: 1px solid #ddd; }
     .chat-input-area input { flex-grow: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; font-size: 0.9rem; }
     .chat-input-area button { background: #2193b0; color: white; border: none; padding: 8px 15px; margin-left: 5px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
-    /* Modales */
+    /* Modales generales */
     .img-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 200; }
     .img-modal img { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    
     .modal-mesa { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 200; }
     .modal-content { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; }
     .modal-content input { width: 80%; padding: 10px; font-size: 1.2rem; margin: 15px 0; border: 1px solid #ccc; border-radius: 8px; text-align: center; }
@@ -62,25 +72,41 @@
   <!-- Botón Camarero IA -->
   <button class="ia-btn" onclick="toggleChat()">✨ Camarero IA</button>
 
-  <!-- Ventana Chatbot Libre -->
+  <!-- Ventana Chatbot -->
   <div class="chat-window" id="chatWindow">
     <div class="chat-header">
       <span>Camarero Virtual 👨‍🍳</span>
       <span onclick="toggleChat()" style="cursor:pointer; font-size: 1.2rem;">✖</span>
     </div>
     <div class="chat-body" id="chatBody">
-      <div class="bot-msg">¡Hola! Soy tu asistente de Pizzería Plaza. Pregúntame lo que quieras sobre la carta, recomendaciones o alérgenos. 😊</div>
+      <div class="bot-msg">¡Hola! Soy tu asistente de Pizzería Plaza. Pregúntame lo que quieras sobre la carta o recomendaciones. 😊</div>
     </div>
     <div class="chat-input-area">
-      <input type="text" id="userInput" placeholder="Escribe tu duda aquí..." onkeypress="if(event.key === 'Enter') enviarMensajeUsuario()">
+      <input type="text" id="userInput" placeholder="Escribe tu duda..." onkeypress="if(event.key === 'Enter') enviarMensajeUsuario()">
       <button onclick="enviarMensajeUsuario()">Enviar</button>
     </div>
   </div>
 
-  <!-- Barra inferior -->
-  <div class="carrito-bar" id="carritoBar" style="display:none;">
-    <div><span id="cantPlatos">0</span> platos | <strong id="totalPrecio">0.00 €</strong></div>
-    <button class="btn-pedir" onclick="abrirModalMesa()">Hacer Pedido</button>
+  <!-- Barra inferior interactiva -->
+  <div class="carrito-bar" id="carritoBar" style="display:none;" onclick="abrirCesta()">
+    <div>🛒 <span id="cantPlatos">0</span> platos | <strong id="totalPrecio">0.00 €</strong></div>
+    <span style="font-size: 0.85rem; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px;">Ver Cesta ↗</span>
+  </div>
+
+  <!-- Modal Cesta Detallada -->
+  <div class="modal-cesta" id="modalCesta" onclick="if(event.target === this) cerrarCesta()">
+    <div class="cesta-content">
+      <div class="cesta-header">
+        <h3 style="margin:0;">Tus Platos Seleccionados</h3>
+        <span onclick="cerrarCesta()" style="cursor:pointer; font-size: 1.3rem; font-weight:bold;">✖</span>
+      </div>
+      <div class="cesta-lista" id="cestaLista"></div>
+      <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; border-top: 2px solid #eee; padding-top: 10px;">
+        <span>Total:</span>
+        <span id="cestaTotalPrecio">0.00 €</span>
+      </div>
+      <button class="btn-pedir" style="width:100%; padding: 14px; font-size: 1.1rem;" onclick="abrirModalMesa()">Proceder a Pedir</button>
+    </div>
   </div>
 
   <!-- Modal para pedir número de mesa -->
@@ -89,7 +115,7 @@
       <h3>¿En qué mesa estás?</h3>
       <input type="number" id="numMesa" placeholder="Ej: 4" min="1">
       <br>
-      <button class="btn-pedir" style="width:100%; margin-bottom:10px;" onclick="enviarPedidoACocina()">Enviar a Cocina</button>
+      <button class="btn-pedir" id="btnEnviarCocina" style="width:100%; margin-bottom:10px;" onclick="enviarPedidoACocina()">Enviar a Cocina</button>
       <button onclick="document.getElementById('modalMesa').style.display='none'" style="background:none; border:none; color:#666; cursor:pointer;">Cancelar</button>
     </div>
   </div>
@@ -241,18 +267,77 @@
     });
 
     function agregarAlCarrito(nombre, precio, esSugerencia = false) {
-      carrito.push({ nombre, precio });
+      let encontrado = carrito.find(item => item.nombre === nombre);
+      if(encontrado) {
+        encontrado.cantidad++;
+      } else {
+        carrito.push({ nombre, precio, cantidad: 1 });
+      }
       actualizarBarraCarrito();
+      if(document.getElementById('modalCesta').style.display === 'flex') {
+        mostrarListaCesta();
+      }
       if(!esSugerencia) lanzarSugerenciaAutomatica(nombre);
+    }
+
+    function cambiarCantidad(nombre, cambio) {
+      let item = carrito.find(i => i.nombre === nombre);
+      if(item) {
+        item.cantidad += cambio;
+        if(item.cantidad <= 0) {
+          carrito = carrito.filter(i => i.nombre !== nombre);
+        }
+      }
+      actualizarBarraCarrito();
+      mostrarListaCesta();
     }
 
     function actualizarBarraCarrito() {
       const bar = document.getElementById('carritoBar');
-      if(carrito.length > 0) {
+      let totalPlatos = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+      let totalP = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+
+      if(totalPlatos > 0) {
         bar.style.display = 'flex';
-        document.getElementById('cantPlatos').innerText = carrito.length;
-        document.getElementById('totalPrecio').innerText = carrito.reduce((sum, item) => sum + item.precio, 0).toFixed(2).replace('.',',') + ' €';
-      } else { bar.style.display = 'none'; }
+        document.getElementById('cantPlatos').innerText = totalPlatos;
+        document.getElementById('totalPrecio').innerText = totalP.toFixed(2).replace('.',',') + ' €';
+      } else { 
+        bar.style.display = 'none'; 
+        cerrarCesta();
+      }
+    }
+
+    function abrirCesta() {
+      mostrarListaCesta();
+      document.getElementById('modalCesta').style.display = 'flex';
+    }
+
+    function cerrarCesta() {
+      document.getElementById('modalCesta').style.display = 'none';
+    }
+
+    function mostrarListaCesta() {
+      const lista = document.getElementById('cestaLista');
+      lista.innerHTML = "";
+      let totalP = 0;
+
+      carrito.forEach(item => {
+        let subtotal = item.precio * item.cantidad;
+        totalP += subtotal;
+        lista.innerHTML += `
+          <div class="cesta-item">
+            <div>
+              <strong>${item.nombre}</strong><br>
+              <small style="color:#666;">${item.precio.toFixed(2).replace('.',',')} € x ${item.cantidad}</small>
+            </div>
+            <div class="controles-item">
+              <button class="btn-control" onclick="cambiarCantidad('${item.nombre}', -1)">-</button>
+              <span>${item.cantidad}</span>
+              <button class="btn-control" onclick="cambiarCantidad('${item.nombre}', 1)">+</button>
+            </div>
+          </div>`;
+      });
+      document.getElementById('cestaTotalPrecio').innerText = totalP.toFixed(2).replace('.',',') + ' €';
     }
 
     function toggleChat() { 
@@ -266,13 +351,10 @@
       if(!texto) return;
 
       const chatBody = document.getElementById('chatBody');
-      
-      // Mensaje del usuario
       chatBody.innerHTML += `<div class="user-msg">${texto}</div>`;
       input.value = '';
       chatBody.scrollTop = chatBody.scrollHeight;
 
-      // Respuesta inteligente de la IA según lo que escriba
       setTimeout(() => {
         let respuesta = "¡Excelente elección! Tenemos una gran variedad de platos frescos preparados al momento. ¿Te apetece probar alguna de nuestras pastas o woks?";
         let textoMin = texto.toLowerCase();
@@ -315,7 +397,55 @@
       chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    function abrirModalMesa() { document.getElementById('modalMesa').style.display = 'flex'; }
+    function abrirModalMesa() { 
+      cerrarCesta();
+      document.getElementById('modalMesa').style.display = 'flex'; 
+    }
+
+    function enviarPedidoACocina() {
+      const mesa = document.getElementById('numMesa').value;
+      if(!mesa) return alert("Por favor, introduce tu número de mesa.");
+      
+      const boton = document.getElementById('btnEnviarCocina');
+      boton.innerText = "Enviando...";
+      boton.disabled = true;
+
+      let platosDesglosados = [];
+      carrito.forEach(item => {
+        for(let i=0; i < item.cantidad; i++) {
+          platosDesglosados.push({ nombre: item.nombre, precio: item.precio });
+        }
+      });
+
+      const totalPedido = platosDesglosados.reduce((sum, item) => sum + item.precio, 0);
+      const datosPedido = { 
+        mesa: mesa, 
+        platos: platosDesglosados, 
+        total: totalPedido, 
+        hora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+      };
+
+      fetch(DB_URL, { 
+        method: 'POST', 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datosPedido) 
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Error en la red");
+        alert("✅ ¡Tu pedido se ha enviado a la cocina correctamente!");
+        carrito = []; 
+        actualizarBarraCarrito();
+        document.getElementById('modalMesa').style.display = 'none';
+        boton.innerText = "Enviar a Cocina"; 
+        boton.disabled = false;
+        document.getElementById('numMesa').value = '';
+      }).catch(err => { 
+        alert("Hubo un error al enviar el pedido. Comprueba tu conexión."); 
+        boton.innerText = "Enviar a Cocina"; 
+        boton.disabled = false;
+      });
+    }
+
     function ampliarImagen(src) { document.getElementById('imgAmpliada').src = src; document.getElementById('imgModal').style.display = 'flex'; }
     function cerrarImagen() { document.getElementById('imgModal').style.display = 'none'; }
   </script>
