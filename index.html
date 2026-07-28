@@ -142,8 +142,8 @@
   <script>
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     
-    // 👇 API KEY ORIGINAL
-    const API_KEY = "AQ.Ab8RN6IUvMe7S7_WFLgnmsOJKazNM4gXUWnICbKk4jFdbQslMg"; 
+    // 👇 TU NUEVA API KEY APLICADA
+    const API_KEY = "AQ.Ab8RN6L1yjHhhNr6xWxPs9Mrp5PLRhYEubpwmowS1KW1nLjeAQ"; 
     
     let carrito = []; let tipoAccionMesa = 'pedido'; let platoAbiertoActual = null;
     
@@ -336,13 +336,11 @@
         
         if(document.getElementById('typing')) document.getElementById('typing').remove();
         
-        // Si hay error en la conexión o la clave, el código lo atrapa aquí mismo
         if(data.error) throw new Error(data.error.message);
         
         b.innerHTML+=`<div class="bot-msg">${data.candidates[0].content.parts[0].text.replace(/\n/g,"<br>")}</div>`;
       } catch(e) {
         if(document.getElementById('typing')) document.getElementById('typing').remove();
-        // CAJA ROJA DE ALERTA: Te dirá si es "API key not valid", problema de red, etc.
         b.innerHTML+=`<div class="bot-msg" style="border:2px solid red; background:#fff0f0;"><b>🚨 Error técnico de Google:</b><br><span style="color:#c0392b;">${e.message}</span><br><br><small>Si dice 'API key not valid', tu contraseña de Google necesita unos minutos para propagarse o no se copió entera.</small></div>`;
       }
       b.scrollTop=b.scrollHeight;
