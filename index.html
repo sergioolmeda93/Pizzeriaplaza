@@ -18,25 +18,34 @@
     #seccion-platos{display:none}
     .btn-volver{background:var(--primary);color:white;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;margin-bottom:20px}
     .categoria-titulo{color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:5px;margin-top:10px;font-size:1.5rem;text-transform:uppercase}
-    .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;margin-top:15px}
-    .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.05);display:flex;flex-direction:column;position:relative}
-    .img-container{width:100%;height:140px;overflow:hidden;position:relative}
-    .plato-img{width:100%;height:100%;object-fit:cover;cursor:pointer}
-    .badge-caliente{position:absolute;top:8px;right:8px;background:rgba(231,76,60,0.9);color:white;font-size:0.7rem;padding:3px 8px;border-radius:10px;font-weight:bold;animation:pulseHumo 2s infinite}
-    @keyframes pulseHumo{0%{opacity:0.8;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}100%{opacity:0.8;transform:scale(1)}}
-    .plato-info{padding:12px;display:flex;flex-direction:column;flex-grow:1}
-    .plato-info h3{margin:0 0 5px 0;font-size:1.05rem;color:var(--primary)}
-    .plato-info p{margin:0 0 10px 0;font-size:0.85rem;color:#666;flex-grow:1;line-height:1.3}
+    
+    /* Imágenes y tarjetas más pequeñas */
+    .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:15px}
+    .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.05);display:flex;flex-direction:column}
+    .img-container{width:100%;height:100px;overflow:hidden}
+    .plato-img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.3s}
+    .plato-img:hover{transform:scale(1.05)}
+    
+    .plato-info{padding:10px;display:flex;flex-direction:column;flex-grow:1}
+    .plato-info h3{margin:0 0 5px 0;font-size:0.95rem;color:var(--primary)}
     .precio-fila{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
-    .precio{font-weight:bold;color:var(--primary);font-size:1.1rem}
-    .btn-add{background:var(--accent);color:white;border:none;padding:6px 12px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:0.9rem}
+    .precio{font-weight:bold;color:var(--primary);font-size:1rem}
+    .btn-add{background:var(--accent);color:white;border:none;padding:5px 10px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:0.85rem}
+    
     .barra-flotante-inferior{position:fixed;bottom:15px;left:15px;right:15px;display:flex;gap:10px;z-index:100}
     .carrito-bar{flex-grow:1;background:var(--primary);color:white;border-radius:30px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);cursor:pointer}
     .btn-llamar-camarero{background:var(--gold);color:white;border:none;border-radius:30px;padding:0 16px;font-weight:bold;font-size:0.9rem;box-shadow:0 4px 15px rgba(0,0,0,0.3);cursor:pointer}
     .btn-pedir{background:var(--accent);color:white;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer}
-    .modal-cesta,.modal-mesa,.img-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:150}
+    
+    .modal-cesta,.modal-mesa,.modal-detalle{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:150}
     .modal-cesta{justify-content:flex-end;align-items:flex-end}
-    .img-modal,.modal-mesa{justify-content:center;align-items:center;z-index:200}
+    .modal-detalle,.modal-mesa{justify-content:center;align-items:center;z-index:200}
+    
+    /* Ventana de Detalle del Plato */
+    .detalle-content{background:white;padding:20px;border-radius:15px;width:85%;max-width:350px;max-height:85vh;overflow-y:auto;position:relative}
+    .detalle-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:15px}
+    .detalle-tag{font-size:0.85rem;margin-top:8px;padding:8px;border-radius:8px;background:#f9f9f9}
+    
     .cesta-content{background:white;width:100%;max-height:80vh;border-radius:20px 20px 0 0;padding:20px;display:flex;flex-direction:column;box-sizing:border-box}
     .cesta-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px}
     .cesta-lista{overflow-y:auto;max-height:45vh;margin-bottom:15px;display:flex;flex-direction:column;gap:10px}
@@ -45,7 +54,7 @@
     .btn-control{background:#ddd;border:none;width:28px;height:28px;border-radius:50%;font-weight:bold;cursor:pointer}
     .modal-content{background:white;padding:25px;border-radius:15px;width:85%;max-width:350px;text-align:center}
     .modal-content input{width:80%;padding:10px;font-size:1.2rem;margin:15px 0;border:1px solid #ccc;border-radius:8px;text-align:center}
-    .img-modal img{max-width:90%;max-height:80%;border-radius:10px}
+    
     .ia-btn{position:fixed;bottom:85px;right:15px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:50px;padding:12px 20px;font-weight:bold;z-index:99;cursor:pointer}
     .chat-window{display:none;position:fixed;bottom:85px;right:15px;width:320px;height:400px;background:white;border-radius:15px;z-index:101;flex-direction:column;border:2px solid #2193b0}
     .chat-header{background:#2193b0;color:white;padding:15px;font-weight:bold;display:flex;justify-content:space-between}
@@ -62,7 +71,6 @@
   <div class="subtitle">Carta Digital Interactiva</div>
   
   <div id="seccion-categorias">
-    <h2 style="color:var(--primary);font-size:1.2rem;text-align:center;margin-top:20px;">¿Qué te apetece hoy?</h2>
     <div class="categorias-inicio-grid" id="gridCategoriasInicio"></div>
   </div>
 
@@ -86,6 +94,29 @@
     </div>
   </div>
 
+  <!-- Modal Detalle del Plato -->
+  <div class="modal-detalle" id="modalDetalle">
+    <div class="detalle-content">
+      <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2)">✖</span>
+      <img id="detImg" class="detalle-img" src="">
+      <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
+      <p id="detDesc" style="color:#666;font-size:0.9rem;margin:0 0 10px 0;"></p>
+      
+      <div class="detalle-tag" style="border-left:3px solid var(--primary);">
+        <strong>🍅 Ingredientes:</strong> <span id="detIng" style="color:#555;"></span>
+      </div>
+      <div class="detalle-tag" style="border-left:3px solid var(--accent);">
+        <strong>⚠️ Alérgenos:</strong> <span id="detAle" style="color:#c0392b;font-weight:bold;"></span>
+      </div>
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+        <span id="detPrecio" style="font-size:1.3rem;font-weight:bold;color:var(--primary);"></span>
+        <button class="btn-pedir" id="btnAñadirDetalle" onclick="">+ Añadir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cesta y Mesa -->
   <div class="modal-cesta" id="modalCesta" onclick="if(event.target===this) cerrarCesta()">
     <div class="cesta-content">
       <div class="cesta-header"><h3 style="margin:0;">Tu Pedido</h3><span onclick="cerrarCesta()" style="cursor:pointer;font-size:1.3rem;">✖</span></div>
@@ -103,23 +134,64 @@
       <button onclick="document.getElementById('modalMesa').style.display='none'" style="background:none;border:none;color:#666;cursor:pointer">Cancelar</button>
     </div>
   </div>
-  <div class="img-modal" id="imgModal" onclick="this.style.display='none'"><img id="imgAmpliada" src=""></div>
 
   <script>
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     let carrito = []; let tipoAccionMesa = 'pedido';
+    
+    // He añadido ingredientes y alérgenos de ejemplo a los primeros platos
     const menuData = [
-      {categoria:"Entrantes",icono:"🧆",platos:[{nombre:"Pan de pizza",precio:5.35,img:"https://images.unsplash.com/photo-1599507684074-13e2bb9e7631?w=500&q=80"},{nombre:"Pan con 'all i oli'",precio:2.75,img:"https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=500&q=80"},{nombre:"Aceitunas",precio:2.25,img:"https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=500&q=80"},{nombre:"Mozarillo 'Plaza'",precio:6.40,img:"https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&q=80"},{nombre:"Surtido croquetas",precio:10.60,img:"https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=500&q=80"},{nombre:"Carpaccio",precio:16.80,img:"https://images.unsplash.com/photo-1608897013039-887f214b985c?w=500&q=80"}]},
-      {categoria:"Ensaladas",icono:"🥗",platos:[{nombre:"Mixta",precio:10.60,img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80"},{nombre:"Capresse",precio:13.95,img:"https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=500&q=80"}]},
+      {categoria:"Entrantes",icono:"🧆",platos:[
+        {nombre:"Pan de pizza",descripcion:"Nuestra masa artesana horneada",precio:5.35,img:"https://images.unsplash.com/photo-1599507684074-13e2bb9e7631?w=500&q=80",ingredientes:"Harina de trigo, agua, aceite de oliva virgen extra, sal, orégano.",alergenos:"Contiene Gluten."},
+        {nombre:"Pan con 'all i oli'",descripcion:"Crujiente y sabroso",precio:2.75,img:"https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=500&q=80",ingredientes:"Pan rústico, ajo, aceite, huevo, sal.",alergenos:"Gluten, Huevo."},
+        {nombre:"Aceitunas",descripcion:"",precio:2.25,img:"https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=500&q=80"},
+        {nombre:"Mozarillo 'Plaza'",descripcion:"",precio:6.40,img:"https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&q=80"}
+      ]},
+      {categoria:"Ensaladas",icono:"🥗",platos:[
+        {nombre:"Mixta",precio:10.60,img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80"},
+        {nombre:"Capresse",precio:13.95,img:"https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=500&q=80",ingredientes:"Tomate natural, mozzarella de búfala, albahaca fresca.",alergenos:"Lácteos. Apto para celíacos."}
+      ]},
       {categoria:"Woks",icono:"🥢",platos:[{nombre:"Wok pollo",precio:16.05,img:"https://images.unsplash.com/photo-1552611052-33e04de081de?w=500&q=80"},{nombre:"Wok pulpo",precio:20.35,img:"https://images.unsplash.com/photo-1599487405270-8e12eb046274?w=500&q=80"}]},
-      {categoria:"Pastas",icono:"🍝",platos:[{nombre:"Espaguetis boloñesa",precio:12.00,img:"https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=500&q=80"},{nombre:"Carbonara",precio:12.90,img:"https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&q=80"},{nombre:"Lasaña",precio:15.00,img:"https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=500&q=80"}]},
+      {categoria:"Pastas",icono:"🍝",platos:[{nombre:"Espaguetis boloñesa",precio:12.00,img:"https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=500&q=80"},{nombre:"Carbonara",precio:12.90,img:"https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&q=80"}]},
       {categoria:"Postres",icono:"🍨",platos:[{nombre:"Banana split",precio:6.75,img:"https://images.unsplash.com/photo-1553787762-b5f528e0e989?w=500&q=80"}]},
       {categoria:"Café",icono:"☕",platos:[{nombre:"Café solo",precio:1.60,img:"https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=80"}]}
     ];
+    
     function inicializarCategorias(){let g=document.getElementById('gridCategoriasInicio');g.innerHTML=`<div class="cat-inicio-card" onclick="mostrarTodosPlatos()"><div class="cat-icono">📋</div><h3>Ver Todo</h3></div>`;menuData.forEach((s,i)=>{g.innerHTML+=`<div class="cat-inicio-card" onclick="mostrarCategoria(${i})"><div class="cat-icono">${s.icono}</div><h3>${s.categoria}</h3></div>`});}
-    function mostrarCategoria(i){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";renderizarSeccion(menuData[i],c);window.scrollTo(0,0)}
-    function mostrarTodosPlatos(){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";menuData.forEach(s=>renderizarSeccion(s,c));window.scrollTo(0,0)}
-    function renderizarSeccion(s,c){let t=document.createElement('h2');t.className='categoria-titulo';t.innerText=s.categoria;c.appendChild(t);let g=document.createElement('div');g.className='platos-grid';s.platos.forEach(p=>{g.innerHTML+=`<div class="plato-card"><div class="img-container"><span class="badge-caliente">🔥 Recién hecho</span><img src="${p.img}" class="plato-img" onclick="document.getElementById('imgAmpliada').src=this.src;document.getElementById('imgModal').style.display='flex'"></div><div class="plato-info"><h3>${p.nombre}</h3><div class="precio-fila"><div class="precio">${p.precio.toFixed(2)} €</div><button class="btn-add" onclick="agregarAlCarrito('${p.nombre}',${p.precio})">+ Añadir</button></div></div></div>`});c.appendChild(g)}
+    function mostrarCategoria(i){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";renderizarSeccion(menuData[i],c,i);window.scrollTo(0,0)}
+    function mostrarTodosPlatos(){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";menuData.forEach((s,i)=>renderizarSeccion(s,c,i));window.scrollTo(0,0)}
+    
+    function renderizarSeccion(s,c,catIdx){
+      let t=document.createElement('h2');t.className='categoria-titulo';t.innerText=s.categoria;c.appendChild(t);
+      let g=document.createElement('div');g.className='platos-grid';
+      s.platos.forEach((p,pIdx)=>{
+        g.innerHTML+=`<div class="plato-card">
+          <div class="img-container"><img src="${p.img}" class="plato-img" onclick="abrirDetalle(${catIdx},${pIdx})"></div>
+          <div class="plato-info">
+            <h3>${p.nombre}</h3>
+            <div class="precio-fila"><div class="precio">${p.precio.toFixed(2)} €</div>
+            <button class="btn-add" onclick="agregarAlCarrito('${p.nombre}',${p.precio})">+ Añadir</button></div>
+          </div>
+        </div>`
+      });
+      c.appendChild(g)
+    }
+    
+    function abrirDetalle(catIdx, pIdx) {
+      let plato = menuData[catIdx].platos[pIdx];
+      document.getElementById('detImg').src = plato.img;
+      document.getElementById('detNombre').innerText = plato.nombre;
+      document.getElementById('detDesc').innerText = plato.descripcion || "";
+      document.getElementById('detIng').innerText = plato.ingredientes || "Consulta con el camarero para más detalles sobre los ingredientes.";
+      document.getElementById('detAle').innerText = plato.alergenos || "Pregunta al personal si tienes alergias o intolerancias.";
+      document.getElementById('detPrecio').innerText = plato.precio.toFixed(2) + " €";
+      document.getElementById('btnAñadirDetalle').onclick = function() {
+        agregarAlCarrito(plato.nombre, plato.precio);
+        document.getElementById('modalDetalle').style.display = 'none';
+      };
+      document.getElementById('modalDetalle').style.display = 'flex';
+    }
+
     function mostrarCategorias(){document.getElementById('seccion-platos').style.display='none';document.getElementById('seccion-categorias').style.display='block';window.scrollTo(0,0)}
     function agregarAlCarrito(n,p,sug=false){let f=carrito.find(i=>i.nombre===n);if(f)f.cantidad++;else carrito.push({nombre:n,precio:p,cantidad:1});actualizarBarraCarrito();if(document.getElementById('modalCesta').style.display==='flex')mostrarListaCesta();if(!sug)lanzarSugerenciaAutomatica(n)}
     function cambiarCantidad(n,c){let i=carrito.find(x=>x.nombre===n);if(i){i.cantidad+=c;if(i.cantidad<=0)carrito=carrito.filter(x=>x.nombre!==n)}actualizarBarraCarrito();mostrarListaCesta()}
