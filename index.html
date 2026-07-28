@@ -5,10 +5,7 @@
   <title>Restaurante Pizzería Plaza</title>
   <style>
     :root{--primary:#2c3e50;--accent:#e74c3c;--bg:#f4f7f6;--card-bg:#ffffff;--gold:#f39c12}
-    
-    /* FONDO DE HORNO DE LEÑA GLOBAL Y TEXTOS EN BLANCO */
     body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.85)),url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1000&q=80') center/cover fixed;margin:0;padding:15px;padding-bottom:140px;color:white}
-    
     h1{text-align:center;color:white;font-size:2.2rem;margin-bottom:5px;text-shadow:2px 2px 5px rgba(0,0,0,0.8)}
     .subtitle{text-align:center;color:#eee;font-size:1rem;margin-bottom:15px;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
     
@@ -145,7 +142,7 @@
   <script>
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     
-    // 👇 TU API KEY DE GEMINI APLICADA
+    // 👇 API KEY ORIGINAL
     const API_KEY = "AQ.Ab8RN6LW7m-aQjDDAZaaZQPb8eAmLfK6YeN26Om9A1z8W1Fs_A"; 
     
     let carrito = []; let tipoAccionMesa = 'pedido'; let platoAbiertoActual = null;
@@ -324,27 +321,34 @@
     function mostrarListaCesta(){let l=document.getElementById('cestaLista'),t=0;l.innerHTML="";carrito.forEach(i=>{t+=i.precio*i.cantidad;l.innerHTML+=`<div class="cesta-item"><div><strong style="color:var(--primary)">${i.nombre}</strong><br><small>${i.precio.toFixed(2)} € x ${i.cantidad}</small></div><div class="controles-item"><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',-1)">-</button><span>${i.cantidad}</span><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',1)">+</button></div></div>`});document.getElementById('cestaTotalPrecio').innerText=t.toFixed(2)+' €'}
     function toggleChat(){let c=document.getElementById('chatWindow');c.style.display=c.style.display==='flex'?'none':'flex'}
     
-    // IA CONEXIÓN A GEMINI API
+    // IA CONEXIÓN Y DETECCIÓN DE ERRORES EXACTOS
     async function enviarMensajeUsuario(){
       let i=document.getElementById('userInput'), t=i.value.trim(), b=document.getElementById('chatBody');
       if(!t)return;
       b.innerHTML+=`<div class="user-msg">${t}</div>`; i.value=''; b.scrollTop=b.scrollHeight;
       
       b.innerHTML+=`<div class="bot-msg" id="typing">Pensando...</div>`; b.scrollTop=b.scrollHeight;
+      
       try {
         let p = "Eres el camarero de la Pizzería Plaza en España. Sé breve, amable y directo. Responde a este cliente: " + t;
         let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: p}]}]}) });
         let data = await res.json();
-        document.getElementById('typing').remove();
+        
+        if(document.getElementById('typing')) document.getElementById('typing').remove();
+        
+        // Si hay error en la conexión o la clave, el código lo atrapa aquí mismo
+        if(data.error) throw new Error(data.error.message);
+        
         b.innerHTML+=`<div class="bot-msg">${data.candidates[0].content.parts[0].text.replace(/\n/g,"<br>")}</div>`;
       } catch(e) {
-        document.getElementById('typing').remove();
-        b.innerHTML+=`<div class="bot-msg">Error de conexión. Inténtalo de nuevo.</div>`;
+        if(document.getElementById('typing')) document.getElementById('typing').remove();
+        // CAJA ROJA DE ALERTA: Te dirá si es "API key not valid", problema de red, etc.
+        b.innerHTML+=`<div class="bot-msg" style="border:2px solid red; background:#fff0f0;"><b>🚨 Error técnico de Google:</b><br><span style="color:#c0392b;">${e.message}</span><br><br><small>Si dice 'API key not valid', tu contraseña de Google necesita unos minutos para propagarse o no se copió entera.</small></div>`;
       }
       b.scrollTop=b.scrollHeight;
     }
     
-    function lanzarSugerenciaAutomatica(n){let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody');c.style.display='flex';b.innerHTML+=`<div class="bot-msg">¡Gran elección la <b>${n}</b>! 👨‍🍳<br>¿Te gustaría acompañarlo con un postre o entrante de la carta?</div>`;b.scrollTop=b.scrollHeight}
+    function lanzarSugerenciaAutomatica(n){let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody');c.style.display='flex';b.innerHTML+=`<div class="bot-msg">¡Gran elección la <b>${n}</b>! 👨‍🍳<br>¿Te gustaría acompañarlo con un postre o bebida de la carta?</div>`;b.scrollTop=b.scrollHeight}
     
     function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Desde qué mesa nos llamas?':'¿En qué mesa estás?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar al camarero':'Enviar a cocina';document.getElementById('modalMesa').style.display='flex'}
     function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Introduce el número de tu mesa, por favor.");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.":"✅ ¡Tu pedido se ha enviado a la cocina correctamente!");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red. Comprueba tu conexión a internet.");b.innerText="Confirmar";b.disabled=false})}
