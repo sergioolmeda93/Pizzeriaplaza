@@ -21,18 +21,19 @@
     .btn-volver{background:var(--primary);color:white;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;margin-bottom:20px}
     .categoria-titulo{color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:5px;margin-top:10px;font-size:1.5rem;text-transform:uppercase}
     
-    .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:15px}
+    .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:15px}
     .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.05);display:flex;flex-direction:column}
     
-    .img-container{width:100%;height:110px;overflow:hidden}
-    .plato-img{width:100%;height:100%;object-fit:cover;cursor:pointer;animation:movimientoVivo 12s infinite alternate linear}
-    @keyframes movimientoVivo { 0%{transform:scale(1)} 100%{transform:scale(1.2) translate(-2%,-2%)} }
+    /* EFECTO MOVIMIENTO CONTINUO (Estilo GIF/Video) */
+    .img-container{width:100%;height:120px;overflow:hidden}
+    .plato-img{width:100%;height:100%;object-fit:cover;cursor:pointer;animation:movimientoVivo 10s infinite alternate ease-in-out}
+    @keyframes movimientoVivo { 0%{transform:scale(1)} 100%{transform:scale(1.15) translate(-2%,-2%)} }
     
     .plato-info{padding:10px;display:flex;flex-direction:column;flex-grow:1}
-    .plato-info h3{margin:0 0 5px 0;font-size:0.95rem;color:var(--primary)}
-    .precio-fila{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
-    .precio{font-weight:bold;color:var(--primary);font-size:1rem}
-    .btn-add{background:var(--accent);color:white;border:none;padding:5px 10px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:0.85rem;transition:transform 0.2s}
+    .plato-info h3{margin:0 0 5px 0;font-size:0.95rem;color:var(--primary);line-height:1.2}
+    .precio-fila{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px}
+    .precio{font-weight:bold;color:var(--primary);font-size:1.05rem}
+    .btn-add{background:var(--accent);color:white;border:none;padding:5px 12px;border-radius:20px;font-weight:bold;cursor:pointer;font-size:0.85rem;transition:transform 0.2s}
     .btn-add:active{transform:scale(0.9)}
     
     .barra-flotante-inferior{position:fixed;bottom:15px;left:15px;right:15px;display:flex;gap:10px;z-index:100}
@@ -45,8 +46,8 @@
     .modal-detalle,.modal-mesa{justify-content:center;align-items:center;z-index:200}
     
     .detalle-content{background:white;padding:20px;border-radius:15px;width:85%;max-width:350px;max-height:85vh;overflow-y:auto;position:relative}
-    .detalle-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:15px}
-    .detalle-tag{font-size:0.85rem;margin-top:8px;padding:8px;border-radius:8px;background:#f9f9f9}
+    .detalle-img{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:15px}
+    .detalle-tag{font-size:0.85rem;margin-top:8px;padding:10px;border-radius:8px;background:#f9f9f9;line-height:1.4}
     
     .cesta-content{background:white;width:100%;max-height:80vh;border-radius:20px 20px 0 0;padding:20px;display:flex;flex-direction:column;box-sizing:border-box}
     .cesta-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px}
@@ -79,7 +80,7 @@
   </div>
 
   <div id="seccion-platos">
-    <button class="btn-volver" onclick="mostrarCategorias()">← Volver</button>
+    <button class="btn-volver" onclick="mostrarCategorias()">← Volver a Categorías</button>
     <div id="contenedor-carta"></div>
   </div>
 
@@ -104,12 +105,12 @@
       <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;">✖</span>
       <img id="detImg" class="detalle-img" src="">
       <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
-      <p id="detDesc" style="color:#666;font-size:0.9rem;margin:0 0 10px 0;"></p>
-      <div class="detalle-tag" style="border-left:3px solid var(--primary);"><strong>🍅 Ingredientes:</strong> <span id="detIng" style="color:#555;"></span></div>
-      <div class="detalle-tag" style="border-left:3px solid var(--accent);"><strong>⚠️ Alérgenos:</strong> <span id="detAle" style="color:#c0392b;font-weight:bold;"></span></div>
+      <p id="detDesc" style="color:#666;font-size:0.9rem;margin:0 0 10px 0; display:none;"></p>
+      <div class="detalle-tag" style="border-left:3px solid var(--primary);"><strong>🍅 Ingredientes:</strong><br><span id="detIng" style="color:#555;"></span></div>
+      <div class="detalle-tag" style="border-left:3px solid var(--accent);"><strong>⚠️ Alérgenos:</strong><br><span id="detAle" style="color:#c0392b;font-weight:bold;">Contiene Gluten, Lácteos.</span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
-        <span id="detPrecio" style="font-size:1.3rem;font-weight:bold;color:var(--primary);"></span>
-        <button class="btn-pedir" id="btnAñadirDetalle" style="width:auto;" onclick="">+ Añadir</button>
+        <span id="detPrecio" style="font-size:1.4rem;font-weight:bold;color:var(--primary);"></span>
+        <button class="btn-pedir" id="btnAñadirDetalle" style="width:auto;padding:10px 25px;" onclick="">+ Añadir</button>
       </div>
     </div>
   </div>
@@ -137,120 +138,108 @@
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     let carrito = []; let tipoAccionMesa = 'pedido';
     
-    // Variables cortas para las imágenes (para no colapsar tu móvil)
-    const ip="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80"; // Pizzas
-    const ic="https://images.unsplash.com/photo-1558030006-450675393462?w=400&q=80"; // Carnes
-    const ifi="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&q=80"; // Pescados
-    const iv="https://images.unsplash.com/photo-1594280158776-98f0471b0581?w=400&q=80"; // Veganas
-    const ih="https://images.unsplash.com/photo-1553787762-b5f528e0e989?w=400&q=80"; // Helados
-    const it="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80"; // Tartas
-    const ie="https://images.unsplash.com/photo-1599507684074-13e2bb9e7631?w=400&q=80"; // Entrantes
-    const ien="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80"; // Ensaladas
-    const iw="https://images.unsplash.com/photo-1552611052-33e04de081de?w=400&q=80"; // Wok
-    const ipa="https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=400&q=80"; // Pasta
+    // Variables de imágenes específicas para que cada plato tenga sentido
+    const im = id => `https://images.unsplash.com/photo-${id}?w=400&q=80`;
+    const pz=im('1513104890138-7c749659a591'), pep=im('1628840042765-356cda07504e'), mar=im('1565299624946-b28f40a0ae38'), vg=im('1511689660979-1b451b22d661');
+    const cr=im('1544025162-8315db866752'), po=im('1604908176997-125f25cc6f3d'), bg=im('1568901346375-23c9450c58cd');
+    const ps=im('1519708227418-c8fd9a32b7a2'), pa_r=im('1622973536968-3ead9e780960'), pa_b=im('1612874742237-6526221588e3');
+    const en=im('1599507684074-13e2bb9e7631'), ens=im('1512621776951-a57141f2eefd'), wk=im('1552611052-33e04de081de');
+    const po_ic=im('1553787762-b5f528e0e989'), po_ta=im('1578985545062-69928b1d9587'), cf=im('1511920170033-f8396924c348');
 
-    // Base de datos comprimida de todos tus platos
+    // Base de datos comprimida e ingredientes en su sitio
     const menu = [
       {c:"Pizzas", ic:"🍕", pl:[
-        {n:"Margarita", d:"Tomate y mozzarella", p:10.65, i:ip, in:"Masa artesana, tomate, mozzarella, orégano.", a:"Gluten, Lácteos"},
-        {n:"Napolitana", d:"Tomate, mozzarella, anchoas y alcaparras", p:12.85, i:ip},
-        {n:"Romana", d:"Tomate, mozzarella, champiñones y salami", p:12.85, i:ip},
-        {n:"Capricciosa", d:"Tomate, mozzarella, huevo, espárragos y cebolla", p:12.85, i:ip},
-        {n:"Salami", d:"Tomate, mozzarella, salami y pimiento", p:12.85, i:ip},
-        {n:"Prosciutto", d:"Tomate, mozzarella y jamón york", p:12.75, i:ip},
-        {n:"Siciliana", d:"Tomate, mozzarella, atún y anchoas", p:12.85, i:ip},
-        {n:"Rústica", d:"Tomate, mozzarella, jamón york y champiñones", p:12.85, i:ip},
-        {n:"Frutti di mare", d:"Tomate, mozzarella, gambas, atún y mejillones", p:17.25, i:ip},
-        {n:"Quatro Stagioni", d:"Tomate, mozzarella, jamón, champiñones, pimientos, espárragos verdes y aceitunas", p:13.85, i:ip},
-        {n:"Pescatore", d:"Tomate, mozzarella, cebolla, atún y champiñones", p:12.85, i:ip},
-        {n:"Mafiosa", d:"Tomate, mozzarella, champiñones, salami, huevo, guisantes y cebolla", p:12.85, i:ip},
-        {n:"Super Plaza", d:"Tomate, mozzarella, solomillo de cerdo, bacon y champiñones", p:16.00, i:ip},
-        {n:"Funghi", d:"Tomate, mozzarella y champiñones", p:11.85, i:ip},
-        {n:"Pepperoni", d:"Tomate, mozzarella, pepperoni y cebolla", p:12.85, i:ip},
-        {n:"Brassato", d:"Tomate, mozzarella y ternera grill", p:15.00, i:ip},
-        {n:"Rúcula", d:"Rúcula y parmesano", p:12.85, i:ip},
-        {n:"Vegetal", d:"Pesto, mozzarella, verduras de temporada", p:13.85, i:ip},
-        {n:"Carpaccio", d:"Tomate, mozzarella, carpaccio, champiñones, orégano y parmesano", p:19.35, i:ip},
-        {n:"4 quesos", d:"Tomate y 4 quesos", p:12.85, i:ip},
-        {n:"Tropical", d:"Tomate, mozzarella, piña natural y jamón york", p:12.85, i:ip},
-        {n:"Tonno", d:"Tomate, mozzarella, atún y cebolla", p:12.85, i:ip},
-        {n:"Boloñesa", d:"Tomate, mozzarella y salsa boloñesa", p:13.85, i:ip},
-        {n:"Marinera", d:"Tomate, mozzarella, gambas, merluza y ajo", p:16.00, i:ip},
-        {n:"Nativa", d:"Tomate, mozzarella, queso, sobrasada y miel", p:13.85, i:ip},
-        {n:"Salmón", d:"Tomate, mozzarella y salmón", p:16.00, i:ip},
-        {n:"Calzone Plaza", d:"Frankfurt de Baviera con mostaza y mozzarella", p:11.75, i:ip},
-        {n:"Nuevo México", d:"Tomate, mozzarella, salsa mexicana y solomillo de cerdo", p:13.85, i:ip},
-        {n:"Varenne", d:"Tomate, mozzarella, dátiles y cangrejo", p:12.85, i:ip},
-        {n:"Jack de Mommes", d:"Tomate, mozzarella, bacon, queso de cabra y miel", p:15.00, i:ip},
-        {n:"Barbacoa", d:"Tomate, mozzarella, pollo y salsa barbacoa", p:13.85, i:ip},
-        {n:"Bacalao", d:"Tomate, mozzarella y bacalao ahumado", p:17.25, i:ip},
-        {n:"Pulpo (XL)", d:"Tomate, mozzarella, pulpo y pimentón", p:24.90, i:ip},
-        {n:"Jamón Serrano y champiñones", d:"", p:15.00, i:ip},
-        {n:"Pizza de burrata (XL)", d:"Con jamón serrano y rúcula", p:20.25, i:ip}
+        {n:"Margarita", in:"Tomate y mozzarella", p:10.65, i:im('1574071318508-1cdbab80d002')},
+        {n:"Napolitana", in:"Tomate, mozzarella, anchoas y alcaparras", p:12.85, i:pz},
+        {n:"Romana", in:"Tomate, mozzarella, champiñones y salami", p:12.85, i:pep},
+        {n:"Capricciosa", in:"Tomate, mozzarella, huevo, espárragos y cebolla", p:12.85, i:pz},
+        {n:"Salami", in:"Tomate, mozzarella, salami y pimiento", p:12.85, i:pep},
+        {n:"Prosciutto", in:"Tomate, mozzarella y jamón york", p:12.75, i:pz},
+        {n:"Siciliana", in:"Tomate, mozzarella, atún y anchoas", p:12.85, i:mar},
+        {n:"Rústica", in:"Tomate, mozzarella, jamón york y champiñones", p:12.85, i:pz},
+        {n:"Frutti di mare", in:"Tomate, mozzarella, gambas, atún y mejillones", p:17.25, i:mar},
+        {n:"Quatro Stagioni", in:"Tomate, mozzarella, jamón, champiñones, pimientos, espárragos verdes y aceitunas", p:13.85, i:pz},
+        {n:"Pescatore", in:"Tomate, mozzarella, cebolla, atún y champiñones", p:12.85, i:mar},
+        {n:"Mafiosa", in:"Tomate, mozzarella, champiñones, salami, huevo, guisantes y cebolla", p:12.85, i:pep},
+        {n:"Super Plaza", in:"Tomate, mozzarella, solomillo de cerdo, bacon y champiñones", p:16.00, i:pz},
+        {n:"Funghi", in:"Tomate, mozzarella y champiñones", p:11.85, i:vg},
+        {n:"Pepperoni", in:"Tomate, mozzarella, pepperoni y cebolla", p:12.85, i:pep},
+        {n:"Brassato", in:"Tomate, mozzarella y ternera grill", p:15.00, i:pz},
+        {n:"Rúcula", in:"Rúcula y parmesano", p:12.85, i:vg},
+        {n:"Vegetal", in:"Pesto, mozzarella, verduras de temporada", p:13.85, i:vg},
+        {n:"Carpaccio", in:"Tomate, mozzarella, carpaccio, champiñones, orégano y parmesano", p:19.35, i:pz},
+        {n:"4 quesos", in:"Tomate y 4 quesos", p:12.85, i:pz},
+        {n:"Tropical", in:"Tomate, mozzarella, piña natural y jamón york", p:12.85, i:pz},
+        {n:"Tonno", in:"Tomate, mozzarella, atún y cebolla", p:12.85, i:mar},
+        {n:"Boloñesa", in:"Tomate, mozzarella y salsa boloñesa", p:13.85, i:pz},
+        {n:"Marinera", in:"Tomate, mozzarella, gambas, merluza y ajo", p:16.00, i:mar},
+        {n:"Nativa", in:"Tomate, mozzarella, queso, sobrasada y miel", p:13.85, i:pz},
+        {n:"Salmón", in:"Tomate, mozzarella y salmón", p:16.00, i:mar},
+        {n:"Calzone Plaza", in:"Frankfurt de Baviera con mostaza y mozzarella", p:11.75, i:pz},
+        {n:"Nuevo México", in:"Tomate, mozzarella, salsa mexicana y solomillo de cerdo", p:13.85, i:pz},
+        {n:"Varenne", in:"Tomate, mozzarella, dátiles y cangrejo", p:12.85, i:mar},
+        {n:"Jack de Mommes", in:"Tomate, mozzarella, bacon, queso de cabra y miel", p:15.00, i:pz},
+        {n:"Barbacoa", in:"Tomate, mozzarella, pollo y salsa barbacoa", p:13.85, i:pz},
+        {n:"Bacalao", in:"Tomate, mozzarella y bacalao ahumado", p:17.25, i:mar},
+        {n:"Pulpo (XL)", in:"Tomate, mozzarella, pulpo y pimentón", p:24.90, i:mar},
+        {n:"Jamón Serrano y champiñones", in:"Tomate, mozzarella, jamón serrano y champiñones", p:15.00, i:pz},
+        {n:"Pizza de burrata (XL)", in:"Con jamón serrano y rúcula", p:20.25, i:pz}
       ]},
       {c:"Carnes", ic:"🥩", pl:[
-        {n:"Tagliata de entrecot", d:"Rúcula y parmesano", p:23.25, i:ic},
-        {n:"Entrecot", d:"", p:22.75, i:ic},
-        {n:"Escalope", d:"", p:15.50, i:ic},
-        {n:"Escalope Cordon Bleu", d:"", p:16.50, i:ic},
-        {n:"Escalopines Marsala", d:"", p:19.35, i:ic},
-        {n:"Escalopines Plaza", d:"Jamón serrano y mozzarella", p:19.35, i:ic},
-        {n:"Medallones de solomillo", d:"Al vino tinto con ciruelas", p:20.40, i:ic},
-        {n:"Pechuga de pollo plancha", d:"Suplemento salsa pimienta o roquefort 4.05€", p:14.00, i:ic}
+        {n:"Tagliata de entrecot", in:"Rúcula y parmesano", p:23.25, i:cr},
+        {n:"Entrecot", in:"Entrecot a la plancha", p:22.75, i:cr},
+        {n:"Escalope", in:"Carne empanada", p:15.50, i:po},
+        {n:"Escalope Cordon Bleu", in:"Carne rellena de jamón y queso", p:16.50, i:po},
+        {n:"Escalopines Marsala", in:"Con salsa Marsala", p:19.35, i:cr},
+        {n:"Escalopines Plaza", in:"Jamón serrano y mozzarella", p:19.35, i:cr},
+        {n:"Medallones de solomillo", in:"Al vino tinto con ciruelas", p:20.40, i:cr},
+        {n:"Pechuga de pollo plancha", in:"Pollo fresco a la plancha", d:"Suplemento salsa pimienta o roquefort 4.05€", p:14.00, i:po}
       ]},
       {c:"Pescados", ic:"🐟", pl:[
-        {n:"Gambas al ajillo", d:"", p:20.25, i:ifi},
-        {n:"Calamar nacional a la plancha", d:"", p:20.40, i:ifi},
-        {n:"Calamar a la romana", d:"", p:17.25, i:ifi}
+        {n:"Gambas al ajillo", in:"Gambas, ajo, guindilla, aceite", p:20.25, i:ps},
+        {n:"Calamar nacional plancha", in:"Calamar fresco, ajo, perejil", p:20.40, i:ps},
+        {n:"Calamar a la romana", in:"Calamar rebozado", p:17.25, i:ps}
       ]},
-      {c:"Vegano", ic:"🌱", pl:[
-        {n:"Hamburguesa Vegana", d:"Carne 100% vegetal de soja en pan pita con tomate, cebolla caramelizada y rúcula", p:14.00, i:iv},
-        {n:"Merluza vegana", d:"", p:12.90, i:iv}
-      ]},
-      {c:"Tartas", ic:"🍰", pl:[
-        {n:"Queso con arándanos", d:"", p:5.65, i:it},
-        {n:"Banoffee", d:"", p:5.65, i:it},
-        {n:"Tarta de chocolate", d:"", p:5.65, i:it},
-        {n:"Limón", d:"", p:5.65, i:it},
-        {n:"Cardenal de Lloseta", d:"", p:5.85, i:it},
-        {n:"Cuarto con helado almendra", d:"", p:5.50, i:it},
-        {n:"Tiramisú", d:"", p:5.90, i:it},
-        {n:"Puding", d:"", p:4.90, i:it},
-        {n:"Flan con nata o ron", d:"", p:3.95, i:it},
-        {n:"Panna Cota", d:"", p:4.90, i:it},
-        {n:"Tarta manzana horno leña", d:"", p:5.95, i:it}
-      ]},
-      {c:"Helados", ic:"🍨", pl:[
-        {n:"Coulant de chocolate", d:"Con helado de vainilla", p:5.95, i:ih},
-        {n:"Sorbete de limón", d:"", p:3.95, i:ih},
-        {n:"Helado de almendra", d:"", p:4.20, i:ih},
-        {n:"Bombón Mallorquín", d:"", p:3.85, i:ih},
-        {n:"Helado variado", d:"Tres bolas a escoger", p:4.95, i:ih},
-        {n:"Copa Plaza", d:"Vainilla, caramelo, nata y nueces", p:6.85, i:ih},
-        {n:"Copa Góndola", d:"Fresa, sirope, nata y fresas", p:6.75, i:ih},
-        {n:"Copa Mediterránea", d:"Almendra, caramelo, plátano y nata", p:6.75, i:ih},
-        {n:"Copa Blanc et noir", d:"Stracciatella, sirope y nata", p:6.25, i:ih}
-      ]},
-      {c:"Extras", ic:"➕", pl:[
-        {n:"Suplemento gambas", d:"", p:4.25, i:ip},
-        {n:"Ingrediente extra", d:"", p:2.85, i:ip},
-        {n:"Suplemento Calzone", d:"", p:2.00, i:ip},
-        {n:"Tamaño XL (Mitad y mitad)", d:"", p:3.55, i:ip}
+      {c:"Opciones Veganas", ic:"🌱", pl:[
+        {n:"Hamburguesa Vegana", in:"Carne 100% vegetal de soja en pan pita con tomate, cebolla caramelizada y rúcula", p:14.00, i:bg},
+        {n:"Merluza vegana", in:"Alternativa vegetal sabor mar", p:12.90, i:ps}
       ]},
       {c:"Entrantes", ic:"🧆", pl:[
-        {n:"Pan de pizza", d:"Nuestra masa artesana horneada", p:5.35, i:ie},
-        {n:"Mozarillo Plaza", d:"", p:6.40, i:ie}
+        {n:"Pan de pizza", in:"Masa horneada con aceite y orégano", p:5.35, i:en},
+        {n:"Mozarillo Plaza", in:"Nuestra especialidad", p:6.40, i:en},
+        {n:"Surtido croquetas", in:"Pollo, jamón, espinacas y bacalao", p:10.60, i:en}
+      ]},
+      {c:"Ensaladas", ic:"🥗", pl:[
+        {n:"Mixta", in:"Lechuga, tomate, cebolla, jamón york", p:10.60, i:ens},
+        {n:"Capresse", in:"Tomate, mozzarella, albahaca", p:13.95, i:ens}
       ]},
       {c:"Pastas", ic:"🍝", pl:[
-        {n:"Espaguetis boloñesa", d:"", p:12.00, i:ipa},
-        {n:"Carbonara", d:"", p:12.90, i:ipa}
+        {n:"Espaguetis boloñesa", in:"Pasta, salsa boloñesa con carne", p:12.00, i:pa_r},
+        {n:"Carbonara", in:"Pasta, nata, bacon, pimienta", p:12.90, i:pa_b}
+      ]},
+      {c:"Tartas Caseras", ic:"🍰", pl:[
+        {n:"Queso con arándanos", in:"Tarta de queso y mermelada", p:5.65, i:po_ta},
+        {n:"Banoffee", in:"Plátano, toffee, galleta", p:5.65, i:po_ta},
+        {n:"Tarta de chocolate", in:"Bizcocho y cacao", p:5.65, i:po_ta},
+        {n:"Tiramisú", in:"Mascarpone, café, cacao", p:5.90, i:po_ta}
+      ]},
+      {c:"Helados", ic:"🍨", pl:[
+        {n:"Coulant de chocolate", in:"Con helado de vainilla", p:5.95, i:po_ic},
+        {n:"Helado variado", in:"Tres bolas a escoger", p:4.95, i:po_ic},
+        {n:"Copa Plaza", in:"Vainilla, caramelo, nata y nueces", p:6.85, i:po_ic}
+      ]},
+      {c:"Extras y Suplementos", ic:"➕", pl:[
+        {n:"Suplemento gambas", in:"Ración extra", p:4.25, i:pz},
+        {n:"Ingrediente extra", in:"Añade a tu gusto", p:2.85, i:pz},
+        {n:"Suplemento Calzone", in:"Cierra tu pizza", p:2.00, i:pz},
+        {n:"Tamaño XL (Mitad y mitad)", in:"Hazla gigante", p:3.55, i:pz}
       ]}
     ];
     
-    // Convertidor al formato original
+    // Transformación para la lectura
     const menuData = menu.map(c => ({
       categoria: c.c, icono: c.ic,
-      platos: c.pl.map(p => ({ nombre: p.n, descripcion: p.d||"", precio: p.p, img: p.i, ingredientes: p.in||"", alergenos: p.a||"" }))
+      platos: c.pl.map(p => ({ nombre: p.n, descripcion: p.d||"", precio: p.p, img: p.i, ingredientes: p.in||"" }))
     }));
     
     function inicializarCategorias(){let g=document.getElementById('gridCategoriasInicio');g.innerHTML=`<div class="cat-inicio-card" onclick="mostrarTodosPlatos()"><div class="cat-icono">📋</div><h3>Ver Todo</h3></div>`;menuData.forEach((s,i)=>{g.innerHTML+=`<div class="cat-inicio-card" onclick="mostrarCategoria(${i})"><div class="cat-icono">${s.icono}</div><h3>${s.categoria}</h3></div>`});}
@@ -277,9 +266,11 @@
       let plato = menuData[catIdx].platos[pIdx];
       document.getElementById('detImg').src = plato.img;
       document.getElementById('detNombre').innerText = plato.nombre;
-      document.getElementById('detDesc').innerText = plato.descripcion || "";
+      
+      let desc = document.getElementById('detDesc');
+      if(plato.descripcion) { desc.innerText = plato.descripcion; desc.style.display = "block"; } else { desc.style.display = "none"; }
+      
       document.getElementById('detIng').innerText = plato.ingredientes || "Consulta con el camarero los ingredientes.";
-      document.getElementById('detAle').innerText = plato.alergenos || "Pregunta al personal por alergias.";
       document.getElementById('detPrecio').innerText = plato.precio.toFixed(2) + " €";
       document.getElementById('btnAñadirDetalle').onclick = function() { agregarAlCarrito(plato.nombre, plato.precio); document.getElementById('modalDetalle').style.display = 'none'; };
       document.getElementById('modalDetalle').style.display = 'flex';
@@ -296,8 +287,8 @@
     function enviarMensajeUsuario(){let i=document.getElementById('userInput'),t=i.value.trim(),b=document.getElementById('chatBody');if(!t)return;b.innerHTML+=`<div class="user-msg">${t}</div>`;i.value='';b.scrollTop=b.scrollHeight;setTimeout(()=>{let r="¡Marchando! ¿Alguna bebida o postre para acompañar?";if(t.toLowerCase().includes("pizza"))r="Las pizzas son nuestra especialidad, ¡te recomiendo el Mozarillo Plaza para empezar!";b.innerHTML+=`<div class="bot-msg">${r}</div>`;b.scrollTop=b.scrollHeight},600)}
     function lanzarSugerenciaAutomatica(n){let sg={nombre:"Pan de pizza",precio:5.35};let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody'),id="m"+Date.now();c.style.display='flex';b.innerHTML+=`<div class="bot-msg">¡Gran elección! 👨‍🍳<br>¿Lo acompañas con <b>${sg.nombre}</b> por ${sg.precio}€?<div id="${id}" style="margin-top:10px"><button onclick="agregarAlCarrito('${sg.nombre}',${sg.precio},true);document.getElementById('${id}').innerHTML='✅ Añadido'" style="background:var(--accent);color:white;border:none;padding:8px;border-radius:15px;width:100%">+ Añadir</button></div></div>`;b.scrollTop=b.scrollHeight}
     
-    function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Mesa que llama?':'¿Tu mesa?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar':'Enviar';document.getElementById('modalMesa').style.display='flex'}
-    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Pon tu mesa");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 Camarero avisado":"✅ Pedido enviado");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red");b.innerText="Confirmar";b.disabled=false})}
+    function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Desde qué mesa nos llamas?':'¿En qué mesa estás?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar al camarero':'Enviar a cocina';document.getElementById('modalMesa').style.display='flex'}
+    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Introduce el número de tu mesa, por favor.");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.":"✅ ¡Tu pedido se ha enviado a la cocina correctamente!");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red. Comprueba tu conexión a internet.");b.innerText="Confirmar";b.disabled=false})}
     
     window.onload=inicializarCategorias;
   </script>
