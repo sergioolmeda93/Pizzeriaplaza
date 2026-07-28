@@ -2,29 +2,39 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Restaurante Pizzería Plaza - Carta Digital</title>
+  <title>Restaurante Pizzería Plaza</title>
   <style>
     :root{--primary:#2c3e50;--accent:#e74c3c;--bg:#f4f7f6;--card-bg:#ffffff;--gold:#f39c12}
     body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);margin:0;padding:15px;padding-bottom:140px;color:#333}
     h1{text-align:center;color:var(--primary);font-size:1.8rem;margin-bottom:5px}
-    .subtitle{text-align:center;color:#7f8c8d;font-size:0.9rem;margin-bottom:25px}
-    #seccion-categorias{display:block}
-    .categorias-inicio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:15px;margin-top:20px}
-    .cat-inicio-card{background:white;border-radius:15px;padding:20px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.08);cursor:pointer;border-bottom:4px solid var(--accent)}
-    .cat-inicio-card:active{transform:scale(0.95)}
+    .subtitle{text-align:center;color:#7f8c8d;font-size:0.9rem;margin-bottom:15px}
+    
+    /* Fondo Horno de Leña en Categorías */
+    #seccion-categorias{
+      display:block;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1000&q=80') center/cover;
+      padding: 30px 15px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    #seccion-categorias h2 { color: white !important; }
+    
+    .categorias-inicio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:15px;margin-top:20px}
+    .cat-inicio-card{background:rgba(255,255,255,0.95);border-radius:15px;padding:20px;text-align:center;cursor:pointer;border-bottom:4px solid var(--accent)}
     .cat-inicio-card h3{color:var(--primary);margin:10px 0 0 0;font-size:1.1rem}
-    .cat-icono{font-size:2.2rem;transition:transform 0.3s}
-    .cat-inicio-card:hover .cat-icono{transform:scale(1.15) rotate(5deg)}
+    .cat-icono{font-size:2.2rem;}
+    
     #seccion-platos{display:none}
     .btn-volver{background:var(--primary);color:white;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;margin-bottom:20px}
     .categoria-titulo{color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:5px;margin-top:10px;font-size:1.5rem;text-transform:uppercase}
     
-    /* Imágenes y tarjetas más pequeñas */
     .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:15px}
     .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.05);display:flex;flex-direction:column}
-    .img-container{width:100%;height:100px;overflow:hidden}
-    .plato-img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.3s}
-    .plato-img:hover{transform:scale(1.05)}
+    
+    /* Efecto Movimiento Continuo en Imágenes */
+    .img-container{width:100%;height:110px;overflow:hidden}
+    .plato-img{width:100%;height:100%;object-fit:cover;cursor:pointer;animation: movimientoVivo 12s infinite alternate linear;}
+    @keyframes movimientoVivo { 0% { transform: scale(1); } 100% { transform: scale(1.2) translate(-2%, -2%); } }
     
     .plato-info{padding:10px;display:flex;flex-direction:column;flex-grow:1}
     .plato-info h3{margin:0 0 5px 0;font-size:0.95rem;color:var(--primary)}
@@ -41,7 +51,6 @@
     .modal-cesta{justify-content:flex-end;align-items:flex-end}
     .modal-detalle,.modal-mesa{justify-content:center;align-items:center;z-index:200}
     
-    /* Ventana de Detalle del Plato */
     .detalle-content{background:white;padding:20px;border-radius:15px;width:85%;max-width:350px;max-height:85vh;overflow-y:auto;position:relative}
     .detalle-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:15px}
     .detalle-tag{font-size:0.85rem;margin-top:8px;padding:8px;border-radius:8px;background:#f9f9f9}
@@ -71,6 +80,7 @@
   <div class="subtitle">Carta Digital Interactiva</div>
   
   <div id="seccion-categorias">
+    <h2 style="font-size:1.4rem;text-align:center;margin-top:0;">¿Qué te apetece hoy?</h2>
     <div class="categorias-inicio-grid" id="gridCategoriasInicio"></div>
   </div>
 
@@ -82,7 +92,7 @@
   <button class="ia-btn" onclick="toggleChat()">✨ Camarero IA</button>
   <div class="chat-window" id="chatWindow">
     <div class="chat-header"><span>Camarero IA 👨‍🍳</span><span onclick="toggleChat()" style="cursor:pointer">✖</span></div>
-    <div class="chat-body" id="chatBody"><div class="bot-msg">¡Hola! Soy tu asistente de Pizzería Plaza. ¿Qué te apetece? 😊</div></div>
+    <div class="chat-body" id="chatBody"><div class="bot-msg">¡Hola! Soy tu asistente. ¿Qué te apetece pedir? 😊</div></div>
     <div class="chat-input-area"><input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') enviarMensajeUsuario()"><button onclick="enviarMensajeUsuario()">Enviar</button></div>
   </div>
 
@@ -94,21 +104,15 @@
     </div>
   </div>
 
-  <!-- Modal Detalle del Plato -->
+  <!-- Modal Detalle -->
   <div class="modal-detalle" id="modalDetalle">
     <div class="detalle-content">
-      <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2)">✖</span>
+      <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;">✖</span>
       <img id="detImg" class="detalle-img" src="">
       <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
       <p id="detDesc" style="color:#666;font-size:0.9rem;margin:0 0 10px 0;"></p>
-      
-      <div class="detalle-tag" style="border-left:3px solid var(--primary);">
-        <strong>🍅 Ingredientes:</strong> <span id="detIng" style="color:#555;"></span>
-      </div>
-      <div class="detalle-tag" style="border-left:3px solid var(--accent);">
-        <strong>⚠️ Alérgenos:</strong> <span id="detAle" style="color:#c0392b;font-weight:bold;"></span>
-      </div>
-      
+      <div class="detalle-tag" style="border-left:3px solid var(--primary);"><strong>🍅 Ingredientes:</strong> <span id="detIng" style="color:#555;"></span></div>
+      <div class="detalle-tag" style="border-left:3px solid var(--accent);"><strong>⚠️ Alérgenos:</strong> <span id="detAle" style="color:#c0392b;font-weight:bold;"></span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
         <span id="detPrecio" style="font-size:1.3rem;font-weight:bold;color:var(--primary);"></span>
         <button class="btn-pedir" id="btnAñadirDetalle" onclick="">+ Añadir</button>
@@ -116,7 +120,6 @@
     </div>
   </div>
 
-  <!-- Cesta y Mesa -->
   <div class="modal-cesta" id="modalCesta" onclick="if(event.target===this) cerrarCesta()">
     <div class="cesta-content">
       <div class="cesta-header"><h3 style="margin:0;">Tu Pedido</h3><span onclick="cerrarCesta()" style="cursor:pointer;font-size:1.3rem;">✖</span></div>
@@ -139,17 +142,16 @@
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     let carrito = []; let tipoAccionMesa = 'pedido';
     
-    // He añadido ingredientes y alérgenos de ejemplo a los primeros platos
     const menuData = [
       {categoria:"Entrantes",icono:"🧆",platos:[
-        {nombre:"Pan de pizza",descripcion:"Nuestra masa artesana horneada",precio:5.35,img:"https://images.unsplash.com/photo-1599507684074-13e2bb9e7631?w=500&q=80",ingredientes:"Harina de trigo, agua, aceite de oliva virgen extra, sal, orégano.",alergenos:"Contiene Gluten."},
-        {nombre:"Pan con 'all i oli'",descripcion:"Crujiente y sabroso",precio:2.75,img:"https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=500&q=80",ingredientes:"Pan rústico, ajo, aceite, huevo, sal.",alergenos:"Gluten, Huevo."},
+        {nombre:"Pan de pizza",descripcion:"Nuestra masa artesana horneada",precio:5.35,img:"https://images.unsplash.com/photo-1599507684074-13e2bb9e7631?w=500&q=80",ingredientes:"Harina de trigo, agua, aceite de oliva, orégano.",alergenos:"Contiene Gluten."},
+        {nombre:"Pan con 'all i oli'",descripcion:"Crujiente y sabroso",precio:2.75,img:"https://images.unsplash.com/photo-1573140247632-f8fd74997d5c?w=500&q=80",ingredientes:"Pan rústico, ajo, aceite, huevo.",alergenos:"Gluten, Huevo."},
         {nombre:"Aceitunas",descripcion:"",precio:2.25,img:"https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=500&q=80"},
         {nombre:"Mozarillo 'Plaza'",descripcion:"",precio:6.40,img:"https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&q=80"}
       ]},
       {categoria:"Ensaladas",icono:"🥗",platos:[
         {nombre:"Mixta",precio:10.60,img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80"},
-        {nombre:"Capresse",precio:13.95,img:"https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=500&q=80",ingredientes:"Tomate natural, mozzarella de búfala, albahaca fresca.",alergenos:"Lácteos. Apto para celíacos."}
+        {nombre:"Capresse",precio:13.95,img:"https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=500&q=80",ingredientes:"Tomate, mozzarella, albahaca.",alergenos:"Lácteos. Sin gluten."}
       ]},
       {categoria:"Woks",icono:"🥢",platos:[{nombre:"Wok pollo",precio:16.05,img:"https://images.unsplash.com/photo-1552611052-33e04de081de?w=500&q=80"},{nombre:"Wok pulpo",precio:20.35,img:"https://images.unsplash.com/photo-1599487405270-8e12eb046274?w=500&q=80"}]},
       {categoria:"Pastas",icono:"🍝",platos:[{nombre:"Espaguetis boloñesa",precio:12.00,img:"https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=500&q=80"},{nombre:"Carbonara",precio:12.90,img:"https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&q=80"}]},
@@ -182,13 +184,10 @@
       document.getElementById('detImg').src = plato.img;
       document.getElementById('detNombre').innerText = plato.nombre;
       document.getElementById('detDesc').innerText = plato.descripcion || "";
-      document.getElementById('detIng').innerText = plato.ingredientes || "Consulta con el camarero para más detalles sobre los ingredientes.";
-      document.getElementById('detAle').innerText = plato.alergenos || "Pregunta al personal si tienes alergias o intolerancias.";
+      document.getElementById('detIng').innerText = plato.ingredientes || "Consulta con el camarero los ingredientes.";
+      document.getElementById('detAle').innerText = plato.alergenos || "Pregunta al personal por alergias.";
       document.getElementById('detPrecio').innerText = plato.precio.toFixed(2) + " €";
-      document.getElementById('btnAñadirDetalle').onclick = function() {
-        agregarAlCarrito(plato.nombre, plato.precio);
-        document.getElementById('modalDetalle').style.display = 'none';
-      };
+      document.getElementById('btnAñadirDetalle').onclick = function() { agregarAlCarrito(plato.nombre, plato.precio); document.getElementById('modalDetalle').style.display = 'none'; };
       document.getElementById('modalDetalle').style.display = 'flex';
     }
 
@@ -202,8 +201,10 @@
     function toggleChat(){let c=document.getElementById('chatWindow');c.style.display=c.style.display==='flex'?'none':'flex'}
     function enviarMensajeUsuario(){let i=document.getElementById('userInput'),t=i.value.trim(),b=document.getElementById('chatBody');if(!t)return;b.innerHTML+=`<div class="user-msg">${t}</div>`;i.value='';b.scrollTop=b.scrollHeight;setTimeout(()=>{let r="¡Marchando! ¿Alguna bebida o postre para acompañar?";if(t.toLowerCase().includes("pizza"))r="Las pizzas son nuestra especialidad, ¡te recomiendo el Mozarillo Plaza para empezar!";b.innerHTML+=`<div class="bot-msg">${r}</div>`;b.scrollTop=b.scrollHeight},600)}
     function lanzarSugerenciaAutomatica(n){let sg={nombre:"Pan de pizza",precio:5.35};let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody'),id="m"+Date.now();c.style.display='flex';b.innerHTML+=`<div class="bot-msg">¡Gran elección! 👨‍🍳<br>¿Lo acompañas con <b>${sg.nombre}</b> por ${sg.precio}€?<div id="${id}" style="margin-top:10px"><button onclick="agregarAlCarrito('${sg.nombre}',${sg.precio},true);document.getElementById('${id}').innerHTML='✅ Añadido'" style="background:var(--accent);color:white;border:none;padding:8px;border-radius:15px;width:100%">+ Añadir</button></div></div>`;b.scrollTop=b.scrollHeight}
+    
     function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Mesa que llama?':'¿Tu mesa?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar':'Enviar';document.getElementById('modalMesa').style.display='flex'}
-    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Pon tu mesa");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 Camarero avisado":"✅ Pedido enviado");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red");b.innerText="Confirmar";b.disabled=false})}
+    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Pon tu mesa");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 Camarero avisado":"✅ Pedido enviado");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red");b.innerText="Confirmar";b.disabled=false})}
+    
     window.onload=inicializarCategorias;
   </script>
 </body>
