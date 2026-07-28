@@ -142,9 +142,6 @@
   <script>
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     
-    // 👇 TU NUEVA API KEY APLICADA
-    const API_KEY = "AQ.Ab8RN6L1yjHhhNr6xWxPs9Mrp5PLRhYEubpwmowS1KW1nLjeAQ"; 
-    
     let carrito = []; let tipoAccionMesa = 'pedido'; let platoAbiertoActual = null;
     
     const im = id => `https://images.unsplash.com/photo-${id}?w=400&q=80`;
@@ -321,7 +318,7 @@
     function mostrarListaCesta(){let l=document.getElementById('cestaLista'),t=0;l.innerHTML="";carrito.forEach(i=>{t+=i.precio*i.cantidad;l.innerHTML+=`<div class="cesta-item"><div><strong style="color:var(--primary)">${i.nombre}</strong><br><small>${i.precio.toFixed(2)} € x ${i.cantidad}</small></div><div class="controles-item"><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',-1)">-</button><span>${i.cantidad}</span><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',1)">+</button></div></div>`});document.getElementById('cestaTotalPrecio').innerText=t.toFixed(2)+' €'}
     function toggleChat(){let c=document.getElementById('chatWindow');c.style.display=c.style.display==='flex'?'none':'flex'}
     
-    // IA CONEXIÓN Y DETECCIÓN DE ERRORES EXACTOS
+    // CONEXION AL PUENTE SEGURO DE VERCEL (YA NO ESTÁ LA CLAVE AQUÍ)
     async function enviarMensajeUsuario(){
       let i=document.getElementById('userInput'), t=i.value.trim(), b=document.getElementById('chatBody');
       if(!t)return;
@@ -330,18 +327,22 @@
       b.innerHTML+=`<div class="bot-msg" id="typing">Pensando...</div>`; b.scrollTop=b.scrollHeight;
       
       try {
-        let p = "Eres el camarero de la Pizzería Plaza en España. Sé breve, amable y directo. Responde a este cliente: " + t;
-        let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: p}]}]}) });
+        let res = await fetch('/api/chat', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mensaje: t })
+        });
+        
         let data = await res.json();
         
         if(document.getElementById('typing')) document.getElementById('typing').remove();
         
-        if(data.error) throw new Error(data.error.message);
+        if(data.error) throw new Error(data.error);
         
-        b.innerHTML+=`<div class="bot-msg">${data.candidates[0].content.parts[0].text.replace(/\n/g,"<br>")}</div>`;
+        b.innerHTML+=`<div class="bot-msg">${data.respuesta.replace(/\n/g,"<br>")}</div>`;
       } catch(e) {
         if(document.getElementById('typing')) document.getElementById('typing').remove();
-        b.innerHTML+=`<div class="bot-msg" style="border:2px solid red; background:#fff0f0;"><b>🚨 Error técnico de Google:</b><br><span style="color:#c0392b;">${e.message}</span><br><br><small>Si dice 'API key not valid', tu contraseña de Google necesita unos minutos para propagarse o no se copió entera.</small></div>`;
+        b.innerHTML+=`<div class="bot-msg" style="border:2px solid red; background:#fff0f0;"><b>🚨 Error de conexión con el puente:</b><br><span style="color:#c0392b;">${e.message}</span></div>`;
       }
       b.scrollTop=b.scrollHeight;
     }
