@@ -5,21 +5,27 @@
   <title>Restaurante Pizzería Plaza</title>
   <style>
     :root{--primary:#2c3e50;--accent:#e74c3c;--bg:#f4f7f6;--card-bg:#ffffff;--gold:#f39c12}
-    body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);margin:0;padding:15px;padding-bottom:140px;color:#333}
-    h1{text-align:center;color:var(--primary);font-size:1.8rem;margin-bottom:5px}
-    .subtitle{text-align:center;color:#7f8c8d;font-size:0.9rem;margin-bottom:15px}
-    #seccion-categorias{display:block;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7)),url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1000&q=80') center/cover;padding:30px 15px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
-    #seccion-categorias h2{color:white !important;font-size:1.4rem;text-align:center;margin-top:0}
+    
+    /* FONDO DE HORNO DE LEÑA GLOBAL Y TEXTOS EN BLANCO */
+    body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.85)),url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1000&q=80') center/cover fixed;margin:0;padding:15px;padding-bottom:140px;color:white}
+    
+    h1{text-align:center;color:white;font-size:2.2rem;margin-bottom:5px;text-shadow:2px 2px 5px rgba(0,0,0,0.8)}
+    .subtitle{text-align:center;color:#eee;font-size:1rem;margin-bottom:15px;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
+    
+    #seccion-categorias{display:block}
+    #seccion-categorias h2{color:white;font-size:1.4rem;text-align:center;margin-top:0;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
     .categorias-inicio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:15px;margin-top:20px}
-    .cat-inicio-card{background:rgba(255,255,255,0.95);border-radius:15px;padding:20px;text-align:center;cursor:pointer;border-bottom:4px solid var(--accent);transition:transform 0.2s}
+    .cat-inicio-card{background:rgba(255,255,255,0.95);border-radius:15px;padding:20px;text-align:center;cursor:pointer;border-bottom:4px solid var(--accent);transition:transform 0.2s;color:#333}
     .cat-inicio-card:active{transform:scale(0.95)}
     .cat-inicio-card h3{color:var(--primary);margin:10px 0 0 0;font-size:1.1rem}
     .cat-icono{font-size:2.2rem}
+    
     #seccion-platos{display:none}
-    .btn-volver{background:var(--primary);color:white;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;margin-bottom:20px}
-    .categoria-titulo{color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:5px;margin-top:10px;font-size:1.5rem;text-transform:uppercase}
+    .btn-volver{background:var(--accent);color:white;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;margin-bottom:20px;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
+    .categoria-titulo{color:var(--gold);border-bottom:2px solid var(--gold);padding-bottom:5px;margin-top:10px;font-size:1.5rem;text-transform:uppercase;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
+    
     .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:15px}
-    .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.05);display:flex;flex-direction:column;cursor:pointer}
+    .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.3);display:flex;flex-direction:column;cursor:pointer;color:#333}
     .img-container{width:100%;height:120px;overflow:hidden}
     .plato-img{width:100%;height:100%;object-fit:cover;animation:movimientoVivo 10s infinite alternate ease-in-out}
     @keyframes movimientoVivo { 0%{transform:scale(1)} 100%{transform:scale(1.15) translate(-2%,-2%)} }
@@ -28,32 +34,38 @@
     .precio-fila{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px}
     .precio{font-weight:bold;color:var(--primary);font-size:1.05rem}
     .btn-info{background:var(--accent);color:white;border:none;padding:5px 12px;border-radius:20px;font-weight:bold;font-size:0.85rem}
+    
     .barra-flotante-inferior{position:fixed;bottom:15px;left:15px;right:15px;display:flex;gap:10px;z-index:100}
-    .carrito-bar{flex-grow:1;background:var(--primary);color:white;border-radius:30px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);cursor:pointer}
-    .btn-llamar-camarero{background:var(--gold);color:white;border:none;border-radius:30px;padding:0 16px;font-weight:bold;font-size:0.9rem;box-shadow:0 4px 15px rgba(0,0,0,0.3);cursor:pointer}
+    .carrito-bar{flex-grow:1;background:var(--primary);color:white;border-radius:30px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 15px rgba(0,0,0,0.5);cursor:pointer}
+    .btn-llamar-camarero{background:var(--gold);color:white;border:none;border-radius:30px;padding:0 16px;font-weight:bold;font-size:0.9rem;box-shadow:0 4px 15px rgba(0,0,0,0.5);cursor:pointer}
     .btn-pedir{background:var(--accent);color:white;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;width:100%}
-    .modal-cesta,.modal-mesa,.modal-detalle{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:150}
+    
+    .modal-cesta,.modal-mesa,.modal-detalle{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:150}
     .modal-cesta{justify-content:flex-end;align-items:flex-end}
     .modal-detalle,.modal-mesa{justify-content:center;align-items:center;z-index:200}
-    .detalle-content{background:white;padding:20px;border-radius:15px;width:85%;max-width:350px;max-height:85vh;overflow-y:auto;position:relative;text-align:left}
+    
+    .detalle-content{background:white;color:#333;padding:20px;border-radius:15px;width:85%;max-width:350px;max-height:85vh;overflow-y:auto;position:relative;text-align:left}
     .detalle-img{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:15px}
     .detalle-tag{font-size:0.85rem;margin-top:8px;padding:10px;border-radius:8px;background:#f9f9f9;line-height:1.4}
-    .cesta-content{background:white;width:100%;max-height:80vh;border-radius:20px 20px 0 0;padding:20px;display:flex;flex-direction:column;box-sizing:border-box}
+    
+    .cesta-content{background:white;color:#333;width:100%;max-height:80vh;border-radius:20px 20px 0 0;padding:20px;display:flex;flex-direction:column;box-sizing:border-box}
     .cesta-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px}
     .cesta-lista{overflow-y:auto;max-height:45vh;margin-bottom:15px;display:flex;flex-direction:column;gap:10px}
     .cesta-item{display:flex;justify-content:space-between;align-items:center;background:#f9f9f9;padding:10px 15px;border-radius:10px}
     .controles-item{display:flex;align-items:center;gap:10px}
-    .btn-control{background:#ddd;border:none;width:28px;height:28px;border-radius:50%;font-weight:bold;cursor:pointer}
-    .modal-content{background:white;padding:25px;border-radius:15px;width:85%;max-width:350px;text-align:center}
+    .btn-control{background:#ddd;border:none;width:28px;height:28px;border-radius:50%;font-weight:bold;cursor:pointer;color:#333}
+    
+    .modal-content{background:white;color:#333;padding:25px;border-radius:15px;width:85%;max-width:350px;text-align:center}
     .modal-content input{width:80%;padding:10px;font-size:1.2rem;margin:15px 0;border:1px solid #ccc;border-radius:8px;text-align:center}
-    .ia-btn{position:fixed;bottom:85px;right:15px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:50px;padding:12px 20px;font-weight:bold;z-index:99;cursor:pointer}
-    .chat-window{display:none;position:fixed;bottom:85px;right:15px;width:320px;height:400px;background:white;border-radius:15px;z-index:101;flex-direction:column;border:2px solid #2193b0}
+    
+    .ia-btn{position:fixed;bottom:85px;right:15px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:50px;padding:12px 20px;font-weight:bold;z-index:99;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.5)}
+    .chat-window{display:none;position:fixed;bottom:85px;right:15px;width:320px;height:400px;background:white;color:#333;border-radius:15px;z-index:101;flex-direction:column;border:2px solid #2193b0}
     .chat-header{background:#2193b0;color:white;padding:15px;font-weight:bold;display:flex;justify-content:space-between}
     .chat-body{padding:15px;flex-grow:1;overflow-y:auto;background:#f9f9f9;font-size:0.9rem;display:flex;flex-direction:column;gap:10px}
     .bot-msg{background:#e0e0e0;padding:10px;border-radius:10px 10px 10px 0;max-width:85%}
     .user-msg{background:#2193b0;color:white;padding:10px;border-radius:10px 10px 0 10px;max-width:85%;align-self:flex-end}
     .chat-input-area{display:flex;padding:10px;background:white;border-top:1px solid #ddd}
-    .chat-input-area input{flex-grow:1;padding:8px;border:1px solid #ccc;border-radius:20px;outline:none}
+    .chat-input-area input{flex-grow:1;padding:8px;border:1px solid #ccc;border-radius:20px;outline:none;color:#333}
     .chat-input-area button{background:#2193b0;color:white;border:none;padding:8px 15px;margin-left:5px;border-radius:20px;cursor:pointer}
   </style>
 </head>
@@ -89,7 +101,7 @@
   <!-- Modal Detalle Plato con Extras y Notas -->
   <div class="modal-detalle" id="modalDetalle">
     <div class="detalle-content">
-      <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;">✖</span>
+      <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;color:#333;">✖</span>
       <img id="detImg" class="detalle-img" src="">
       <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
       
@@ -102,7 +114,7 @@
 
       <div style="margin-top:15px;">
         <strong style="color:var(--primary);">Notas para la cocina:</strong>
-        <textarea id="detNotas" placeholder="Ej: Sin cebolla, carne muy hecha..." style="width:100%; box-sizing:border-box; padding:10px; margin-top:5px; border-radius:8px; border:1px solid #ccc; font-family:inherit;"></textarea>
+        <textarea id="detNotas" placeholder="Ej: Sin cebolla, carne muy hecha..." style="width:100%; box-sizing:border-box; padding:10px; margin-top:5px; border-radius:8px; border:1px solid #ccc; font-family:inherit; color:#333;"></textarea>
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
@@ -124,21 +136,20 @@
   <div class="modal-mesa" id="modalMesa">
     <div class="modal-content">
       <h3 id="tituloModalMesa">¿Mesa?</h3>
-      <input type="number" id="numMesa" placeholder="Ej: 4" min="1"><br>
+      <input type="number" id="numMesa" placeholder="Ej: 4" min="1" style="color:#333;"><br>
       <button class="btn-pedir" id="btnAccionMesa" style="margin-bottom:10px;" onclick="ejecutarAccionMesa()">Confirmar</button>
-      <button onclick="document.getElementById('modalMesa').style.display='none'" style="background:none;border:none;color:#666;cursor:pointer;width:100%">Cancelar</button>
+      <button onclick="document.getElementById('modalMesa').style.display='none'" style="background:none;border:none;color:#666;cursor:pointer;width:100%;font-weight:bold;">Cancelar</button>
     </div>
   </div>
 
   <script>
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     
-    // 👇 AQUI PONES TU CLAVE DE GEMINI (O déjalo así para usar el simulador gratuito)
-    const API_KEY = "PON_TU_API_KEY_AQUI"; 
+    // 👇 TU API KEY DE GEMINI APLICADA
+    const API_KEY = "AQ.Ab8RN6LW7m-aQjDDAZaaZQPb8eAmLfK6YeN26Om9A1z8W1Fs_A"; 
     
     let carrito = []; let tipoAccionMesa = 'pedido'; let platoAbiertoActual = null;
     
-    // Variables de imágenes específicas
     const im = id => `https://images.unsplash.com/photo-${id}?w=400&q=80`;
     const pz=im('1513104890138-7c749659a591'), pep=im('1628840042765-356cda07504e'), mar=im('1565299624946-b28f40a0ae38'), vg=im('1511689660979-1b451b22d661');
     const cr=im('1544025162-8315db866752'), po=im('1604908176997-125f25cc6f3d'), bg=im('1568901346375-23c9450c58cd');
@@ -146,7 +157,6 @@
     const en=im('1599507684074-13e2bb9e7631'), ens=im('1512621776951-a57141f2eefd'), wk=im('1552611052-33e04de081de');
     const po_ic=im('1553787762-b5f528e0e989'), po_ta=im('1578985545062-69928b1d9587'), cf=im('1511920170033-f8396924c348');
 
-    // Extras globales de las pizzas
     const extrasPizzas = [
       { n: "Ingrediente extra", p: 2.85 },
       { n: "Suplemento gambas", p: 4.25 },
@@ -154,7 +164,6 @@
       { n: "Tamaño XL (Mitad y mitad)", p: 3.55 }
     ];
 
-    // Base de datos comprimida
     const menu = [
       {c:"Pizzas", ic:"🍕", pl:[
         {n:"Margarita", in:"Tomate y mozzarella", p:10.65, i:im('1574071318508-1cdbab80d002')},
@@ -208,7 +217,7 @@
         {n:"Calamar nacional plancha", in:"Calamar fresco, ajo, perejil", p:20.40, i:ps},
         {n:"Calamar a la romana", in:"Calamar rebozado", p:17.25, i:ps}
       ]},
-      {c:"Vegano", ic:"🌱", pl:[
+      {c:"Opciones Veganas", ic:"🌱", pl:[
         {n:"Hamburguesa Vegana", in:"Carne 100% vegetal de soja en pan pita con tomate, cebolla caramelizada y rúcula", p:14.00, i:bg},
         {n:"Merluza vegana", in:"Alternativa vegetal sabor mar", p:12.90, i:ps}
       ]},
@@ -226,7 +235,7 @@
         {n:"Espaguetis boloñesa", in:"Pasta, salsa boloñesa con carne", p:12.00, i:pa_r},
         {n:"Carbonara", in:"Pasta, nata, bacon, pimienta", p:12.90, i:pa_b}
       ]},
-      {c:"Tartas", ic:"🍰", pl:[
+      {c:"Tartas Caseras", ic:"🍰", pl:[
         {n:"Queso con arándanos", in:"Tarta de queso y mermelada", p:5.65, i:po_ta},
         {n:"Banoffee", in:"Plátano, toffee, galleta", p:5.65, i:po_ta},
         {n:"Tarta de chocolate", in:"Bizcocho y cacao", p:5.65, i:po_ta},
@@ -268,9 +277,8 @@
       document.getElementById('detNombre').innerText = plato.nombre;
       document.getElementById('detIng').innerText = plato.ingredientes || "Consulta con el camarero.";
       document.getElementById('detPrecio').innerText = plato.precio.toFixed(2) + " €";
-      document.getElementById('detNotas').value = ""; // Limpiar notas anteriores
+      document.getElementById('detNotas').value = ""; 
       
-      // Mostrar extras solo si es categoría Pizzas
       let contenedorExtras = document.getElementById('contenedorExtras');
       let listaExtras = document.getElementById('listaExtras');
       if (menuData[catIdx].categoria === "Pizzas") {
@@ -295,13 +303,10 @@
       let notas = document.getElementById('detNotas').value.trim();
       let nombreCesta = platoAbiertoActual.nombre;
       
-      // Construir el nombre modificado para la cesta (con extras y notas)
       if (extrasSeleccionados.length > 0) nombreCesta += " (" + extrasSeleccionados.join(", ") + ")";
       if (notas !== "") nombreCesta += " [Notas: " + notas + "]";
       
       let precioFinal = platoAbiertoActual.precio + extraPrecioTotal;
-      
-      // Añadir al carrito global
       let f = carrito.find(i => i.nombre === nombreCesta);
       if(f) f.cantidad++; else carrito.push({nombre: nombreCesta, precio: precioFinal, cantidad: 1});
       
@@ -325,11 +330,6 @@
       if(!t)return;
       b.innerHTML+=`<div class="user-msg">${t}</div>`; i.value=''; b.scrollTop=b.scrollHeight;
       
-      if(API_KEY === "AQ.Ab8RN6LW7m-aQjDDAZaaZQPb8eAmLfK6YeN26Om9A1z8W1Fs_A") {
-        setTimeout(()=>{let r="¡Oído! ¿Alguna bebida o postre para acompañar?";if(t.toLowerCase().includes("pizza"))r="Las pizzas son nuestra especialidad, ¡puedes añadirles ingredientes extra desde la carta!";b.innerHTML+=`<div class="bot-msg">${r}</div>`;b.scrollTop=b.scrollHeight},600);
-        return;
-      }
-      
       b.innerHTML+=`<div class="bot-msg" id="typing">Pensando...</div>`; b.scrollTop=b.scrollHeight;
       try {
         let p = "Eres el camarero de la Pizzería Plaza en España. Sé breve, amable y directo. Responde a este cliente: " + t;
@@ -339,15 +339,15 @@
         b.innerHTML+=`<div class="bot-msg">${data.candidates[0].content.parts[0].text.replace(/\n/g,"<br>")}</div>`;
       } catch(e) {
         document.getElementById('typing').remove();
-        b.innerHTML+=`<div class="bot-msg">Hubo un error de conexión con mi cerebro artificial.</div>`;
+        b.innerHTML+=`<div class="bot-msg">Error de conexión. Inténtalo de nuevo.</div>`;
       }
       b.scrollTop=b.scrollHeight;
     }
     
     function lanzarSugerenciaAutomatica(n){let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody');c.style.display='flex';b.innerHTML+=`<div class="bot-msg">¡Gran elección la <b>${n}</b>! 👨‍🍳<br>¿Te gustaría acompañarlo con un postre o entrante de la carta?</div>`;b.scrollTop=b.scrollHeight}
     
-    function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Mesa que llama?':'¿Tu número de mesa?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar al Camarero':'Enviar a Cocina';document.getElementById('modalMesa').style.display='flex'}
-    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Pon tu mesa por favor.");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 Camarero avisado en mesa "+m:"✅ ¡Pedido de mesa "+m+" enviado a cocina!");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red");b.innerText="Confirmar";b.disabled=false})}
+    function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Desde qué mesa nos llamas?':'¿En qué mesa estás?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar al camarero':'Enviar a cocina';document.getElementById('modalMesa').style.display='flex'}
+    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Introduce el número de tu mesa, por favor.");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.":"✅ ¡Tu pedido se ha enviado a la cocina correctamente!");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red. Comprueba tu conexión a internet.");b.innerText="Confirmar";b.disabled=false})}
     
     window.onload=inicializarCategorias;
   </script>
