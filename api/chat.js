@@ -1,9 +1,23 @@
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    const { mensaje } = req.body;
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    const mensaje = body?.mensaje;
+
+    if (!mensaje) {
+      return res.status(400).json({ error: "No se ha recibido ningún mensaje." });
+    }
+
     const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: "Falta configurar la GEMINI_API_KEY en Vercel." });
+    }
 
     const prompt = "Eres el camarero de la Pizzería Plaza en España. Sé breve, amable y directo. Responde a este cliente: " + mensaje;
 
@@ -14,12 +28,19 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    
-    const respuestaIA = data.candidates[0].content.parts[0].text;
+
+    if (data.error) {
+      return res.status(500).json({ error: "Google: " + (data.error.message || JSON.stringify(data.error)) });
+    }
+
+    const respuestaIA = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!respuestaIA) {
+      return res.status(500).json({ error: "La IA no devolvió texto. Respuesta: " + JSON.stringify(data) });
+    }
+
     return res.status(200).json({ respuesta: respuestaIA });
-    
+
   } catch (error) {
-    return res.status(500).json({ error: "Error en el servidor o clave inválida." });
+    return res.status(500).json({ error: "Error en el servidor: " + error.message });
   }
 }
