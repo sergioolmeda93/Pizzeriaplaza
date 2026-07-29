@@ -132,7 +132,7 @@
         🛒 Mi Pedido: <span id="carrito-contador">0</span>
     </div>
 
-    <!-- Ventana Modal de Detalles del Plato -->
+    <!-- Ventana Modal de Detalles del Plato (TU ORIGINAL) -->
     <div class="modal" id="modal-detalle">
         <div class="modal-content">
             <h2 id="modal-titulo">Plato</h2>
@@ -176,7 +176,7 @@
             {
                 categoria: "Postres",
                 platos: [
-                    // El postre con el GIF animado
+                    // AQUI ESTÁ LA MEJORA: Tu postre con el GIF animado 
                     { id: "tarta_chocolate", nombre: "Tarta de Chocolate Fundido", descripcion: "Bizcocho caliente que se derrite por dentro. ¡Una explosión de sabor!", precio: 6.50, img: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc29lOG5zYTIyOTFmbnQwbWZmbjJ1cG92dGdjaGF0MWxyNHp3ZmFldSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xAFtjouK83isjm/giphy.webp" },
                     { id: "tiramisu", nombre: "Tiramisú Clásico", descripcion: "Receta italiana original con queso mascarpone, cacao y café espresso.", precio: 5.50, img: "https://placehold.co/600x400/222/fff?text=Tiramisu" },
                     { id: "helado", nombre: "Copa de Helado Artesano", descripcion: "Dos bolas a elegir: Vainilla de Madagascar, Fresa o Chocolate belga.", precio: 4.00, img: "https://placehold.co/600x400/222/fff?text=Helado" }
@@ -209,7 +209,7 @@
                 grid.className = 'platos-grid';
                 
                 seccion.platos.forEach((plato, pIdx) => {
-                    // Magia: Leemos si la cocina lo ha apagado
+                    // MEJORA: Lee el estado marcado por la cocina en tiempo real
                     const estado = localStorage.getItem('estado_' + plato.id);
                     let claseAgotado = (estado === 'agotado') ? 'agotado' : '';
                     
@@ -257,7 +257,7 @@
 
         window.addEventListener('storage', function(e) {
             if(e.key && e.key.startsWith('estado_')) {
-                renderizarCarta(); // Si cocina apaga un plato, la carta se repinta sola
+                renderizarCarta(); 
             }
         });
 
