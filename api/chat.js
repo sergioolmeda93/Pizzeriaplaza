@@ -15,8 +15,8 @@ export default async function handler(req, res) {
 
     const prompt = "Eres el camarero de la Pizzería Plaza en España. Sé breve, amable y directo. Responde a este cliente: " + (mensaje || "Hola");
     
-    // Aquí está el cambio clave: usamos gemini-1.5-flash-latest
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
+    // Aquí está el cambio definitivo: usamos el modelo estándar gemini-pro
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
