@@ -47,6 +47,7 @@
             margin-top: 40px;
             font-size: 2rem;
             color: var(--accent-color);
+            text-transform: uppercase;
         }
 
         .platos-grid {
@@ -87,7 +88,6 @@
             background-color: var(--accent-color); color: #000; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;
         }
 
-        /* DISEÑO DE PLATO AGOTADO */
         .plato-card.agotado { 
             opacity: 0.5; 
             filter: grayscale(100%); 
@@ -114,8 +114,8 @@
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); padding: 30px; border-radius: 12px; max-width: 400px; text-align: center; border: 2px solid var(--accent-color); }
-        .modal-content h2 { margin-top: 0; }
-        .modal-content button { margin-top: 20px; background: var(--accent-color); color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 6px; }
+        .modal-content h2 { margin-top: 0; color: var(--accent-color); }
+        .modal-content button { margin-top: 20px; background: var(--accent-color); color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 6px; font-size: 1.1rem;}
         .modal-cerrar { margin-left: 10px; background: #555 !important; color: white !important; }
     </style>
 </head>
@@ -132,25 +132,34 @@
         🛒 Mi Pedido: <span id="carrito-contador">0</span>
     </div>
 
+    <!-- Ventana Modal de Detalles del Plato -->
     <div class="modal" id="modal-detalle">
         <div class="modal-content">
             <h2 id="modal-titulo">Plato</h2>
             <p id="modal-desc">Descripción</p>
             <h3 id="modal-precio">0.00 €</h3>
             <button onclick="confirmarPedido()">Añadir al Carrito</button>
-            <button class="modal-cerrar" onclick="cerrarModal()">Cancelar</button>
+            <button class="modal-cerrar" onclick="cerrarModal()">Volver</button>
         </div>
     </div>
 
     <script>
-        // CARTA COMPLETA CON IDs PARA CONECTAR CON LA COCINA
         const carta = [
             {
-                categoria: "Entrantes para compartir",
+                categoria: "Entrantes",
                 platos: [
-                    { id: "nachos", nombre: "Nachos Plaza", descripcion: "Totopos crujientes con queso fundido, carne, guacamole y jalapeños.", precio: 9.50, img: "https://placehold.co/600x400/222/fff?text=Nachos" },
-                    { id: "tequenos", nombre: "Tequeños de Queso", descripcion: "Palitos de masa frita rellenos de queso llanero derretido (6 uds).", precio: 7.00, img: "https://placehold.co/600x400/222/fff?text=Tequenos" },
-                    { id: "pan_ajo", nombre: "Pan de Ajo Supremo", descripcion: "Pan artesano tostado con mantequilla de ajo y mozzarella.", precio: 4.50, img: "https://placehold.co/600x400/222/fff?text=Pan+Ajo" }
+                    { id: "nachos", nombre: "Nachos Plaza", descripcion: "Totopos crujientes con queso fundido, carne picada, guacamole casero y jalapeños.", precio: 9.50, img: "https://placehold.co/600x400/222/fff?text=Nachos" },
+                    { id: "tequenos", nombre: "Tequeños de Queso", descripcion: "Palitos de masa frita rellenos de queso llanero derretido (6 uds). Acompañados de mermelada.", precio: 7.00, img: "https://placehold.co/600x400/222/fff?text=Tequenos" },
+                    { id: "pan_ajo", nombre: "Pan de Ajo Supremo", descripcion: "Pan artesano tostado con mantequilla de ajo, perejil y extra de mozzarella.", precio: 4.50, img: "https://placehold.co/600x400/222/fff?text=Pan+Ajo" },
+                    { id: "patatas_bacon", nombre: "Patatas Bacon Cheese", descripcion: "Ración generosa de patatas fritas bañadas en salsa cheddar y bacon crujiente.", precio: 6.50, img: "https://placehold.co/600x400/222/fff?text=Patatas+Bacon" }
+                ]
+            },
+            {
+                categoria: "Nuestros Woks",
+                platos: [
+                    { id: "wok_pulpo", nombre: "Wok de Pulpo", descripcion: "Fideos salteados al wok con verduras frescas, salsa de soja y trozos de pulpo tierno.", precio: 20.35, img: "https://placehold.co/600x400/222/fff?text=Wok+Pulpo" },
+                    { id: "wok_pollo", nombre: "Wok Pollo Teriyaki", descripcion: "Arroz o fideos con pechuga de pollo marinada en teriyaki, brócoli y sésamo.", precio: 12.50, img: "https://placehold.co/600x400/222/fff?text=Wok+Pollo" },
+                    { id: "wok_vegetal", nombre: "Wok 100% Vegetal", descripcion: "Salteado de verduras de temporada con tofu ahumado y salsa agridulce.", precio: 10.50, img: "https://placehold.co/600x400/222/fff?text=Wok+Vegetal" }
                 ]
             },
             {
@@ -159,15 +168,26 @@
                     { id: "pizza_barbacoa", nombre: "Pizza Barbacoa", descripcion: "Salsa BBQ, carne picada, pollo asado, bacon crujiente y extra de queso.", precio: 12.50, img: "https://placehold.co/600x400/222/fff?text=Barbacoa" },
                     { id: "pizza_carbonara", nombre: "Pizza Carbonara", descripcion: "Nata, bacon, champiñones, cebolla roja y queso parmesano.", precio: 11.50, img: "https://placehold.co/600x400/222/fff?text=Carbonara" },
                     { id: "pizza_margarita", nombre: "Pizza Margarita", descripcion: "Salsa de tomate casera, mozzarella fior di latte y albahaca fresca.", precio: 9.00, img: "https://placehold.co/600x400/222/fff?text=Margarita" },
-                    { id: "pizza_4quesos", nombre: "Pizza 4 Quesos", descripcion: "Mozzarella, gorgonzola, emmental y parmesano.", precio: 12.00, img: "https://placehold.co/600x400/222/fff?text=4+Quesos" }
+                    { id: "pizza_4quesos", nombre: "Pizza 4 Quesos", descripcion: "Mozzarella, gorgonzola, emmental y escamas de parmesano curado.", precio: 12.00, img: "https://placehold.co/600x400/222/fff?text=4+Quesos" },
+                    { id: "pizza_pepperoni", nombre: "Pizza Pepperoni", descripcion: "Clásica americana con doble ración de pepperoni ligeramente picante.", precio: 10.50, img: "https://placehold.co/600x400/222/fff?text=Pepperoni" },
+                    { id: "pizza_trufada", nombre: "Pizza Trufada", descripcion: "Base blanca con crema de trufa, setas silvestres, mozzarella y huevo.", precio: 14.00, img: "https://placehold.co/600x400/222/fff?text=Trufada" }
                 ]
             },
             {
                 categoria: "Postres",
                 platos: [
-                    // AQUÍ ESTÁ EL POSTRE CON EL GIF ANIMADO
+                    // El postre con el GIF animado
                     { id: "tarta_chocolate", nombre: "Tarta de Chocolate Fundido", descripcion: "Bizcocho caliente que se derrite por dentro. ¡Una explosión de sabor!", precio: 6.50, img: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc29lOG5zYTIyOTFmbnQwbWZmbjJ1cG92dGdjaGF0MWxyNHp3ZmFldSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xAFtjouK83isjm/giphy.webp" },
-                    { id: "tiramisu", nombre: "Tiramisú Clásico", descripcion: "Receta italiana original con mascarpone y café espresso.", precio: 5.50, img: "https://placehold.co/600x400/222/fff?text=Tiramisu" }
+                    { id: "tiramisu", nombre: "Tiramisú Clásico", descripcion: "Receta italiana original con queso mascarpone, cacao y café espresso.", precio: 5.50, img: "https://placehold.co/600x400/222/fff?text=Tiramisu" },
+                    { id: "helado", nombre: "Copa de Helado Artesano", descripcion: "Dos bolas a elegir: Vainilla de Madagascar, Fresa o Chocolate belga.", precio: 4.00, img: "https://placehold.co/600x400/222/fff?text=Helado" }
+                ]
+            },
+            {
+                categoria: "Bebidas",
+                platos: [
+                    { id: "refresco", nombre: "Refrescos", descripcion: "Coca-Cola, Fanta, Sprite o Nestea (33cl).", precio: 2.50, img: "https://placehold.co/600x400/222/fff?text=Refresco" },
+                    { id: "cerveza", nombre: "Cerveza de Barril", descripcion: "Caña o doble bien fría.", precio: 2.50, img: "https://placehold.co/600x400/222/fff?text=Cerveza" },
+                    { id: "agua", nombre: "Agua Mineral", descripcion: "Botella de 50cl, con o sin gas.", precio: 1.50, img: "https://placehold.co/600x400/222/fff?text=Agua" }
                 ]
             }
         ];
@@ -189,7 +209,7 @@
                 grid.className = 'platos-grid';
                 
                 seccion.platos.forEach((plato, pIdx) => {
-                    // CONEXIÓN CON LA COCINA: Miramos la memoria del navegador para ver si cocina lo apagó
+                    // Magia: Leemos si la cocina lo ha apagado
                     const estado = localStorage.getItem('estado_' + plato.id);
                     let claseAgotado = (estado === 'agotado') ? 'agotado' : '';
                     
@@ -232,12 +252,13 @@
         }
 
         function verCarrito() {
-            alert("Tienes " + carrito.length + " platos en tu pedido. (Aquí iría la pasarela de pago)");
+            alert("Tienes " + carrito.length + " productos en tu pedido listos para enviar a cocina.");
         }
 
-        // Refrescar automáticamente si la cocina hace cambios en otra pestaña
         window.addEventListener('storage', function(e) {
-            if(e.key.startsWith('estado_')) renderizarCarta();
+            if(e.key && e.key.startsWith('estado_')) {
+                renderizarCarta(); // Si cocina apaga un plato, la carta se repinta sola
+            }
         });
 
         window.onload = function() {
