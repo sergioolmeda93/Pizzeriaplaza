@@ -18,13 +18,13 @@
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            padding-bottom: 80px; /* Espacio para el carrito flotante */
+            padding-bottom: 80px; 
         }
 
         .header {
             text-align: center;
             padding: 40px 20px;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://placehold.co/1200x400/1a1a1a/f39c12?text=Pizzería+Plaza') center/cover;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://placehold.co/1200x400/1a1a1a/f39c12?text=Pizzer%C3%ADa+Plaza') center/cover;
             border-bottom: 4px solid var(--accent-color);
         }
 
@@ -72,105 +72,46 @@
             box-shadow: 0 6px 20px rgba(243, 156, 18, 0.2);
         }
 
-        .img-container {
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
+        .img-container { width: 100%; height: 200px; overflow: hidden; }
+        .plato-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .plato-card:hover .plato-img { transform: scale(1.05); }
 
-        .plato-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .plato-card:hover .plato-img {
-            transform: scale(1.05);
-        }
-
-        .plato-info {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
+        .plato-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
         .plato-info h3 { margin: 0 0 10px 0; font-size: 1.4rem; }
         .plato-info p { color: #aaa; font-size: 0.9rem; flex-grow: 1; margin: 0 0 15px 0; }
 
-        .precio-fila {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-        }
-
-        .precio {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
+        .precio-fila { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .precio { font-size: 1.3rem; font-weight: bold; color: var(--accent-color); }
 
         .btn-info {
-            background-color: var(--accent-color);
-            color: #000;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
+            background-color: var(--accent-color); color: #000; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;
         }
 
-        .btn-info:hover { background-color: #d68910; }
-
-        /* ========================================= */
-        /* EL DISEÑO MÁGICO DEL PLATO AGOTADO        */
-        /* ========================================= */
+        /* DISEÑO DE PLATO AGOTADO */
         .plato-card.agotado { 
-            opacity: 0.5; /* Lo hace transparente */
-            filter: grayscale(100%); /* Lo pone en blanco y negro */
-            pointer-events: none; /* BLOQUEA los clicks, no deja pedirlo */
+            opacity: 0.5; 
+            filter: grayscale(100%); 
+            pointer-events: none; 
             position: relative; 
         }
 
         .plato-card.agotado::after { 
             content: "AGOTADO"; 
             position: absolute; 
-            top: 40%; 
-            left: 50%; 
+            top: 40%; left: 50%; 
             transform: translate(-50%, -50%) rotate(-10deg); 
-            background: rgba(231, 76, 60, 0.95); /* Rojo intenso */
-            color: white; 
-            padding: 10px 20px; 
-            font-weight: bold; 
-            border-radius: 8px; 
-            font-size: 1.5rem; 
-            letter-spacing: 2px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-            z-index: 10; 
+            background: rgba(231, 76, 60, 0.95); 
+            color: white; padding: 10px 20px; font-weight: bold; 
+            border-radius: 8px; font-size: 1.5rem; letter-spacing: 2px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 10; 
         }
 
-        /* ========================================= */
-        /* ELEMENTOS EXTRAS (CARRITO Y DETALLE)      */
-        /* ========================================= */
         #carrito-flotante {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--accent-color);
-            color: black;
-            padding: 15px 25px;
-            border-radius: 30px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            cursor: pointer;
-            display: none;
-            z-index: 100;
+            position: fixed; bottom: 20px; right: 20px; background-color: var(--accent-color); color: black;
+            padding: 15px 25px; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            cursor: pointer; display: none; z-index: 100;
         }
 
-        /* Modal simple para simular cuando el cliente pide algo */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: var(--card-bg); padding: 30px; border-radius: 12px; max-width: 400px; text-align: center; border: 2px solid var(--accent-color); }
         .modal-content h2 { margin-top: 0; }
@@ -185,20 +126,16 @@
         <p>Los mejores ingredientes, directos a tu mesa</p>
     </div>
 
-    <div class="container" id="contenedor-carta">
-        <!-- El menú se inyectará aquí desde Javascript -->
-    </div>
+    <div class="container" id="contenedor-carta"></div>
 
-    <!-- Botón flotante del carrito -->
     <div id="carrito-flotante" onclick="verCarrito()">
-        🛒 Mi Pedido: <span id="carrito-contador">0</span> platos
+        🛒 Mi Pedido: <span id="carrito-contador">0</span>
     </div>
 
-    <!-- Ventana emergente (Modal) al pedir un plato -->
     <div class="modal" id="modal-detalle">
         <div class="modal-content">
-            <h2 id="modal-titulo">Nombre Plato</h2>
-            <p id="modal-desc">Descripción detallada</p>
+            <h2 id="modal-titulo">Plato</h2>
+            <p id="modal-desc">Descripción</p>
             <h3 id="modal-precio">0.00 €</h3>
             <button onclick="confirmarPedido()">Añadir al Carrito</button>
             <button class="modal-cerrar" onclick="cerrarModal()">Cancelar</button>
@@ -206,99 +143,59 @@
     </div>
 
     <script>
-        // LA BASE DE DATOS DE TU CARTA COMPLETA
+        // CARTA COMPLETA CON IDs PARA CONECTAR CON LA COCINA
         const carta = [
             {
-                categoria: "Pizzas Artesanales",
+                categoria: "Entrantes para compartir",
                 platos: [
-                    { 
-                        nombre: "Pizza Barbacoa", 
-                        descripcion: "Salsa BBQ, carne picada de ternera, bacon crujiente y extra de queso.", 
-                        precio: 12.50, 
-                        img: "https://placehold.co/600x400/222/fff?text=Pizza+Barbacoa",
-                        agotado: false 
-                    },
-                    { 
-                        nombre: "Pizza Carbonara", 
-                        descripcion: "Nata, bacon, champiñones, cebolla roja y queso parmesano.", 
-                        precio: 11.00, 
-                        img: "https://placehold.co/600x400/222/fff?text=Pizza+Carbonara",
-                        agotado: false 
-                    }
+                    { id: "nachos", nombre: "Nachos Plaza", descripcion: "Totopos crujientes con queso fundido, carne, guacamole y jalapeños.", precio: 9.50, img: "https://placehold.co/600x400/222/fff?text=Nachos" },
+                    { id: "tequenos", nombre: "Tequeños de Queso", descripcion: "Palitos de masa frita rellenos de queso llanero derretido (6 uds).", precio: 7.00, img: "https://placehold.co/600x400/222/fff?text=Tequenos" },
+                    { id: "pan_ajo", nombre: "Pan de Ajo Supremo", descripcion: "Pan artesano tostado con mantequilla de ajo y mozzarella.", precio: 4.50, img: "https://placehold.co/600x400/222/fff?text=Pan+Ajo" }
                 ]
             },
             {
-                categoria: "Woks y Entrantes",
+                categoria: "Pizzas Artesanales",
                 platos: [
-                    { 
-                        nombre: "Wok de Pulpo", 
-                        descripcion: "Fideos udon, pulpo fresco, verduras salteadas con soja y sésamo.", 
-                        precio: 14.50, 
-                        img: "https://placehold.co/600x400/222/fff?text=Wok+de+Pulpo",
-                        agotado: false 
-                    },
-                    { 
-                        nombre: "Nachos de la Casa", 
-                        descripcion: "Totopos crujientes con queso fundido, guacamole, pico de gallo y jalapeños.", 
-                        precio: 10.00, 
-                        img: "https://placehold.co/600x400/222/fff?text=Nachos",
-                        agotado: false 
-                    }
+                    { id: "pizza_barbacoa", nombre: "Pizza Barbacoa", descripcion: "Salsa BBQ, carne picada, pollo asado, bacon crujiente y extra de queso.", precio: 12.50, img: "https://placehold.co/600x400/222/fff?text=Barbacoa" },
+                    { id: "pizza_carbonara", nombre: "Pizza Carbonara", descripcion: "Nata, bacon, champiñones, cebolla roja y queso parmesano.", precio: 11.50, img: "https://placehold.co/600x400/222/fff?text=Carbonara" },
+                    { id: "pizza_margarita", nombre: "Pizza Margarita", descripcion: "Salsa de tomate casera, mozzarella fior di latte y albahaca fresca.", precio: 9.00, img: "https://placehold.co/600x400/222/fff?text=Margarita" },
+                    { id: "pizza_4quesos", nombre: "Pizza 4 Quesos", descripcion: "Mozzarella, gorgonzola, emmental y parmesano.", precio: 12.00, img: "https://placehold.co/600x400/222/fff?text=4+Quesos" }
                 ]
             },
             {
                 categoria: "Postres",
                 platos: [
-                    { 
-                        nombre: "Tarta de Chocolate Fundido", 
-                        descripcion: "Bizcocho caliente que se derrite por dentro. ¡Una explosión de sabor!", 
-                        precio: 6.50, 
-                        // AQUÍ ESTÁ EL GIF ANIMADO DE LA TARTA DERRITIÉNDOSE
-                        img: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc29lOG5zYTIyOTFmbnQwbWZmbjJ1cG92dGdjaGF0MWxyNHp3ZmFldSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xAFtjouK83isjm/giphy.webp",
-                        // MARCAMOS AGOTADO PARA QUE VEAS EL EFECTO:
-                        agotado: true 
-                    },
-                    { 
-                        nombre: "Tiramisú Clásico", 
-                        descripcion: "Receta italiana original con mascarpone, café espresso y cacao puro.", 
-                        precio: 5.50, 
-                        img: "https://placehold.co/600x400/222/fff?text=Tiramisu",
-                        agotado: false 
-                    }
+                    // AQUÍ ESTÁ EL POSTRE CON EL GIF ANIMADO
+                    { id: "tarta_chocolate", nombre: "Tarta de Chocolate Fundido", descripcion: "Bizcocho caliente que se derrite por dentro. ¡Una explosión de sabor!", precio: 6.50, img: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc29lOG5zYTIyOTFmbnQwbWZmbjJ1cG92dGdjaGF0MWxyNHp3ZmFldSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xAFtjouK83isjm/giphy.webp" },
+                    { id: "tiramisu", nombre: "Tiramisú Clásico", descripcion: "Receta italiana original con mascarpone y café espresso.", precio: 5.50, img: "https://placehold.co/600x400/222/fff?text=Tiramisu" }
                 ]
             }
         ];
 
-        let carrito = 0;
+        let carrito = [];
         let platoSeleccionado = null;
 
-        // Función para pintar la carta en la web
         function renderizarCarta() {
             const contenedor = document.getElementById('contenedor-carta');
             contenedor.innerHTML = ''; 
 
             carta.forEach((seccion, catIdx) => {
-                // Título (Pizzas, Postres...)
                 let titulo = document.createElement('h2');
                 titulo.className = 'categoria-titulo';
                 titulo.innerText = seccion.categoria;
                 contenedor.appendChild(titulo);
 
-                // Grid de platos
                 let grid = document.createElement('div');
                 grid.className = 'platos-grid';
                 
                 seccion.platos.forEach((plato, pIdx) => {
-                    // Magia: Si está agotado, le añadimos la clase 'agotado'
-                    let claseAgotado = plato.agotado ? 'agotado' : '';
+                    // CONEXIÓN CON LA COCINA: Miramos la memoria del navegador para ver si cocina lo apagó
+                    const estado = localStorage.getItem('estado_' + plato.id);
+                    let claseAgotado = (estado === 'agotado') ? 'agotado' : '';
                     
-                    // Al hacer click, abre el detalle del plato. 
-                    // (Si tiene la clase 'agotado', el CSS bloquea el click y no hace nada)
                     grid.innerHTML += `
                         <div class="plato-card ${claseAgotado}" onclick="abrirDetalle(${catIdx}, ${pIdx})">
-                            <div class="img-container">
-                                <img src="${plato.img}" class="plato-img" alt="${plato.nombre}">
-                            </div>
+                            <div class="img-container"><img src="${plato.img}" class="plato-img" alt="${plato.nombre}"></div>
                             <div class="plato-info">
                                 <h3>${plato.nombre}</h3>
                                 <p>${plato.descripcion}</p>
@@ -315,7 +212,6 @@
             });
         }
 
-        // Función al pulsar un plato disponible
         function abrirDetalle(catIdx, pIdx) {
             platoSeleccionado = carta[catIdx].platos[pIdx];
             document.getElementById('modal-titulo').innerText = platoSeleccionado.nombre;
@@ -324,28 +220,26 @@
             document.getElementById('modal-detalle').style.display = 'flex';
         }
 
-        // Función para cerrar la ventanita
         function cerrarModal() {
             document.getElementById('modal-detalle').style.display = 'none';
-            platoSeleccionado = null;
         }
 
-        // Función para confirmar y añadir al carrito flotante
         function confirmarPedido() {
-            carrito++;
-            document.getElementById('carrito-contador').innerText = carrito;
+            carrito.push(platoSeleccionado);
+            document.getElementById('carrito-contador').innerText = carrito.length;
             document.getElementById('carrito-flotante').style.display = 'block';
             cerrarModal();
-            // Aquí puedes añadir librerías como SweetAlert2 para hacer mensajes más bonitos
-            console.log("Añadido al carrito: " + platoSeleccionado.nombre);
         }
 
-        // Función para el botón del carrito
         function verCarrito() {
-            alert("Tienes " + carrito + " platos en tu pedido. ¡Aquí iría la pasarela de pago o confirmación a cocina!");
+            alert("Tienes " + carrito.length + " platos en tu pedido. (Aquí iría la pasarela de pago)");
         }
 
-        // Arrancar la carta al cargar la página
+        // Refrescar automáticamente si la cocina hace cambios en otra pestaña
+        window.addEventListener('storage', function(e) {
+            if(e.key.startsWith('estado_')) renderizarCarta();
+        });
+
         window.onload = function() {
             renderizarCarta();
         };
