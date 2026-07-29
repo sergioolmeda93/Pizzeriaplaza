@@ -1,358 +1,265 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Restaurante Pizzería Plaza</title>
-  <style>
-    :root{--primary:#2c3e50;--accent:#e74c3c;--bg:#f4f7f6;--card-bg:#ffffff;--gold:#f39c12}
-    body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.85)),url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1000&q=80') center/cover fixed;margin:0;padding:15px;padding-bottom:140px;color:white}
-    h1{text-align:center;color:white;font-size:2.2rem;margin-bottom:5px;text-shadow:2px 2px 5px rgba(0,0,0,0.8)}
-    .subtitle{text-align:center;color:#eee;font-size:1rem;margin-bottom:15px;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
-    
-    #seccion-categorias{display:block}
-    #seccion-categorias h2{color:white;font-size:1.4rem;text-align:center;margin-top:0;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
-    .categorias-inicio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:15px;margin-top:20px}
-    .cat-inicio-card{background:rgba(255,255,255,0.95);border-radius:15px;padding:20px;text-align:center;cursor:pointer;border-bottom:4px solid var(--accent);transition:transform 0.2s;color:#333}
-    .cat-inicio-card:active{transform:scale(0.95)}
-    .cat-inicio-card h3{color:var(--primary);margin:10px 0 0 0;font-size:1.1rem}
-    .cat-icono{font-size:2.2rem}
-    
-    #seccion-platos{display:none}
-    .btn-volver{background:var(--accent);color:white;border:none;padding:8px 16px;border-radius:20px;font-weight:bold;cursor:pointer;margin-bottom:20px;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
-    .categoria-titulo{color:var(--gold);border-bottom:2px solid var(--gold);padding-bottom:5px;margin-top:10px;font-size:1.5rem;text-transform:uppercase;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
-    
-    .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:15px}
-    .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.3);display:flex;flex-direction:column;cursor:pointer;color:#333}
-    .img-container{width:100%;height:120px;overflow:hidden}
-    .plato-img{width:100%;height:100%;object-fit:cover;animation:movimientoVivo 10s infinite alternate ease-in-out}
-    @keyframes movimientoVivo { 0%{transform:scale(1)} 100%{transform:scale(1.15) translate(-2%,-2%)} }
-    .plato-info{padding:10px;display:flex;flex-direction:column;flex-grow:1}
-    .plato-info h3{margin:0 0 5px 0;font-size:0.95rem;color:var(--primary);line-height:1.2}
-    .precio-fila{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px}
-    .precio{font-weight:bold;color:var(--primary);font-size:1.05rem}
-    .btn-info{background:var(--accent);color:white;border:none;padding:5px 12px;border-radius:20px;font-weight:bold;font-size:0.85rem}
-    
-    .barra-flotante-inferior{position:fixed;bottom:15px;left:15px;right:15px;display:flex;gap:10px;z-index:100}
-    .carrito-bar{flex-grow:1;background:var(--primary);color:white;border-radius:30px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 15px rgba(0,0,0,0.5);cursor:pointer}
-    .btn-llamar-camarero{background:var(--gold);color:white;border:none;border-radius:30px;padding:0 16px;font-weight:bold;font-size:0.9rem;box-shadow:0 4px 15px rgba(0,0,0,0.5);cursor:pointer}
-    .btn-pedir{background:var(--accent);color:white;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;cursor:pointer;width:100%}
-    
-    .modal-cesta,.modal-mesa,.modal-detalle{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:150}
-    .modal-cesta{justify-content:flex-end;align-items:flex-end}
-    .modal-detalle,.modal-mesa{justify-content:center;align-items:center;z-index:200}
-    
-    .detalle-content{background:white;color:#333;padding:20px;border-radius:15px;width:85%;max-width:350px;max-height:85vh;overflow-y:auto;position:relative;text-align:left}
-    .detalle-img{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:15px}
-    .detalle-tag{font-size:0.85rem;margin-top:8px;padding:10px;border-radius:8px;background:#f9f9f9;line-height:1.4}
-    
-    .cesta-content{background:white;color:#333;width:100%;max-height:80vh;border-radius:20px 20px 0 0;padding:20px;display:flex;flex-direction:column;box-sizing:border-box}
-    .cesta-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px}
-    .cesta-lista{overflow-y:auto;max-height:45vh;margin-bottom:15px;display:flex;flex-direction:column;gap:10px}
-    .cesta-item{display:flex;justify-content:space-between;align-items:center;background:#f9f9f9;padding:10px 15px;border-radius:10px}
-    .controles-item{display:flex;align-items:center;gap:10px}
-    .btn-control{background:#ddd;border:none;width:28px;height:28px;border-radius:50%;font-weight:bold;cursor:pointer;color:#333}
-    
-    .modal-content{background:white;color:#333;padding:25px;border-radius:15px;width:85%;max-width:350px;text-align:center}
-    .modal-content input{width:80%;padding:10px;font-size:1.2rem;margin:15px 0;border:1px solid #ccc;border-radius:8px;text-align:center}
-    
-    .ia-btn{position:fixed;bottom:85px;right:15px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:50px;padding:12px 20px;font-weight:bold;z-index:99;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.5)}
-    .chat-window{display:none;position:fixed;bottom:85px;right:15px;width:320px;height:400px;background:white;color:#333;border-radius:15px;z-index:101;flex-direction:column;border:2px solid #2193b0}
-    .chat-header{background:#2193b0;color:white;padding:15px;font-weight:bold;display:flex;justify-content:space-between}
-    .chat-body{padding:15px;flex-grow:1;overflow-y:auto;background:#f9f9f9;font-size:0.9rem;display:flex;flex-direction:column;gap:10px}
-    .bot-msg{background:#e0e0e0;padding:10px;border-radius:10px 10px 10px 0;max-width:85%}
-    .user-msg{background:#2193b0;color:white;padding:10px;border-radius:10px 10px 0 10px;max-width:85%;align-self:flex-end}
-    .chat-input-area{display:flex;padding:10px;background:white;border-top:1px solid #ddd}
-    .chat-input-area input{flex-grow:1;padding:8px;border:1px solid #ccc;border-radius:20px;outline:none;color:#333}
-    .chat-input-area button{background:#2193b0;color:white;border:none;padding:8px 15px;margin-left:5px;border-radius:20px;cursor:pointer}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta - Pizzería Plaza</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --accent-color: #f39c12;
+            --card-bg: #2a2a2a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://placehold.co/1200x400/1a1a1a/f39c12?text=Pizzería+Plaza') center/cover;
+            border-bottom: 4px solid var(--accent-color);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 3rem;
+            color: var(--accent-color);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .categoria-titulo {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .platos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .plato-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plato-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .img-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .plato-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .plato-card:hover .plato-img {
+            transform: scale(1.05);
+        }
+
+        .plato-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .plato-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+        }
+
+        .plato-info p {
+            color: #ccc;
+            font-size: 0.9rem;
+            flex-grow: 1;
+            margin: 0 0 15px 0;
+        }
+
+        .precio-fila {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .precio {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .btn-info {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-info:hover {
+            background-color: #d68910;
+        }
+
+        /* MAGIA: Estos son los estilos que ponen el plato gris y el sello rojo */
+        .plato-card.agotado { 
+            opacity: 0.6; 
+            filter: grayscale(100%); 
+            pointer-events: none; /* Bloquea los clicks del cliente */
+            position: relative; 
+        }
+
+        .plato-card.agotado::after { 
+            content: "AGOTADO"; 
+            position: absolute; 
+            top: 40%; 
+            left: 50%; 
+            transform: translate(-50%, -50%) rotate(-10deg); 
+            background: rgba(231, 76, 60, 0.95); /* Rojo intenso */
+            color: white; 
+            padding: 10px 20px; 
+            font-weight: bold; 
+            border-radius: 8px; 
+            font-size: 1.5rem; 
+            letter-spacing: 2px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            z-index: 10; 
+        }
+    </style>
 </head>
 <body>
-  <h1>Pizzería Plaza</h1>
-  <div class="subtitle">Carta Digital Interactiva</div>
-  
-  <div id="seccion-categorias">
-    <h2>¿Qué te apetece hoy?</h2>
-    <div class="categorias-inicio-grid" id="gridCategoriasInicio"></div>
-  </div>
 
-  <div id="seccion-platos">
-    <button class="btn-volver" onclick="mostrarCategorias()">← Volver a Categorías</button>
-    <div id="contenedor-carta"></div>
-  </div>
-
-  <button class="ia-btn" onclick="toggleChat()">✨ Camarero IA</button>
-  <div class="chat-window" id="chatWindow">
-    <div class="chat-header"><span>Camarero IA 👨‍🍳</span><span onclick="toggleChat()" style="cursor:pointer">✖</span></div>
-    <div class="chat-body" id="chatBody"><div class="bot-msg">¡Hola! Soy tu asistente inteligente. Pregúntame lo que necesites 😊</div></div>
-    <div class="chat-input-area"><input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') enviarMensajeUsuario()"><button onclick="enviarMensajeUsuario()">Enviar</button></div>
-  </div>
-
-  <div class="barra-flotante-inferior">
-    <button class="btn-llamar-camarero" onclick="abrirModalMesa('llamada')">🔔 Camarero</button>
-    <div class="carrito-bar" id="carritoBar" style="display:none;" onclick="abrirCesta()">
-      <div>🛒 <span id="cantPlatos">0</span> platos | <strong id="totalPrecio">0.00 €</strong></div>
-      <span style="font-size:0.85rem;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:12px;">Ver Cesta ↗</span>
+    <div class="header">
+        <h1>🍕 Pizzería Plaza</h1>
+        <p>Descubre nuestra carta artesanal</p>
     </div>
-  </div>
 
-  <!-- Modal Detalle Plato con Extras y Notas -->
-  <div class="modal-detalle" id="modalDetalle">
-    <div class="detalle-content">
-      <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;color:#333;">✖</span>
-      <img id="detImg" class="detalle-img" src="">
-      <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
-      
-      <div class="detalle-tag" style="border-left:3px solid var(--primary);"><strong>🍅 Ingredientes:</strong><br><span id="detIng" style="color:#555;"></span></div>
-      
-      <div id="contenedorExtras" style="display:none; margin-top:15px;">
-        <strong style="color:var(--primary);">Extras disponibles:</strong>
-        <div id="listaExtras" style="display:flex;flex-direction:column;gap:5px;margin-top:8px;font-size:0.9rem;"></div>
-      </div>
-
-      <div style="margin-top:15px;">
-        <strong style="color:var(--primary);">Notas para la cocina:</strong>
-        <textarea id="detNotas" placeholder="Ej: Sin cebolla, carne muy hecha..." style="width:100%; box-sizing:border-box; padding:10px; margin-top:5px; border-radius:8px; border:1px solid #ccc; font-family:inherit; color:#333;"></textarea>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
-        <span id="detPrecio" style="font-size:1.4rem;font-weight:bold;color:var(--primary);"></span>
-        <button class="btn-pedir" style="width:auto;padding:10px 25px;" onclick="añadirAlCarritoDesdeModal()">+ Añadir</button>
-      </div>
+    <div class="container" id="contenedor-carta">
+        <!-- El menú se inyectará aquí desde Javascript -->
     </div>
-  </div>
 
-  <div class="modal-cesta" id="modalCesta" onclick="if(event.target===this) cerrarCesta()">
-    <div class="cesta-content">
-      <div class="cesta-header"><h3 style="margin:0;">Tu Pedido</h3><span onclick="cerrarCesta()" style="cursor:pointer;font-size:1.3rem;">✖</span></div>
-      <div class="cesta-lista" id="cestaLista"></div>
-      <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1.2rem;margin-bottom:15px;border-top:2px solid #eee;padding-top:10px"><span>Total:</span><span id="cestaTotalPrecio">0.00 €</span></div>
-      <button class="btn-pedir" onclick="abrirModalMesa('pedido')">Proceder a Pedir</button>
-    </div>
-  </div>
+    <script>
+        // BASE DE DATOS DE TU CARTA
+        const carta = [
+            {
+                categoria: "Woks y Entrantes",
+                platos: [
+                    { 
+                        nombre: "Wok de Pulpo", 
+                        descripcion: "Fideos udon, pulpo fresco, verduras salteadas con soja y sésamo.", 
+                        precio: 14.50, 
+                        img: "https://placehold.co/600x400/333/fff?text=Wok+de+Pulpo",
+                        agotado: false // Plato normal
+                    },
+                    { 
+                        nombre: "Nachos de la Casa", 
+                        descripcion: "Totopos crujientes con queso fundido, guacamole, pico de gallo y jalapeños.", 
+                        precio: 10.00, 
+                        img: "https://placehold.co/600x400/333/fff?text=Nachos",
+                        agotado: false 
+                    }
+                ]
+            },
+            {
+                categoria: "Postres",
+                platos: [
+                    { 
+                        nombre: "Tarta de Chocolate Fundido", 
+                        descripcion: "Bizcocho caliente que se derrite por dentro. ¡Una explosión de sabor!", 
+                        precio: 6.50, 
+                        // AQUÍ ESTÁ EL GIF DE LA TARTA DERRITIÉNDOSE (funciona igual que una foto)
+                        img: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc29lOG5zYTIyOTFmbnQwbWZmbjJ1cG92dGdjaGF0MWxyNHp3ZmFldSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xAFtjouK83isjm/giphy.webp",
+                        // MODO AGOTADO ACTIVADO PARA ESTE PLATO:
+                        agotado: true 
+                    },
+                    { 
+                        nombre: "Tiramisú Clásico", 
+                        descripcion: "Receta italiana original con mascarpone, café espresso y cacao puro.", 
+                        precio: 5.50, 
+                        img: "https://placehold.co/600x400/333/fff?text=Tiramisu",
+                        agotado: false 
+                    }
+                ]
+            }
+        ];
 
-  <div class="modal-mesa" id="modalMesa">
-    <div class="modal-content">
-      <h3 id="tituloModalMesa">¿Mesa?</h3>
-      <input type="number" id="numMesa" placeholder="Ej: 4" min="1" style="color:#333;"><br>
-      <button class="btn-pedir" id="btnAccionMesa" style="margin-bottom:10px;" onclick="ejecutarAccionMesa()">Confirmar</button>
-      <button onclick="document.getElementById('modalMesa').style.display='none'" style="background:none;border:none;color:#666;cursor:pointer;width:100%;font-weight:bold;">Cancelar</button>
-    </div>
-  </div>
+        // Función para pintar la carta en la web
+        function renderizarCarta() {
+            const contenedor = document.getElementById('contenedor-carta');
+            contenedor.innerHTML = ''; // Limpiamos antes de pintar
 
-  <script>
-    const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
-    
-    let carrito = []; let tipoAccionMesa = 'pedido'; let platoAbiertoActual = null;
-    
-    const im = id => `https://images.unsplash.com/photo-${id}?w=400&q=80`;
-    const pz=im('1513104890138-7c749659a591'), pep=im('1628840042765-356cda07504e'), mar=im('1565299624946-b28f40a0ae38'), vg=im('1511689660979-1b451b22d661');
-    const cr=im('1544025162-8315db866752'), po=im('1604908176997-125f25cc6f3d'), bg=im('1568901346375-23c9450c58cd');
-    const ps=im('1519708227418-c8fd9a32b7a2'), pa_r=im('1622973536968-3ead9e780960'), pa_b=im('1612874742237-6526221588e3');
-    const en=im('1599507684074-13e2bb9e7631'), ens=im('1512621776951-a57141f2eefd'), wk=im('1552611052-33e04de081de');
-    const po_ic=im('1553787762-b5f528e0e989'), po_ta=im('1578985545062-69928b1d9587'), cf=im('1511920170033-f8396924c348');
+            carta.forEach((seccion) => {
+                // Título de la categoría
+                let titulo = document.createElement('h2');
+                titulo.className = 'categoria-titulo';
+                titulo.innerText = seccion.categoria;
+                contenedor.appendChild(titulo);
 
-    const extrasPizzas = [
-      { n: "Ingrediente extra", p: 2.85 },
-      { n: "Suplemento gambas", p: 4.25 },
-      { n: "Hacer Calzone", p: 2.00 },
-      { n: "Tamaño XL (Mitad y mitad)", p: 3.55 }
-    ];
+                // Cuadrícula de platos
+                let grid = document.createElement('div');
+                grid.className = 'platos-grid';
+                
+                seccion.platos.forEach((plato) => {
+                    // Verificamos si el plato está agotado para añadirle la clase CSS
+                    let claseAgotado = plato.agotado ? 'agotado' : '';
+                    
+                    grid.innerHTML += `
+                        <div class="plato-card ${claseAgotado}">
+                            <div class="img-container">
+                                <img src="${plato.img}" class="plato-img" alt="${plato.nombre}">
+                            </div>
+                            <div class="plato-info">
+                                <h3>${plato.nombre}</h3>
+                                <p>${plato.descripcion}</p>
+                                <div class="precio-fila">
+                                    <div class="precio">${plato.precio.toFixed(2)} €</div>
+                                    <button class="btn-info">Pedir</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                contenedor.appendChild(grid);
+            });
+        }
 
-    const menu = [
-      {c:"Pizzas", ic:"🍕", pl:[
-        {n:"Margarita", in:"Tomate y mozzarella", p:10.65, i:im('1574071318508-1cdbab80d002')},
-        {n:"Napolitana", in:"Tomate, mozzarella, anchoas y alcaparras", p:12.85, i:pz},
-        {n:"Romana", in:"Tomate, mozzarella, champiñones y salami", p:12.85, i:pep},
-        {n:"Capricciosa", in:"Tomate, mozzarella, huevo, espárragos y cebolla", p:12.85, i:pz},
-        {n:"Salami", in:"Tomate, mozzarella, salami y pimiento", p:12.85, i:pep},
-        {n:"Prosciutto", in:"Tomate, mozzarella y jamón york", p:12.75, i:pz},
-        {n:"Siciliana", in:"Tomate, mozzarella, atún y anchoas", p:12.85, i:mar},
-        {n:"Rústica", in:"Tomate, mozzarella, jamón york y champiñones", p:12.85, i:pz},
-        {n:"Frutti di mare", in:"Tomate, mozzarella, gambas, atún y mejillones", p:17.25, i:mar},
-        {n:"Quatro Stagioni", in:"Tomate, mozzarella, jamón, champiñones, pimientos, espárragos verdes y aceitunas", p:13.85, i:pz},
-        {n:"Pescatore", in:"Tomate, mozzarella, cebolla, atún y champiñones", p:12.85, i:mar},
-        {n:"Mafiosa", in:"Tomate, mozzarella, champiñones, salami, huevo, guisantes y cebolla", p:12.85, i:pep},
-        {n:"Super Plaza", in:"Tomate, mozzarella, solomillo de cerdo, bacon y champiñones", p:16.00, i:pz},
-        {n:"Funghi", in:"Tomate, mozzarella y champiñones", p:11.85, i:vg},
-        {n:"Pepperoni", in:"Tomate, mozzarella, pepperoni y cebolla", p:12.85, i:pep},
-        {n:"Brassato", in:"Tomate, mozzarella y ternera grill", p:15.00, i:pz},
-        {n:"Rúcula", in:"Rúcula y parmesano", p:12.85, i:vg},
-        {n:"Vegetal", in:"Pesto, mozzarella, verduras de temporada", p:13.85, i:vg},
-        {n:"Carpaccio", in:"Tomate, mozzarella, carpaccio, champiñones, orégano y parmesano", p:19.35, i:pz},
-        {n:"4 quesos", in:"Tomate y 4 quesos", p:12.85, i:pz},
-        {n:"Tropical", in:"Tomate, mozzarella, piña natural y jamón york", p:12.85, i:pz},
-        {n:"Tonno", in:"Tomate, mozzarella, atún y cebolla", p:12.85, i:mar},
-        {n:"Boloñesa", in:"Tomate, mozzarella y salsa boloñesa", p:13.85, i:pz},
-        {n:"Marinera", in:"Tomate, mozzarella, gambas, merluza y ajo", p:16.00, i:mar},
-        {n:"Nativa", in:"Tomate, mozzarella, queso, sobrasada y miel", p:13.85, i:pz},
-        {n:"Salmón", in:"Tomate, mozzarella y salmón", p:16.00, i:mar},
-        {n:"Calzone Plaza", in:"Frankfurt de Baviera con mostaza y mozzarella", p:11.75, i:pz},
-        {n:"Nuevo México", in:"Tomate, mozzarella, salsa mexicana y solomillo de cerdo", p:13.85, i:pz},
-        {n:"Varenne", in:"Tomate, mozzarella, dátiles y cangrejo", p:12.85, i:mar},
-        {n:"Jack de Mommes", in:"Tomate, mozzarella, bacon, queso de cabra y miel", p:15.00, i:pz},
-        {n:"Barbacoa", in:"Tomate, mozzarella, pollo y salsa barbacoa", p:13.85, i:pz},
-        {n:"Bacalao", in:"Tomate, mozzarella y bacalao ahumado", p:17.25, i:mar},
-        {n:"Pulpo (XL)", in:"Tomate, mozzarella, pulpo y pimentón", p:24.90, i:mar},
-        {n:"Jamón Serrano y champiñones", in:"Tomate, mozzarella, jamón serrano y champiñones", p:15.00, i:pz},
-        {n:"Pizza de burrata (XL)", in:"Con jamón serrano y rúcula", p:20.25, i:pz}
-      ]},
-      {c:"Carnes", ic:"🥩", pl:[
-        {n:"Tagliata de entrecot", in:"Rúcula y parmesano", p:23.25, i:cr},
-        {n:"Entrecot", in:"Entrecot a la plancha", p:22.75, i:cr},
-        {n:"Escalope", in:"Carne empanada", p:15.50, i:po},
-        {n:"Escalope Cordon Bleu", in:"Carne rellena de jamón y queso", p:16.50, i:po},
-        {n:"Escalopines Marsala", in:"Con salsa Marsala", p:19.35, i:cr},
-        {n:"Escalopines Plaza", in:"Jamón serrano y mozzarella", p:19.35, i:cr},
-        {n:"Medallones de solomillo", in:"Al vino tinto con ciruelas", p:20.40, i:cr},
-        {n:"Pechuga de pollo plancha", in:"Suplemento salsa pimienta o roquefort 4.05€ (indicar en notas)", p:14.00, i:po}
-      ]},
-      {c:"Pescados", ic:"🐟", pl:[
-        {n:"Gambas al ajillo", in:"Gambas, ajo, guindilla, aceite", p:20.25, i:ps},
-        {n:"Calamar nacional plancha", in:"Calamar fresco, ajo, perejil", p:20.40, i:ps},
-        {n:"Calamar a la romana", in:"Calamar rebozado", p:17.25, i:ps}
-      ]},
-      {c:"Opciones Veganas", ic:"🌱", pl:[
-        {n:"Hamburguesa Vegana", in:"Carne 100% vegetal de soja en pan pita con tomate, cebolla caramelizada y rúcula", p:14.00, i:bg},
-        {n:"Merluza vegana", in:"Alternativa vegetal sabor mar", p:12.90, i:ps}
-      ]},
-      {c:"Entrantes", ic:"🧆", pl:[
-        {n:"Pan de pizza", in:"Masa horneada con aceite y orégano", p:5.35, i:en},
-        {n:"Mozarillo Plaza", in:"Nuestra especialidad", p:6.40, i:en},
-        {n:"Surtido croquetas", in:"Pollo, jamón, espinacas y bacalao", p:10.60, i:en}
-      ]},
-      {c:"Ensaladas", ic:"🥗", pl:[
-        {n:"Mixta", in:"Lechuga, tomate, cebolla, jamón york", p:10.60, i:ens},
-        {n:"Capresse", in:"Tomate, mozzarella, albahaca", p:13.95, i:ens}
-      ]},
-      {c:"Woks", ic:"🥢", pl:[{n:"Wok pollo", in:"Verduras, pollo, soja", p:16.05, i:wk},{n:"Wok pulpo", in:"Verduras, pulpo", p:20.35, i:wk}]},
-      {c:"Pastas", ic:"🍝", pl:[
-        {n:"Espaguetis boloñesa", in:"Pasta, salsa boloñesa con carne", p:12.00, i:pa_r},
-        {n:"Carbonara", in:"Pasta, nata, bacon, pimienta", p:12.90, i:pa_b}
-      ]},
-      {c:"Tartas Caseras", ic:"🍰", pl:[
-        {n:"Queso con arándanos", in:"Tarta de queso y mermelada", p:5.65, i:po_ta},
-        {n:"Banoffee", in:"Plátano, toffee, galleta", p:5.65, i:po_ta},
-        {n:"Tarta de chocolate", in:"Bizcocho y cacao", p:5.65, i:po_ta},
-        {n:"Tiramisú", in:"Mascarpone, café, cacao", p:5.90, i:po_ta}
-      ]},
-      {c:"Helados", ic:"🍨", pl:[
-        {n:"Coulant de chocolate", in:"Con helado de vainilla", p:5.95, i:po_ic},
-        {n:"Copa Plaza", in:"Vainilla, caramelo, nata y nueces", p:6.85, i:po_ic}
-      ]},
-      {c:"Café", ic:"☕", pl:[{n:"Café solo", in:"Café arábica", p:1.60, i:cf}]}
-    ];
-    
-    const menuData = menu.map(c => ({categoria: c.c, icono: c.ic, platos: c.pl.map(p => ({ nombre: p.n, precio: p.p, img: p.i, ingredientes: p.in||"" }))}));
-    
-    function inicializarCategorias(){let g=document.getElementById('gridCategoriasInicio');g.innerHTML=`<div class="cat-inicio-card" onclick="mostrarTodosPlatos()"><div class="cat-icono">📋</div><h3>Ver Todo</h3></div>`;menuData.forEach((s,i)=>{g.innerHTML+=`<div class="cat-inicio-card" onclick="mostrarCategoria(${i})"><div class="cat-icono">${s.icono}</div><h3>${s.categoria}</h3></div>`});}
-    function mostrarCategoria(i){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";renderizarSeccion(menuData[i],c,i);window.scrollTo(0,0)}
-    function mostrarTodosPlatos(){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";menuData.forEach((s,i)=>renderizarSeccion(s,c,i));window.scrollTo(0,0)}
-    
-    function renderizarSeccion(s,c,catIdx){
-      let t=document.createElement('h2');t.className='categoria-titulo';t.innerText=s.categoria;c.appendChild(t);
-      let g=document.createElement('div');g.className='platos-grid';
-      s.platos.forEach((p,pIdx)=>{
-        g.innerHTML+=`<div class="plato-card" onclick="abrirDetalle(${catIdx},${pIdx})">
-          <div class="img-container"><img src="${p.img}" class="plato-img"></div>
-          <div class="plato-info">
-            <h3>${p.nombre}</h3>
-            <div class="precio-fila"><div class="precio">${p.precio.toFixed(2)} €</div>
-            <button class="btn-info">+ Info</button></div>
-          </div>
-        </div>`
-      });
-      c.appendChild(g)
-    }
-    
-    function abrirDetalle(catIdx, pIdx) {
-      platoAbiertoActual = menuData[catIdx].platos[pIdx];
-      let plato = platoAbiertoActual;
-      document.getElementById('detImg').src = plato.img;
-      document.getElementById('detNombre').innerText = plato.nombre;
-      document.getElementById('detIng').innerText = plato.ingredientes || "Consulta con el camarero.";
-      document.getElementById('detPrecio').innerText = plato.precio.toFixed(2) + " €";
-      document.getElementById('detNotas').value = ""; 
-      
-      let contenedorExtras = document.getElementById('contenedorExtras');
-      let listaExtras = document.getElementById('listaExtras');
-      if (menuData[catIdx].categoria === "Pizzas") {
-        contenedorExtras.style.display = "block";
-        listaExtras.innerHTML = extrasPizzas.map((e, idx) => `<label><input type="checkbox" class="chk-extra" value="${e.n}" data-p="${e.p}"> ${e.n} (+${e.p.toFixed(2)}€)</label>`).join('');
-      } else {
-        contenedorExtras.style.display = "none";
-        listaExtras.innerHTML = "";
-      }
-      
-      document.getElementById('modalDetalle').style.display = 'flex';
-    }
-
-    function añadirAlCarritoDesdeModal() {
-      let extrasSeleccionados = [];
-      let extraPrecioTotal = 0;
-      document.querySelectorAll('.chk-extra:checked').forEach(c => {
-         extrasSeleccionados.push(c.value);
-         extraPrecioTotal += parseFloat(c.dataset.p);
-      });
-      
-      let notas = document.getElementById('detNotas').value.trim();
-      let nombreCesta = platoAbiertoActual.nombre;
-      
-      if (extrasSeleccionados.length > 0) nombreCesta += " (" + extrasSeleccionados.join(", ") + ")";
-      if (notas !== "") nombreCesta += " [Notas: " + notas + "]";
-      
-      let precioFinal = platoAbiertoActual.precio + extraPrecioTotal;
-      let f = carrito.find(i => i.nombre === nombreCesta);
-      if(f) f.cantidad++; else carrito.push({nombre: nombreCesta, precio: precioFinal, cantidad: 1});
-      
-      actualizarBarraCarrito();
-      mostrarListaCesta();
-      document.getElementById('modalDetalle').style.display = 'none';
-      lanzarSugerenciaAutomatica(platoAbiertoActual.nombre);
-    }
-
-    function mostrarCategorias(){document.getElementById('seccion-platos').style.display='none';document.getElementById('seccion-categorias').style.display='block';window.scrollTo(0,0)}
-    function cambiarCantidad(n,c){let i=carrito.find(x=>x.nombre===n);if(i){i.cantidad+=c;if(i.cantidad<=0)carrito=carrito.filter(x=>x.nombre!==n)}actualizarBarraCarrito();mostrarListaCesta()}
-    function actualizarBarraCarrito(){let b=document.getElementById('carritoBar'),tp=carrito.reduce((s,i)=>s+i.cantidad,0),tpr=carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);if(tp>0){b.style.display='flex';document.getElementById('cantPlatos').innerText=tp;document.getElementById('totalPrecio').innerText=tpr.toFixed(2)+' €'}else{b.style.display='none';cerrarCesta()}}
-    function abrirCesta(){mostrarListaCesta();document.getElementById('modalCesta').style.display='flex'}
-    function cerrarCesta(){document.getElementById('modalCesta').style.display='none'}
-    function mostrarListaCesta(){let l=document.getElementById('cestaLista'),t=0;l.innerHTML="";carrito.forEach(i=>{t+=i.precio*i.cantidad;l.innerHTML+=`<div class="cesta-item"><div><strong style="color:var(--primary)">${i.nombre}</strong><br><small>${i.precio.toFixed(2)} € x ${i.cantidad}</small></div><div class="controles-item"><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',-1)">-</button><span>${i.cantidad}</span><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',1)">+</button></div></div>`});document.getElementById('cestaTotalPrecio').innerText=t.toFixed(2)+' €'}
-    function toggleChat(){let c=document.getElementById('chatWindow');c.style.display=c.style.display==='flex'?'none':'flex'}
-    
-    // CONEXION AL PUENTE SEGURO DE VERCEL (YA NO ESTÁ LA CLAVE AQUÍ)
-    async function enviarMensajeUsuario(){
-      let i=document.getElementById('userInput'), t=i.value.trim(), b=document.getElementById('chatBody');
-      if(!t)return;
-      b.innerHTML+=`<div class="user-msg">${t}</div>`; i.value=''; b.scrollTop=b.scrollHeight;
-      
-      b.innerHTML+=`<div class="bot-msg" id="typing">Pensando...</div>`; b.scrollTop=b.scrollHeight;
-      
-      try {
-        let res = await fetch('/api/chat', {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mensaje: t })
-        });
-        
-        let data = await res.json();
-        
-        if(document.getElementById('typing')) document.getElementById('typing').remove();
-        
-        if(data.error) throw new Error(data.error);
-        
-        b.innerHTML+=`<div class="bot-msg">${data.respuesta.replace(/\n/g,"<br>")}</div>`;
-      } catch(e) {
-        if(document.getElementById('typing')) document.getElementById('typing').remove();
-        b.innerHTML+=`<div class="bot-msg" style="border:2px solid red; background:#fff0f0;"><b>🚨 Error de conexión con el puente:</b><br><span style="color:#c0392b;">${e.message}</span></div>`;
-      }
-      b.scrollTop=b.scrollHeight;
-    }
-    
-    function lanzarSugerenciaAutomatica(n){let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody');c.style.display='flex';b.innerHTML+=`<div class="bot-msg">¡Gran elección la <b>${n}</b>! 👨‍🍳<br>¿Te gustaría acompañarlo con un postre o bebida de la carta?</div>`;b.scrollTop=b.scrollHeight}
-    
-    function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Desde qué mesa nos llamas?':'¿En qué mesa estás?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar al camarero':'Enviar a cocina';document.getElementById('modalMesa').style.display='flex'}
-    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Introduce el número de tu mesa, por favor.");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.":"✅ ¡Tu pedido se ha enviado a la cocina correctamente!");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red. Comprueba tu conexión a internet.");b.innerText="Confirmar";b.disabled=false})}
-    
-    window.onload=inicializarCategorias;
-  </script>
+        // Iniciamos la carta al cargar la página
+        window.onload = function() {
+            renderizarCarta();
+        };
+    </script>
 </body>
 </html>
