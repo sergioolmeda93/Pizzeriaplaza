@@ -10,22 +10,23 @@
     
     /* PESTAÑAS */
     .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab-btn { flex: 1; padding: 15px; background: #333; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+    .tab-btn { flex: 1; padding: 15px; background: #333; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
     .tab-btn.active { background: #f39c12; color: #1a1a1a; }
 
     /* CONTENEDORES */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* PEDIDOS */
+    /* PEDIDOS (FIREBASE) */
     #pedidos-list { display: flex; flex-direction: column; gap: 15px; }
     .pedido-card { background: #2c3e50; padding: 15px; border-radius: 10px; border-left: 5px solid #e74c3c; }
     .pedido-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: #f39c12; margin-bottom: 10px; }
     .plato-item { background: rgba(0,0,0,0.3); margin: 5px 0; padding: 8px; border-radius: 5px; }
 
-    /* STOCK */
-    .grid-stock { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .btn-stock { background: #27ae60; color: white; border: none; padding: 15px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
+    /* STOCK (CATEGORÍAS Y BOTONES) */
+    .categoria-stock { margin-top: 25px; color: #f39c12; border-bottom: 1px solid #333; padding-bottom: 5px; text-transform: uppercase; }
+    .grid-stock { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px; }
+    .btn-stock { background: #27ae60; color: white; border: none; padding: 15px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
     .btn-stock.agotado { background: #e74c3c; opacity: 0.7; }
   </style>
 </head>
@@ -38,20 +39,18 @@
     <button class="tab-btn" onclick="cambiarPestaña('stock', this)">❌ Control Stock</button>
   </div>
 
-  <!-- PESTAÑA 1: PEDIDOS QUE LLEGAN -->
   <div id="ordenes" class="tab-content active">
     <div id="pedidos-list">
       <p style="text-align:center; color:#888;">Buscando nuevos pedidos en Firebase...</p>
     </div>
   </div>
 
-  <!-- PESTAÑA 2: CONTROL DE STOCK -->
   <div id="stock" class="tab-content">
-    <div class="grid-stock" id="grid-stock"></div>
+    <p style="color:#aaa; font-size:0.9rem; text-align:center;">Toca un plato para marcarlo como agotado o disponible en la carta principal.</p>
+    <div id="contenedor-stock"></div>
   </div>
 
   <script>
-    // --- 1. LÓGICA DE LAS PESTAÑAS ---
     function cambiarPestaña(id, boton) {
       document.querySelectorAll('.tab-content').forEach(d => d.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -59,7 +58,7 @@
       boton.classList.add('active');
     }
 
-    // --- 2. LÓGICA DE LOS PEDIDOS (CONECTADO A TU FIREBASE) ---
+    // CONECTADO A TU FIREBASE PARA RECIBIR LOS PEDIDOS
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     
     function cargarPedidos() {
@@ -80,51 +79,77 @@
               p.platos.forEach(plato => { detalles += `<div class="plato-item">1x ${plato.nombre}</div>`; });
             }
 
-            ordenesHtml += `
+            ordenesHtml = `
               <div class="pedido-card">
                 <div class="pedido-header"><span>${titulo} (Mesa ${p.mesa})</span> <span>${p.hora}</span></div>
                 ${detalles}
-              </div>`;
+              </div>` + ordenesHtml; // Añadimos al revés para ver los nuevos arriba
           }
           lista.innerHTML = ordenesHtml;
-        });
+        })
+        .catch(err => console.error("Error cargando pedidos: ", err));
     }
-    setInterval(cargarPedidos, 5000); // Comprueba pedidos nuevos cada 5 segundos
+    
+    // Buscar pedidos nuevos cada 5 segundos
+    setInterval(cargarPedidos, 5000); 
     cargarPedidos();
 
-    // --- 3. LÓGICA DEL STOCK (AGOTAR PLATOS) ---
-    // Copio algunos de tus platos principales para que la cocina los controle
-    const todosLosPlatos = ["Tarta de chocolate", "Margarita", "Napolitana", "Pulpo (XL)", "Entrecot", "Calamar a la romana", "Wok pollo", "Wok pulpo"];
+    // ESTE ES TU MENÚ EXACTO (Generará todos los botones automáticamente)
+    const im = id => ``; // No necesitamos las fotos para el panel de control
+    const menu = [
+      {c:"Pizzas", pl:[{n:"Margarita"},{n:"Napolitana"},{n:"Romana"},{n:"Capricciosa"},{n:"Salami"},{n:"Prosciutto"},{n:"Siciliana"},{n:"Rústica"},{n:"Frutti di mare"},{n:"Quatro Stagioni"},{n:"Pescatore"},{n:"Mafiosa"},{n:"Super Plaza"},{n:"Funghi"},{n:"Pepperoni"},{n:"Brassato"},{n:"Rúcula"},{n:"Vegetal"},{n:"Carpaccio"},{n:"4 quesos"},{n:"Tropical"},{n:"Tonno"},{n:"Boloñesa"},{n:"Marinera"},{n:"Nativa"},{n:"Salmón"},{n:"Calzone Plaza"},{n:"Nuevo México"},{n:"Varenne"},{n:"Jack de Mommes"},{n:"Barbacoa"},{n:"Bacalao"},{n:"Pulpo (XL)"},{n:"Jamón Serrano y champiñones"},{n:"Pizza de burrata (XL)"}]},
+      {c:"Carnes", pl:[{n:"Tagliata de entrecot"},{n:"Entrecot"},{n:"Escalope"},{n:"Escalope Cordon Bleu"},{n:"Escalopines Marsala"},{n:"Escalopines Plaza"},{n:"Medallones de solomillo"},{n:"Pechuga de pollo plancha"}]},
+      {c:"Pescados", pl:[{n:"Gambas al ajillo"},{n:"Calamar nacional plancha"},{n:"Calamar a la romana"}]},
+      {c:"Opciones Veganas", pl:[{n:"Hamburguesa Vegana"},{n:"Merluza vegana"}]},
+      {c:"Entrantes", pl:[{n:"Pan de pizza"},{n:"Mozarillo Plaza"},{n:"Surtido croquetas"}]},
+      {c:"Ensaladas", pl:[{n:"Mixta"},{n:"Capresse"}]},
+      {c:"Woks", pl:[{n:"Wok pollo"},{n:"Wok pulpo"}]},
+      {c:"Pastas", pl:[{n:"Espaguetis boloñesa"},{n:"Carbonara"}]},
+      {c:"Tartas Caseras", pl:[{n:"Queso con arándanos"},{n:"Banoffee"},{n:"Tarta de chocolate"},{n:"Tiramisú"}]},
+      {c:"Helados", pl:[{n:"Coulant de chocolate"},{n:"Copa Plaza"}]},
+      {c:"Café", pl:[{n:"Café solo"}]}
+    ];
     
     function renderizarStock() {
-      let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '["Tarta de chocolate"]');
-      let grid = document.getElementById('grid-stock');
-      grid.innerHTML = "";
+      // Lee qué platos se han marcado como agotados (vacío por defecto)
+      let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '[]');
+      let contenedor = document.getElementById('contenedor-stock');
+      contenedor.innerHTML = "";
       
-      todosLosPlatos.forEach(nombre => {
-        let estaAgotado = agotados.includes(nombre);
-        let clase = estaAgotado ? "agotado" : "";
-        let texto = estaAgotado ? "🔴 AGOTADO" : "🟢 Disponible";
+      menu.forEach(categoria => {
+        contenedor.innerHTML += `<h3 class="categoria-stock">${categoria.c}</h3>`;
+        let gridHTML = `<div class="grid-stock">`;
         
-        grid.innerHTML += `
-          <button class="btn-stock ${clase}" onclick="toggleAgotado('${nombre}')">
-            ${nombre}<br><br><small>${texto}</small>
-          </button>
-        `;
+        categoria.pl.forEach(plato => {
+          let estaAgotado = agotados.includes(plato.n);
+          let clase = estaAgotado ? "agotado" : "";
+          let texto = estaAgotado ? "🔴 AGOTADO" : "🟢 Disponible";
+          
+          gridHTML += `
+            <button class="btn-stock ${clase}" onclick="toggleAgotado('${plato.n}')">
+              ${plato.n}<br><br><small>${texto}</small>
+            </button>
+          `;
+        });
+        
+        gridHTML += `</div>`;
+        contenedor.innerHTML += gridHTML;
       });
     }
 
     function toggleAgotado(nombre) {
-      let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '["Tarta de chocolate"]');
+      let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '[]');
       if(agotados.includes(nombre)) {
         agotados = agotados.filter(n => n !== nombre); // Lo vuelve a poner disponible
       } else {
         agotados.push(nombre); // Lo marca como agotado
       }
+      // Guarda en la memoria para que la carta lo lea
       localStorage.setItem('platosAgotados', JSON.stringify(agotados));
-      renderizarStock();
+      renderizarStock(); // Refresca los botones de la cocina
     }
     
+    // Iniciar al abrir
     renderizarStock();
   </script>
 </body>
