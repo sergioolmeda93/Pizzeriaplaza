@@ -1,208 +1,131 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Cocina - Pizzería Plaza</title>
-    <style>
-        /* Diseño ultra-oscuro y botones gigantes, pensado para trabajar rápido */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #000000; 
-            color: #ffffff; 
-            margin: 0; 
-            padding: 15px; 
-        }
-        
-        .header { 
-            text-align: center; 
-            margin-bottom: 20px; 
-            border-bottom: 2px solid #333; 
-            padding-bottom: 15px; 
-        }
-        
-        .header h1 { 
-            color: #f39c12; 
-            margin: 0; 
-            font-size: 2.2rem; 
-        }
-        
-        .instrucciones {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        .categoria-titulo { 
-            background-color: #1a1a1a; 
-            padding: 15px; 
-            border-radius: 8px; 
-            margin-top: 30px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            font-size: 1.2rem; 
-            font-weight: bold;
-            color: #f39c12;
-            border-left: 4px solid #f39c12;
-        }
-        
-        .plato-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background-color: #151515; 
-            padding: 15px; 
-            margin-top: 10px; 
-            border-radius: 8px; 
-            border: 1px solid #333;
-            transition: all 0.3s ease; 
-        }
-        
-        .plato-nombre { 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            flex-grow: 1;
-            padding-right: 15px;
-        }
-        
-        .btn-toggle { 
-            padding: 15px 20px; 
-            font-size: 1rem; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.2s; 
-            min-width: 140px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-        }
-        
-        .btn-toggle:active { 
-            transform: scale(0.95); 
-        }
-        
-        /* Colores vivos para que el cocinero lo vea claro a metros de distancia */
-        .estado-disponible { 
-            border-left: 6px solid #2ecc71; 
-        }
-        .estado-disponible .btn-toggle { 
-            background-color: #2ecc71; 
-            color: #000; 
-        }
-        
-        .estado-agotado { 
-            border-left: 6px solid #e74c3c; 
-            opacity: 0.7; 
-        }
-        .estado-agotado .btn-toggle { 
-            background-color: #e74c3c; 
-            color: #fff; 
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Cocina - Plaza</title>
+  <style>
+    body { font-family: sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 15px; }
+    h1 { text-align: center; color: #f39c12; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top: 5px; }
+    
+    /* PESTAÑAS */
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 15px; background: #333; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+    .tab-btn.active { background: #f39c12; color: #1a1a1a; }
 
-        /* Adaptación para móviles de los cocineros */
-        @media (max-width: 600px) {
-            .plato-item {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-            .plato-nombre {
-                text-align: center;
-                padding-right: 0;
-            }
-            .btn-toggle {
-                padding: 20px;
-                font-size: 1.1rem;
-            }
-        }
-    </style>
+    /* CONTENEDORES */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* PEDIDOS */
+    #pedidos-list { display: flex; flex-direction: column; gap: 15px; }
+    .pedido-card { background: #2c3e50; padding: 15px; border-radius: 10px; border-left: 5px solid #e74c3c; }
+    .pedido-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: #f39c12; margin-bottom: 10px; }
+    .plato-item { background: rgba(0,0,0,0.3); margin: 5px 0; padding: 8px; border-radius: 5px; }
+
+    /* STOCK */
+    .grid-stock { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .btn-stock { background: #27ae60; color: white; border: none; padding: 15px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
+    .btn-stock.agotado { background: #e74c3c; opacity: 0.7; }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>👨‍🍳 Control de Cocina</h1>
-        <div class="instrucciones">Toca un botón para marcar si hay stock o si el plato se ha agotado.</div>
+
+  <h1>👨‍🍳 Panel de Cocina</h1>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="cambiarPestaña('ordenes', this)">📦 Órdenes Activas</button>
+    <button class="tab-btn" onclick="cambiarPestaña('stock', this)">❌ Control Stock</button>
+  </div>
+
+  <!-- PESTAÑA 1: PEDIDOS QUE LLEGAN -->
+  <div id="ordenes" class="tab-content active">
+    <div id="pedidos-list">
+      <p style="text-align:center; color:#888;">Buscando nuevos pedidos en Firebase...</p>
     </div>
+  </div>
 
-    <div id="panel-platos">
-        <!-- El menú se cargará aquí automáticamente para los cocineros -->
-    </div>
+  <!-- PESTAÑA 2: CONTROL DE STOCK -->
+  <div id="stock" class="tab-content">
+    <div class="grid-stock" id="grid-stock"></div>
+  </div>
 
-    <script>
-        // Los mismos platos que en la carta, para que la cocina los controle
-        const menuCocina = [
-            {
-                categoria: "Woks y Entrantes",
-                platos: [
-                    { id: "wok_pulpo", nombre: "Wok de Pulpo" },
-                    { id: "nachos", nombre: "Nachos de la Casa" }
-                ]
-            },
-            {
-                categoria: "Postres",
-                platos: [
-                    { id: "tarta_chocolate", nombre: "Tarta de Chocolate Fundido" },
-                    { id: "tiramisu", nombre: "Tiramisú Clásico" }
-                ]
-            }
-        ];
+  <script>
+    // --- 1. LÓGICA DE LAS PESTAÑAS ---
+    function cambiarPestaña(id, boton) {
+      document.querySelectorAll('.tab-content').forEach(d => d.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      boton.classList.add('active');
+    }
 
-        // Función que cambia el estado (En memoria local por ahora)
-        function togglePlato(id) {
-            const estadoActual = localStorage.getItem('estado_' + id);
+    // --- 2. LÓGICA DE LOS PEDIDOS (CONECTADO A TU FIREBASE) ---
+    const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
+    
+    function cargarPedidos() {
+      fetch(DB_URL)
+        .then(res => res.json())
+        .then(data => {
+          let lista = document.getElementById('pedidos-list');
+          lista.innerHTML = "";
+          if(!data) { lista.innerHTML = "<p style='text-align:center;'>No hay pedidos pendientes.</p>"; return; }
+          
+          let ordenesHtml = "";
+          for(let key in data) {
+            let p = data[key];
+            let titulo = p.tipo === "ATENCIÓN CAMARERO REQUERIDA" ? "🔔 LLAMADA A MESA" : "🍕 NUEVO PEDIDO";
             
-            if (estadoActual === 'agotado') {
-                localStorage.setItem('estado_' + id, 'disponible'); // Si estaba agotado, reponer
-            } else {
-                localStorage.setItem('estado_' + id, 'agotado'); // Si estaba disponible, agotar
+            let detalles = "";
+            if(p.platos) {
+              p.platos.forEach(plato => { detalles += `<div class="plato-item">1x ${plato.nombre}</div>`; });
             }
-            
-            renderizarPanel(); // Refrescar la pantalla de la cocina
-        }
 
-        function renderizarPanel() {
-            const contenedor = document.getElementById('panel-platos');
-            contenedor.innerHTML = '';
+            ordenesHtml += `
+              <div class="pedido-card">
+                <div class="pedido-header"><span>${titulo} (Mesa ${p.mesa})</span> <span>${p.hora}</span></div>
+                ${detalles}
+              </div>`;
+          }
+          lista.innerHTML = ordenesHtml;
+        });
+    }
+    setInterval(cargarPedidos, 5000); // Comprueba pedidos nuevos cada 5 segundos
+    cargarPedidos();
 
-            menuCocina.forEach(seccion => {
-                // Crear el título de la sección (ej: Postres)
-                const divCat = document.createElement('div');
-                divCat.className = 'categoria-titulo';
-                divCat.innerText = seccion.categoria;
-                contenedor.appendChild(divCat);
+    // --- 3. LÓGICA DEL STOCK (AGOTAR PLATOS) ---
+    // Copio algunos de tus platos principales para que la cocina los controle
+    const todosLosPlatos = ["Tarta de chocolate", "Margarita", "Napolitana", "Pulpo (XL)", "Entrecot", "Calamar a la romana", "Wok pollo", "Wok pulpo"];
+    
+    function renderizarStock() {
+      let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '["Tarta de chocolate"]');
+      let grid = document.getElementById('grid-stock');
+      grid.innerHTML = "";
+      
+      todosLosPlatos.forEach(nombre => {
+        let estaAgotado = agotados.includes(nombre);
+        let clase = estaAgotado ? "agotado" : "";
+        let texto = estaAgotado ? "🔴 AGOTADO" : "🟢 Disponible";
+        
+        grid.innerHTML += `
+          <button class="btn-stock ${clase}" onclick="toggleAgotado('${nombre}')">
+            ${nombre}<br><br><small>${texto}</small>
+          </button>
+        `;
+      });
+    }
 
-                seccion.platos.forEach(plato => {
-                    // Leer si la cocina lo marcó como agotado antes
-                    // (Si es la primera vez que entra, por defecto es 'disponible')
-                    const estado = localStorage.getItem('estado_' + plato.id) || 'disponible';
-                    const esAgotado = (estado === 'agotado');
-
-                    // Contenedor del plato
-                    const divPlato = document.createElement('div');
-                    divPlato.className = 'plato-item ' + (esAgotado ? 'estado-agotado' : 'estado-disponible');
-
-                    // Nombre del plato
-                    const divNombre = document.createElement('div');
-                    divNombre.className = 'plato-nombre';
-                    divNombre.innerText = plato.nombre;
-
-                    // Botón gigante para el cocinero
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-toggle';
-                    btn.innerText = esAgotado ? '❌ AGOTADO' : '✅ EN STOCK';
-                    btn.onclick = () => togglePlato(plato.id);
-
-                    divPlato.appendChild(divNombre);
-                    divPlato.appendChild(btn);
-                    contenedor.appendChild(divPlato);
-                });
-            });
-        }
-
-        // Arrancar el panel al abrir la página
-        window.onload = function() {
-            renderizarPanel();
-        };
-    </script>
+    function toggleAgotado(nombre) {
+      let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '["Tarta de chocolate"]');
+      if(agotados.includes(nombre)) {
+        agotados = agotados.filter(n => n !== nombre); // Lo vuelve a poner disponible
+      } else {
+        agotados.push(nombre); // Lo marca como agotado
+      }
+      localStorage.setItem('platosAgotados', JSON.stringify(agotados));
+      renderizarStock();
+    }
+    
+    renderizarStock();
+  </script>
 </body>
 </html>
