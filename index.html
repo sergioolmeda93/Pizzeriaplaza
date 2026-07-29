@@ -64,6 +64,10 @@
     .chat-input-area{display:flex;padding:10px;background:white;border-top:1px solid #ddd}
     .chat-input-area input{flex-grow:1;padding:8px;border:1px solid #ccc;border-radius:20px;outline:none;color:#333}
     .chat-input-area button{background:#2193b0;color:white;border:none;padding:8px 15px;margin-left:5px;border-radius:20px;cursor:pointer}
+
+    /* --- NUEVO: ESTILOS DE PLATO AGOTADO --- */
+    .plato-card.agotado { opacity: 0.5; filter: grayscale(100%); pointer-events: none; position: relative; }
+    .plato-card.agotado::after { content: "AGOTADO"; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(231, 76, 60, 0.95); color: white; padding: 8px 15px; font-weight: bold; border-radius: 8px; font-size: 1.1rem; letter-spacing: 2px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 10; }
   </style>
 </head>
 <body>
@@ -235,6 +239,7 @@
       {c:"Tartas Caseras", ic:"🍰", pl:[
         {n:"Queso con arándanos", in:"Tarta de queso y mermelada", p:5.65, i:po_ta},
         {n:"Banoffee", in:"Plátano, toffee, galleta", p:5.65, i:po_ta},
+        /* --- NUEVO: AQUÍ ESTÁ EL GIF, PERO SIN AGOTAR --- */
         {n:"Tarta de chocolate", in:"Bizcocho y cacao", p:5.65, i:"https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc29lOG5zYTIyOTFmbnQwbWZmbjJ1cG92dGdjaGF0MWxyNHp3ZmFldSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xAFtjouK83isjm/giphy.webp"},
         {n:"Tiramisú", in:"Mascarpone, café, cacao", p:5.90, i:po_ta}
       ]},
@@ -251,11 +256,18 @@
     function mostrarCategoria(i){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";renderizarSeccion(menuData[i],c,i);window.scrollTo(0,0)}
     function mostrarTodosPlatos(){document.getElementById('seccion-categorias').style.display='none';document.getElementById('seccion-platos').style.display='block';let c=document.getElementById('contenedor-carta');c.innerHTML="";menuData.forEach((s,i)=>renderizarSeccion(s,c,i));window.scrollTo(0,0)}
     
+    /* --- NUEVO: ESTA FUNCIÓN AHORA LEE LA COCINA PARA VER QUÉ SOMBREAR --- */
     function renderizarSeccion(s,c,catIdx){
       let t=document.createElement('h2');t.className='categoria-titulo';t.innerText=s.categoria;c.appendChild(t);
       let g=document.createElement('div');g.className='platos-grid';
+      
+      // Lee si la cocina ha guardado algo en agotados. Por defecto: vacío [] (Tarta Normal)
+      let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '[]');
+
       s.platos.forEach((p,pIdx)=>{
-        g.innerHTML+=`<div class="plato-card" onclick="abrirDetalle(${catIdx},${pIdx})">
+        let claseAgotado = agotados.includes(p.nombre) ? 'agotado' : '';
+        
+        g.innerHTML+=`<div class="plato-card ${claseAgotado}" onclick="abrirDetalle(${catIdx},${pIdx})">
           <div class="img-container"><img src="${p.img}" class="plato-img"></div>
           <div class="plato-info">
             <h3>${p.nombre}</h3>
@@ -321,7 +333,6 @@
     function mostrarListaCesta(){let l=document.getElementById('cestaLista'),t=0;l.innerHTML="";carrito.forEach(i=>{t+=i.precio*i.cantidad;l.innerHTML+=`<div class="cesta-item"><div><strong style="color:var(--primary)">${i.nombre}</strong><br><small>${i.precio.toFixed(2)} € x ${i.cantidad}</small></div><div class="controles-item"><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',-1)">-</button><span>${i.cantidad}</span><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',1)">+</button></div></div>`});document.getElementById('cestaTotalPrecio').innerText=t.toFixed(2)+' €'}
     function toggleChat(){let c=document.getElementById('chatWindow');c.style.display=c.style.display==='flex'?'none':'flex'}
     
-    // IA CONEXIÓN Y DETECCIÓN DE ERRORES EXACTOS
     async function enviarMensajeUsuario(){
       let i=document.getElementById('userInput'), t=i.value.trim(), b=document.getElementById('chatBody');
       if(!t)return;
@@ -349,7 +360,38 @@
     function lanzarSugerenciaAutomatica(n){let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody');c.style.display='flex';b.innerHTML+=`<div class="bot-msg">¡Gran elección la <b>${n}</b>! 👨‍🍳<br>¿Te gustaría acompañarlo con un postre o bebida de la carta?</div>`;b.scrollTop=b.scrollHeight}
     
     function abrirModalMesa(t){tipoAccionMesa=t;cerrarCesta();document.getElementById('tituloModalMesa').innerText=t==='llamada'?'¿Desde qué mesa nos llamas?':'¿En qué mesa estás?';document.getElementById('btnAccionMesa').innerText=t==='llamada'?'Llamar al camarero':'Enviar a cocina';document.getElementById('modalMesa').style.display='flex'}
-    function ejecutarAccionMesa(){let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');if(!m)return alert("Introduce el número de tu mesa, por favor.");b.innerText="Procesando...";b.disabled=true;let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};if(tipoAccionMesa==='llamada'){d.tipo="ATENCIÓN CAMARERO REQUERIDA"}else{let p=[];carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});d.platos=p;d.total=p.reduce((s,i)=>s+i.precio,0)}fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{alert(tipoAccionMesa==='llamada'?"🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.":"✅ ¡Tu pedido se ha enviado a la cocina correctamente!");if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}document.getElementById('modalMesa').style.display='none';b.innerText="Confirmar";b.disabled=false}).catch(()=>{alert("Error de red. Comprueba tu conexión a internet.");b.innerText="Confirmar";b.disabled=false})}
+    
+    function ejecutarAccionMesa(){
+      let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');
+      if(!m)return alert("Introduce el número de tu mesa, por favor.");
+      b.innerText="Procesando...";b.disabled=true;
+      
+      let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
+      
+      if(tipoAccionMesa==='llamada'){
+        d.tipo="ATENCIÓN CAMARERO REQUERIDA"
+      }else{
+        let p=[];
+        carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++)p.push({nombre:i.nombre,precio:i.precio})});
+        d.platos=p;
+        d.total=p.reduce((s,i)=>s+i.precio,0)
+      }
+      
+      fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{
+        alert(tipoAccionMesa==='llamada'?"🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.":"✅ ¡Tu pedido se ha enviado a la cocina correctamente!");
+        if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}
+        document.getElementById('modalMesa').style.display='none';
+        b.innerText="Confirmar";b.disabled=false
+      }).catch(()=>{
+        alert("Error de red. Comprueba tu conexión a internet.");
+        b.innerText="Confirmar";b.disabled=false
+      })
+    }
+    
+    /* --- NUEVO: RECARGAR CARTA SI LA COCINA APAGA/ENCIENDE UN PLATO --- */
+    window.addEventListener('storage', function(e) {
+      if(e.key === 'platosAgotados') location.reload();
+    });
     
     window.onload=inicializarCategorias;
   </script>
