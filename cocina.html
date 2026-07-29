@@ -8,6 +8,7 @@
     body { font-family: sans-serif; background: #1a1a1a; color: white; margin: 0; padding: 15px; }
     h1 { text-align: center; color: #f39c12; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top: 5px; }
     
+    /* PESTAÑAS */
     .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
     .tab-btn { flex: 1; padding: 15px; background: #333; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
     .tab-btn.active { background: #f39c12; color: #1a1a1a; }
@@ -15,16 +16,15 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* PEDIDOS QUE LLEGAN */
     #pedidos-list { display: flex; flex-direction: column; gap: 15px; }
-    .pedido-card { background: #2c3e50; padding: 15px; border-radius: 10px; border-left: 5px solid #e74c3c; }
-    .pedido-header { display: flex; justify-content: space-between; align-items:center; font-weight: bold; font-size: 1.2rem; color: #f39c12; margin-bottom: 10px; }
-    .plato-item { background: rgba(0,0,0,0.3); margin: 5px 0; padding: 8px; border-radius: 5px; font-size:1.1rem;}
-    
-    /* Botón para marcar el pedido como completado */
+    .pedido-card { background: #2c3e50; padding: 15px; border-radius: 10px; border-left: 5px solid #e74c3c; position: relative; }
+    .pedido-header { display: flex; justify-content: space-between; align-items:center; font-weight: bold; font-size: 1.2rem; color: #f39c12; margin-bottom: 10px; padding-bottom:5px; border-bottom:1px solid rgba(255,255,255,0.1); }
+    .plato-item { background: rgba(0,0,0,0.3); margin: 5px 0; padding: 8px; border-radius: 5px; font-size:1.1rem; }
     .btn-completar { background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem;}
     .btn-completar:hover { background: #2ecc71; }
 
-    /* STOCK */
+    /* STOCK ENTERO */
     .categoria-stock { color: #f39c12; border-bottom: 1px solid #333; padding-bottom: 5px; text-transform: uppercase; margin-top:30px; margin-bottom: 15px;}
     .grid-stock { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
     .btn-stock { background: #27ae60; color: white; border: none; padding: 15px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
@@ -47,7 +47,7 @@
   </div>
 
   <div id="stock" class="tab-content">
-    <p style="text-align:center; color:#aaa; font-size:0.9rem;">Toca un plato para marcarlo como Agotado (Rojo) en la carta principal.</p>
+    <p style="text-align:center; color:#aaa; font-size:0.9rem;">Toca un plato para marcarlo como Agotado (Rojo). La carta se actualizará sola.</p>
     <div id="contenedor-stock"></div>
   </div>
 
@@ -59,10 +59,10 @@
       boton.classList.add('active');
     }
 
-    const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos";
+    const DB_URL_BASE = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos";
     
     function cargarPedidos() {
-      fetch(DB_URL + ".json")
+      fetch(DB_URL_BASE + ".json")
         .then(res => res.json())
         .then(data => {
           let lista = document.getElementById('pedidos-list');
@@ -79,11 +79,11 @@
               p.platos.forEach(plato => { detalles += `<div class="plato-item">1x ${plato.nombre}</div>`; });
             }
 
-            // Añadimos el ID del Firebase al botón para poder borrarlo luego
+            // Aquí el Firebase key se usa para el botón "Completar"
             ordenesHtml = `
               <div class="pedido-card">
                 <div class="pedido-header">
-                  <div>${titulo} (Mesa ${p.mesa}) <span style="color:#aaa; font-size:0.9rem; margin-left:10px;">${p.hora}</span></div>
+                  <div>${titulo} (Mesa ${p.mesa}) <span style="font-size:0.9rem; color:#ccc; margin-left:10px;">${p.hora}</span></div>
                   <button class="btn-completar" onclick="completarPedido('${key}')">✅ Completar</button>
                 </div>
                 ${detalles}
@@ -93,61 +93,42 @@
         });
     }
 
-    /* NUEVO: Borrar pedido de Firebase (Marcarlo como completado) */
+    // BOTÓN COMPLETAR: Borra el pedido de Firebase
     function completarPedido(id) {
-      // Preguntamos para no borrar por error
       if(confirm("¿Marcar este pedido como completado?")) {
-        fetch(DB_URL + "/" + id + ".json", {
+        fetch(DB_URL_BASE + "/" + id + ".json", {
           method: 'DELETE'
         }).then(() => {
-          cargarPedidos(); // Recargar la lista inmediatamente
-        }).catch(err => alert("Error al conectar con la base de datos."));
+          cargarPedidos(); // Recarga la lista rápido para que desaparezca
+        });
       }
     }
 
     setInterval(cargarPedidos, 5000); 
     cargarPedidos();
 
-    // Tu carta idéntica a la de index.html
-    const menu = [
-      {c:"Pizzas", pl:[
-        {n:"Margarita"},{n:"Napolitana"},{n:"Romana"},{n:"Capricciosa"},{n:"Salami"},{n:"Prosciutto"},{n:"Siciliana"},{n:"Rústica"},{n:"Frutti di mare"},{n:"Quatro Stagioni"},{n:"Pescatore"},{n:"Mafiosa"},{n:"Super Plaza"},{n:"Funghi"},{n:"Pepperoni"},{n:"Brassato"},{n:"Rúcula"},{n:"Vegetal"},{n:"Carpaccio"},{n:"4 quesos"},{n:"Tropical"},{n:"Tonno"},{n:"Boloñesa"},{n:"Marinera"},{n:"Nativa"},{n:"Salmón"},{n:"Calzone Plaza"},{n:"Nuevo México"},{n:"Varenne"},{n:"Jack de Mommes"},{n:"Barbacoa"},{n:"Bacalao"},{n:"Pulpo (XL)"},{n:"Jamón Serrano y champiñones"},{n:"Pizza de burrata (XL)"}
-      ]},
-      {c:"Carnes", pl:[
-        {n:"Tagliata de entrecot"},{n:"Entrecot"},{n:"Escalope"},{n:"Escalope Cordon Bleu"},{n:"Escalopines Marsala"},{n:"Escalopines Plaza"},{n:"Medallones de solomillo"},{n:"Pechuga de pollo plancha"}
-      ]},
-      {c:"Pescados", pl:[
-        {n:"Gambas al ajillo"},{n:"Calamar nacional plancha"},{n:"Calamar a la romana"}
-      ]},
-      {c:"Opciones Veganas", pl:[
-        {n:"Hamburguesa Vegana"},{n:"Merluza vegana"}
-      ]},
-      {c:"Entrantes", pl:[
-        {n:"Pan de pizza"},{n:"Mozarillo Plaza"},{n:"Surtido croquetas"}
-      ]},
-      {c:"Ensaladas", pl:[
-        {n:"Mixta"},{n:"Capresse"}
-      ]},
+    // TU CARTA ENTERA PARA EL STOCK (La misma que tienes en index.html)
+    const menuStock = [
+      {c:"Pizzas", pl:[{n:"Margarita"},{n:"Napolitana"},{n:"Romana"},{n:"Capricciosa"},{n:"Salami"},{n:"Prosciutto"},{n:"Siciliana"},{n:"Rústica"},{n:"Frutti di mare"},{n:"Quatro Stagioni"},{n:"Pescatore"},{n:"Mafiosa"},{n:"Super Plaza"},{n:"Funghi"},{n:"Pepperoni"},{n:"Brassato"},{n:"Rúcula"},{n:"Vegetal"},{n:"Carpaccio"},{n:"4 quesos"},{n:"Tropical"},{n:"Tonno"},{n:"Boloñesa"},{n:"Marinera"},{n:"Nativa"},{n:"Salmón"},{n:"Calzone Plaza"},{n:"Nuevo México"},{n:"Varenne"},{n:"Jack de Mommes"},{n:"Barbacoa"},{n:"Bacalao"},{n:"Pulpo (XL)"},{n:"Jamón Serrano y champiñones"},{n:"Pizza de burrata (XL)"}]},
+      {c:"Carnes", pl:[{n:"Tagliata de entrecot"},{n:"Entrecot"},{n:"Escalope"},{n:"Escalope Cordon Bleu"},{n:"Escalopines Marsala"},{n:"Escalopines Plaza"},{n:"Medallones de solomillo"},{n:"Pechuga de pollo plancha"}]},
+      {c:"Pescados", pl:[{n:"Gambas al ajillo"},{n:"Calamar nacional plancha"},{n:"Calamar a la romana"}]},
+      {c:"Opciones Veganas", pl:[{n:"Hamburguesa Vegana"},{n:"Merluza vegana"}]},
+      {c:"Entrantes", pl:[{n:"Pan de pizza"},{n:"Mozarillo Plaza"},{n:"Surtido croquetas"}]},
+      {c:"Ensaladas", pl:[{n:"Mixta"},{n:"Capresse"}]},
       {c:"Woks", pl:[{n:"Wok pollo"},{n:"Wok pulpo"}]},
-      {c:"Pastas", pl:[
-        {n:"Espaguetis boloñesa"},{n:"Carbonara"}
-      ]},
-      {c:"Tartas Caseras", pl:[
-        {n:"Queso con arándanos"},{n:"Banoffee"},{n:"Tarta de chocolate"},{n:"Tiramisú"}
-      ]},
-      {c:"Helados", pl:[
-        {n:"Coulant de chocolate"},{n:"Copa Plaza"}
-      ]},
+      {c:"Pastas", pl:[{n:"Espaguetis boloñesa"},{n:"Carbonara"}]},
+      {c:"Tartas Caseras", pl:[{n:"Queso con arándanos"},{n:"Banoffee"},{n:"Tarta de chocolate"},{n:"Tiramisú"}]},
+      {c:"Helados", pl:[{n:"Coulant de chocolate"},{n:"Copa Plaza"}]},
       {c:"Café", pl:[{n:"Café solo"}]}
     ];
     
     function renderizarStock() {
+      // Por defecto no hay nada agotado []
       let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '[]');
       let contenedor = document.getElementById('contenedor-stock');
       contenedor.innerHTML = "";
       
-      // Creamos los botones clasificados por categoría
-      menu.forEach(categoria => {
+      menuStock.forEach(categoria => {
         contenedor.innerHTML += `<h3 class="categoria-stock">${categoria.c}</h3>`;
         let gridHTML = `<div class="grid-stock">`;
         
@@ -171,9 +152,9 @@
     function toggleAgotado(nombre) {
       let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '[]');
       if(agotados.includes(nombre)) {
-        agotados = agotados.filter(n => n !== nombre); // Disponible
+        agotados = agotados.filter(n => n !== nombre); 
       } else {
-        agotados.push(nombre); // Agotado
+        agotados.push(nombre); 
       }
       localStorage.setItem('platosAgotados', JSON.stringify(agotados));
       renderizarStock();
