@@ -5,16 +5,22 @@
   <title>Restaurante Pizzería Plaza</title>
   <style>
     :root{--primary:#2c3e50;--accent:#e74c3c;--bg:#f4f7f6;--card-bg:#ffffff;--gold:#f39c12}
-    body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.85)),url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1000&q=80') center/cover fixed;margin:0;padding:15px;padding-bottom:140px;color:white}
+    body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background-color:#2c3e50;background-image:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.85)),url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1000&q=80');background-size:cover;background-position:center;background-attachment:fixed;margin:0;padding:15px;padding-bottom:140px;color:white}
     h1{text-align:center;color:white;font-size:2.2rem;margin-bottom:5px;text-shadow:2px 2px 5px rgba(0,0,0,0.8)}
     .subtitle{text-align:center;color:#eee;font-size:1rem;margin-bottom:15px;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
     
-    /* --- SECCIÓN IDIOMAS --- */
-    #seccion-idiomas { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 20px; }
-    .btn-idioma { background: rgba(255,255,255,0.95); color: var(--primary); border: none; padding: 15px 30px; border-radius: 30px; font-size: 1.5rem; font-weight: bold; cursor: pointer; width: 80%; max-width: 300px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-idioma:active { transform: scale(0.95); }
+    /* PANTALLA DE IDIOMAS */
+    #pantalla-idiomas { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
+    .lang-btn { background: rgba(255,255,255,0.9); border: 2px solid var(--gold); padding: 15px 30px; margin: 10px; border-radius: 30px; font-size: 1.2rem; font-weight: bold; color: var(--primary); cursor: pointer; width: 80%; max-width: 300px; display: flex; align-items: center; justify-content: center; gap: 15px; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .lang-btn:active { transform: scale(0.95); }
+    .lang-btn span { font-size: 1.8rem; }
 
-    #seccion-categorias{display:none}
+    /* BOTON CAMBIAR IDIOMA (FLOTANTE) */
+    .btn-cambiar-idioma { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; backdrop-filter: blur(5px); z-index: 50; display: none; }
+
+    #contenido-principal { display: none; }
+
+    #seccion-categorias{display:block}
     #seccion-categorias h2{color:white;font-size:1.4rem;text-align:center;margin-top:0;text-shadow:1px 1px 3px rgba(0,0,0,0.8)}
     .categorias-inicio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:15px;margin-top:20px}
     .cat-inicio-card{background:rgba(255,255,255,0.95);border-radius:15px;padding:20px;text-align:center;cursor:pointer;border-bottom:4px solid var(--accent);transition:transform 0.2s;color:#333}
@@ -28,9 +34,11 @@
     
     .platos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:15px}
     .plato-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.3);display:flex;flex-direction:column;cursor:pointer;color:#333}
-    .img-container{width:100%;height:120px;overflow:hidden;background:#000;}
-    /* Quitado el movimientoVivo porque ahora usamos GIFs reales */
-    .plato-img{width:100%;height:100%;object-fit:cover;}
+    
+    /* FONDO DE EMERGENCIA SI FALLAN LOS MEDIA */
+    .img-container{width:100%;height:120px;overflow:hidden;background:linear-gradient(45deg, #2c3e50, #34495e);display:flex;justify-content:center;align-items:center;position:relative;}
+    .img-container::after { content: "🍽️"; position: absolute; font-size: 2.5rem; opacity: 0.3; z-index: 1;}
+    .plato-img{width:100%;height:100%;object-fit:cover;position:relative;z-index:2;}
     
     .plato-info{padding:10px;display:flex;flex-direction:column;flex-grow:1}
     .plato-info h3{margin:0 0 5px 0;font-size:0.95rem;color:var(--primary);line-height:1.2}
@@ -48,7 +56,9 @@
     .modal-detalle,.modal-mesa{justify-content:center;align-items:center;z-index:200}
     
     .detalle-content{background:white;color:#333;padding:20px;border-radius:15px;width:85%;max-width:350px;max-height:85vh;overflow-y:auto;position:relative;text-align:left}
-    .detalle-img{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:15px}
+    #detMediaContainer {width:100%; height:180px; overflow:hidden; border-radius:10px; margin-bottom:15px; background:#2c3e50; position:relative; display:flex; justify-content:center; align-items:center;}
+    #detMediaContainer::after { content: "🍽️"; position: absolute; font-size: 3rem; opacity: 0.3; z-index: 1;}
+    .detalle-img{width:100%;height:100%;object-fit:cover;position:relative;z-index:2;}
     .detalle-tag{font-size:0.85rem;margin-top:8px;padding:10px;border-radius:8px;background:#f9f9f9;line-height:1.4}
     
     .cesta-content{background:white;color:#333;width:100%;max-height:80vh;border-radius:20px 20px 0 0;padding:20px;display:flex;flex-direction:column;box-sizing:border-box}
@@ -71,317 +81,314 @@
     .chat-input-area input{flex-grow:1;padding:8px;border:1px solid #ccc;border-radius:20px;outline:none;color:#333}
     .chat-input-area button{background:#2193b0;color:white;border:none;padding:8px 15px;margin-left:5px;border-radius:20px;cursor:pointer}
     
-    /* --- ESTILOS DE PLATO AGOTADO --- */
     .plato-card.agotado { opacity: 0.5; filter: grayscale(100%); pointer-events: none; position: relative; }
-    .plato-card.agotado::after { content: attr(data-agotado); position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(231, 76, 60, 0.95); color: white; padding: 8px 15px; font-weight: bold; border-radius: 8px; font-size: 1.1rem; letter-spacing: 2px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 10; }
-    
-    /* BOTON CAMBIAR IDIOMA FLOTANTE */
-    .btn-lang-top { position:absolute; top:15px; right:15px; background:rgba(255,255,255,0.2); color:white; padding:8px 15px; border-radius:20px; font-weight:bold; cursor:pointer; z-index:10; border:1px solid rgba(255,255,255,0.4); backdrop-filter:blur(5px); transition: background 0.3s; }
-    .btn-lang-top:active { background:rgba(255,255,255,0.4); }
+    .plato-card.agotado::after { content: attr(data-agotado); position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(231, 76, 60, 0.95); color: white; padding: 8px 15px; font-weight: bold; border-radius: 8px; font-size: 1.1rem; letter-spacing: 2px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 10; text-transform: uppercase; }
   </style>
 </head>
 <body>
-  <div id="btn-cambiar-idioma" class="btn-lang-top" style="display:none;" onclick="mostrarPantallaIdiomas()">🌍 Idioma</div>
-  <h1 id="ui-title">Pizzería Plaza</h1>
-  <div class="subtitle" id="ui-subtitle">Carta Digital Interactiva</div>
   
-  <!-- NUEVA PANTALLA DE IDIOMAS -->
-  <div id="seccion-idiomas">
-    <h2 style="margin-top:0; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Elige tu idioma / Choose your language</h2>
-    <button class="btn-idioma" onclick="seleccionarIdioma('es')">🇪🇸 Español</button>
-    <button class="btn-idioma" onclick="seleccionarIdioma('en')">🇬🇧 English</button>
-    <button class="btn-idioma" onclick="seleccionarIdioma('de')">🇩🇪 Deutsch</button>
+  <div id="pantalla-idiomas">
+    <h1 style="font-size:2.8rem; margin-bottom: 30px;">Pizzería Plaza</h1>
+    <button class="lang-btn" onclick="seleccionarIdioma('es')"><span>🇪🇸</span> Español</button>
+    <button class="lang-btn" onclick="seleccionarIdioma('en')"><span>🇬🇧</span> English</button>
+    <button class="lang-btn" onclick="seleccionarIdioma('de')"><span>🇩🇪</span> Deutsch</button>
   </div>
 
-  <div id="seccion-categorias">
-    <h2 id="ui-queApe">¿Qué te apetece hoy?</h2>
-    <div class="categorias-inicio-grid" id="gridCategoriasInicio"></div>
-  </div>
-
-  <div id="seccion-platos">
-    <button class="btn-volver" id="ui-volver" onclick="mostrarCategorias()">← Volver a Categorías</button>
-    <div id="contenedor-carta"></div>
-  </div>
-
-  <button class="ia-btn" id="ui-ia-btn" onclick="toggleChat()">✨ Camarero IA</button>
-  <div class="chat-window" id="chatWindow">
-    <div class="chat-header"><span id="ui-chat-title">Camarero IA 👨‍🍳</span><span onclick="toggleChat()" style="cursor:pointer">✖</span></div>
-    <div class="chat-body" id="chatBody"><div class="bot-msg" id="ui-chat-welcome">¡Hola! Soy tu asistente inteligente. Pregúntame lo que necesites 😊</div></div>
-    <div class="chat-input-area"><input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') enviarMensajeUsuario()"><button id="ui-chat-send" onclick="enviarMensajeUsuario()">Enviar</button></div>
-  </div>
-
-  <div class="barra-flotante-inferior">
-    <button class="btn-llamar-camarero" id="ui-camarero-btn" onclick="abrirModalMesa('llamada')">🔔 Camarero</button>
-    <div class="carrito-bar" id="carritoBar" style="display:none;" onclick="abrirCesta()">
-      <div>🛒 <span id="cantPlatos">0</span> <span id="ui-platos-text">platos</span> | <strong id="totalPrecio">0.00 €</strong></div>
-      <span style="font-size:0.85rem;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:12px;" id="ui-ver-cesta">Ver Cesta ↗</span>
+  <div id="contenido-principal">
+    <button class="btn-cambiar-idioma" onclick="volverAIdiomas()">🌍 <span id="ui-btn-lang">Idioma</span></button>
+    <h1>Pizzería Plaza</h1>
+    <div class="subtitle" id="ui-subtitle">Carta Digital Interactiva</div>
+    
+    <div id="seccion-categorias">
+      <h2 id="ui-que-apetece">¿Qué te apetece hoy?</h2>
+      <div class="categorias-inicio-grid" id="gridCategoriasInicio"></div>
     </div>
-  </div>
 
-  <div class="modal-detalle" id="modalDetalle">
-    <div class="detalle-content">
-      <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;color:#333;">✖</span>
-      <div id="detMediaContainer"></div>
-      <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
-      
-      <div class="detalle-tag" style="border-left:3px solid var(--primary);"><strong id="ui-ing-label">🍅 Ingredientes:</strong><br><span id="detIng" style="color:#555;"></span></div>
-      
-      <div id="contenedorExtras" style="display:none; margin-top:15px;">
-        <strong style="color:var(--primary);" id="ui-extras-label">Extras disponibles:</strong>
-        <div id="listaExtras" style="display:flex;flex-direction:column;gap:5px;margin-top:8px;font-size:0.9rem;"></div>
-      </div>
+    <div id="seccion-platos">
+      <button class="btn-volver" onclick="mostrarCategorias()" id="ui-volver">← Volver a Categorías</button>
+      <div id="contenedor-carta"></div>
+    </div>
 
-      <div style="margin-top:15px;">
-        <strong style="color:var(--primary);" id="ui-notas-label">Notas para la cocina:</strong>
-        <textarea id="detNotas" placeholder="Ej: Sin cebolla, carne muy hecha..." style="width:100%; box-sizing:border-box; padding:10px; margin-top:5px; border-radius:8px; border:1px solid #ccc; font-family:inherit; color:#333;"></textarea>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
-        <span id="detPrecio" style="font-size:1.4rem;font-weight:bold;color:var(--primary);"></span>
-        <button class="btn-pedir" id="ui-add-btn" style="width:auto;padding:10px 25px;" onclick="añadirAlCarritoDesdeModal()">+ Añadir</button>
+    <button class="ia-btn" onclick="toggleChat()">✨ <span id="ui-ia-btn">Camarero IA</span></button>
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header"><span id="ui-ia-title">Camarero IA 👨‍🍳</span><span onclick="toggleChat()" style="cursor:pointer">✖</span></div>
+      <div class="chat-body" id="chatBody"></div>
+      <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') enviarMensajeUsuario()">
+        <button onclick="enviarMensajeUsuario()" id="ui-ia-send">Enviar</button>
       </div>
     </div>
-  </div>
 
-  <div class="modal-cesta" id="modalCesta" onclick="if(event.target===this) cerrarCesta()">
-    <div class="cesta-content">
-      <div class="cesta-header"><h3 style="margin:0;" id="ui-pedido-title">Tu Pedido</h3><span onclick="cerrarCesta()" style="cursor:pointer;font-size:1.3rem;">✖</span></div>
-      <div class="cesta-lista" id="cestaLista"></div>
-      <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1.2rem;margin-bottom:15px;border-top:2px solid #eee;padding-top:10px"><span id="ui-total-label">Total:</span><span id="cestaTotalPrecio">0.00 €</span></div>
-      <button class="btn-pedir" id="ui-proceder-btn" onclick="abrirModalMesa('pedido')">Proceder a Pedir</button>
+    <div class="barra-flotante-inferior">
+      <button class="btn-llamar-camarero" onclick="abrirModalMesa('llamada')">🔔 <span id="ui-btn-llamar">Camarero</span></button>
+      <div class="carrito-bar" id="carritoBar" style="display:none;" onclick="abrirCesta()">
+        <div>🛒 <span id="cantPlatos">0</span> <span id="ui-txt-platos">platos</span> | <strong id="totalPrecio">0.00 €</strong></div>
+        <span style="font-size:0.85rem;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:12px;" id="ui-ver-cesta">Ver Cesta ↗</span>
+      </div>
     </div>
-  </div>
 
-  <div class="modal-mesa" id="modalMesa">
-    <div class="modal-content">
-      <h3 id="tituloModalMesa">¿Mesa?</h3>
-      <input type="number" id="numMesa" placeholder="Ej: 4" min="1" style="color:#333;"><br>
-      <button class="btn-pedir" id="btnAccionMesa" style="margin-bottom:10px;" onclick="ejecutarAccionMesa()">Confirmar</button>
-      <button id="ui-cancelar-btn" onclick="document.getElementById('modalMesa').style.display='none'" style="background:none;border:none;color:#666;cursor:pointer;width:100%;font-weight:bold;">Cancelar</button>
+    <div class="modal-detalle" id="modalDetalle">
+      <div class="detalle-content">
+        <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;color:#333;">✖</span>
+        <div id="detMediaContainer"></div>
+        <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
+        
+        <div class="detalle-tag" style="border-left:3px solid var(--primary);"><strong id="ui-ing-label">🍅 Ingredientes:</strong><br><span id="detIng" style="color:#555;"></span></div>
+        
+        <div id="contenedorExtras" style="display:none; margin-top:15px;">
+          <strong style="color:var(--primary);" id="ui-extras-label">Extras disponibles:</strong>
+          <div id="listaExtras" style="display:flex;flex-direction:column;gap:5px;margin-top:8px;font-size:0.9rem;"></div>
+        </div>
+
+        <div style="margin-top:15px;">
+          <strong style="color:var(--primary);" id="ui-notas-label">Notas para la cocina:</strong>
+          <textarea id="detNotas" style="width:100%; box-sizing:border-box; padding:10px; margin-top:5px; border-radius:8px; border:1px solid #ccc; font-family:inherit; color:#333;"></textarea>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+          <span id="detPrecio" style="font-size:1.4rem;font-weight:bold;color:var(--primary);"></span>
+          <button class="btn-pedir" style="width:auto;padding:10px 25px;" onclick="añadirAlCarritoDesdeModal()" id="ui-btn-add">+ Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-cesta" id="modalCesta" onclick="if(event.target===this) cerrarCesta()">
+      <div class="cesta-content">
+        <div class="cesta-header"><h3 style="margin:0;" id="ui-cesta-title">Tu Pedido</h3><span onclick="cerrarCesta()" style="cursor:pointer;font-size:1.3rem;">✖</span></div>
+        <div class="cesta-lista" id="cestaLista"></div>
+        <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1.2rem;margin-bottom:15px;border-top:2px solid #eee;padding-top:10px">
+            <span id="ui-cesta-total">Total:</span><span id="cestaTotalPrecio">0.00 €</span>
+        </div>
+        <button class="btn-pedir" onclick="abrirModalMesa('pedido')" id="ui-btn-proceder">Proceder a Pedir</button>
+      </div>
+    </div>
+
+    <div class="modal-mesa" id="modalMesa">
+      <div class="modal-content">
+        <h3 id="tituloModalMesa">¿Mesa?</h3>
+        <input type="number" id="numMesa" min="1" style="color:#333;"><br>
+        <button class="btn-pedir" id="btnAccionMesa" style="margin-bottom:10px;" onclick="ejecutarAccionMesa()">Confirmar</button>
+        <button onclick="document.getElementById('modalMesa').style.display='none'" style="background:none;border:none;color:#666;cursor:pointer;width:100%;font-weight:bold;" id="ui-btn-cancelar">Cancelar</button>
+      </div>
     </div>
   </div>
 
   <script>
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
-    const API_KEY = ""; // El entorno inyectará la clave automáticamente en la llamada fetch
+    
+    // API Key proveída por el entorno. 
+    const apiKey = ""; 
     
     let carrito = []; let tipoAccionMesa = 'pedido'; let platoAbiertoActual = null;
-    let currentLang = 'es'; // Idioma por defecto
-    
-    // TEXTOS DE LA INTERFAZ TRADUCIDOS
+    let currentLang = 'es';
+
+    // DICCIONARIO DE TRADUCCIONES DE LA INTERFAZ
     const i18n = {
       es: {
-        volver: "← Volver a Categorías", verTodo: "Ver Todo", info: "+ Info",
-        queApe: "¿Qué te apetece hoy?", camarero: "🔔 Camarero", platos: "platos", verCesta: "Ver Cesta ↗",
-        ingLabel: "🍅 Ingredientes:", extrasLabel: "Extras disponibles:",
-        notasLabel: "Notas para la cocina:", notasHolder: "Ej: Sin cebolla, carne muy hecha...", addBtn: "+ Añadir",
-        pedidoTitle: "Tu Pedido", totalLabel: "Total:", procederBtn: "Proceder a Pedir",
-        cancelarBtn: "Cancelar", confirmarBtn: "Confirmar", mesaPregunta: "¿En qué mesa estás?",
-        llamadaPregunta: "¿Desde qué mesa nos llamas?", llamarBtn: "Llamar al camarero",
-        enviarCocinaBtn: "Enviar a cocina", agotado: "AGOTADO",
-        iaTitle: "Camarero IA 👨‍🍳", iaWelcome: "¡Hola! Soy tu asistente inteligente. Pregúntame lo que necesites 😊",
-        iaInput: "Escribe aquí...", iaSend: "Enviar", iaSugg: "¡Gran elección", iaSugg2: "¿Te gustaría acompañarlo con un postre o bebida de la carta?",
-        alertaLlamada: "🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.", alertaPedido: "✅ ¡Tu pedido se ha enviado a la cocina correctamente!",
-        alertaMesa: "Introduce el número de tu mesa, por favor.", alertaRed: "Error de red. Comprueba tu conexión a internet."
+        subtitle: "Carta Digital Interactiva", queApetece: "¿Qué te apetece hoy?", volver: "← Volver a Categorías",
+        verTodo: "📋 Ver Todo", iaBtn: "Camarero IA", iaTitle: "Camarero IA 👨‍🍳", iaPlaceholder: "Escribe aquí...",
+        iaSend: "Enviar", iaGreeting: "¡Hola! Soy tu asistente inteligente. Pregúntame lo que necesites 😊",
+        btnLlamar: "Camarero", txtPlatos: "platos", verCesta: "Ver Cesta ↗", ingLabel: "🍅 Ingredientes:",
+        extrasLabel: "Extras disponibles:", notasLabel: "Notas para la cocina:", notasPlaceholder: "Ej: Sin cebolla, carne muy hecha...",
+        btnAdd: "+ Añadir", cestaTitle: "Tu Pedido", cestaTotal: "Total:", btnProceder: "Proceder a Pedir",
+        mesaPreguntaLlamada: "¿Desde qué mesa nos llamas?", mesaPreguntaPedido: "¿En qué mesa estás?",
+        btnLlamarMesa: "Llamar al camarero", btnEnviarCocina: "Enviar a cocina", btnConfirmar: "Confirmar",
+        btnCancelar: "Cancelar", mesaPlaceholder: "Ej: 4",
+        alertMesa: "Introduce el número de tu mesa, por favor.", alertLlamadaOk: "🔔 ¡Oído cocina! Un camarero acudirá enseguida a tu mesa.",
+        alertPedidoOk: "✅ ¡Tu pedido se ha enviado a la cocina correctamente!", alertError: "Error de red. Comprueba tu conexión a internet.",
+        procesando: "Procesando...", agotado: "AGOTADO", btnIdioma: "Idioma"
       },
       en: {
-        volver: "← Back to Categories", verTodo: "View All", info: "+ Info",
-        queApe: "What do you fancy today?", camarero: "🔔 Waiter", platos: "items", verCesta: "View Cart ↗",
-        ingLabel: "🍅 Ingredients:", extrasLabel: "Available extras:",
-        notasLabel: "Notes for kitchen:", notasHolder: "Ex: No onions, well done...", addBtn: "+ Add",
-        pedidoTitle: "Your Order", totalLabel: "Total:", procederBtn: "Proceed to Order",
-        cancelarBtn: "Cancel", confirmarBtn: "Confirm", mesaPregunta: "What is your table number?",
-        llamadaPregunta: "From which table are you calling?", llamarBtn: "Call waiter",
-        enviarCocinaBtn: "Send to kitchen", agotado: "SOLD OUT",
-        iaTitle: "AI Waiter 👨‍🍳", iaWelcome: "Hello! I'm your smart assistant. Ask me anything you need 😊",
-        iaInput: "Type here...", iaSend: "Send", iaSugg: "Great choice", iaSugg2: "Would you like to pair it with a dessert or drink from the menu?",
-        alertaLlamada: "🔔 Heard! A waiter will come to your table right away.", alertaPedido: "✅ Your order has been successfully sent to the kitchen!",
-        alertaMesa: "Please enter your table number.", alertaRed: "Network error. Please check your internet connection."
+        subtitle: "Interactive Digital Menu", queApetece: "What do you fancy today?", volver: "← Back to Categories",
+        verTodo: "📋 View All", iaBtn: "AI Waiter", iaTitle: "AI Waiter 👨‍🍳", iaPlaceholder: "Type here...",
+        iaSend: "Send", iaGreeting: "Hello! I'm your smart assistant. Ask me anything 😊",
+        btnLlamar: "Waiter", txtPlatos: "items", verCesta: "View Cart ↗", ingLabel: "🍅 Ingredients:",
+        extrasLabel: "Available extras:", notasLabel: "Notes for the kitchen:", notasPlaceholder: "Ex: No onion, well done meat...",
+        btnAdd: "+ Add", cestaTitle: "Your Order", cestaTotal: "Total:", btnProceder: "Proceed to Order",
+        mesaPreguntaLlamada: "Which table are you calling from?", mesaPreguntaPedido: "What is your table number?",
+        btnLlamarMesa: "Call waiter", btnEnviarCocina: "Send to kitchen", btnConfirmar: "Confirm",
+        btnCancelar: "Cancel", mesaPlaceholder: "Ex: 4",
+        alertMesa: "Please enter your table number.", alertLlamadaOk: "🔔 Heard! A waiter will come to your table right away.",
+        alertPedidoOk: "✅ Your order has been successfully sent to the kitchen!", alertError: "Network error. Check your internet connection.",
+        procesando: "Processing...", agotado: "SOLD OUT", btnIdioma: "Language"
       },
       de: {
-        volver: "← Zurück zu Kategorien", verTodo: "Alles ansehen", info: "+ Info",
-        queApe: "Worauf haben Sie heute Lust?", camarero: "🔔 Kellner", platos: "artikel", verCesta: "Warenkorb ↗",
-        ingLabel: "🍅 Zutaten:", extrasLabel: "Verfügbare Extras:",
-        notasLabel: "Notizen für die Küche:", notasHolder: "Bsp: Keine Zwiebeln, gut durch...", addBtn: "+ Hinzufügen",
-        pedidoTitle: "Ihre Bestellung", totalLabel: "Gesamt:", procederBtn: "Zur Kasse",
-        cancelarBtn: "Abbrechen", confirmarBtn: "Bestätigen", mesaPregunta: "An welchem Tisch sitzen Sie?",
-        llamadaPregunta: "Von welchem Tisch rufen Sie an?", llamarBtn: "Kellner rufen",
-        enviarCocinaBtn: "Zur Küche senden", agotado: "AUSVERKAUFT",
-        iaTitle: "KI-Kellner 👨‍🍳", iaWelcome: "Hallo! Ich bin Ihr intelligenter Assistent. Fragen Sie mich, was Sie brauchen 😊",
-        iaInput: "Schreiben Sie hier...", iaSend: "Senden", iaSugg: "Gute Wahl", iaSugg2: "Möchten Sie es mit einem Dessert oder Getränk kombinieren?",
-        alertaLlamada: "🔔 Gehört! Ein Kellner kommt sofort an Ihren Tisch.", alertaPedido: "✅ Ihre Bestellung wurde erfolgreich an die Küche gesendet!",
-        alertaMesa: "Bitte geben Sie Ihre Tischnummer ein.", alertaRed: "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung."
+        subtitle: "Interaktive Digitale Speisekarte", queApetece: "Worauf haben Sie heute Lust?", volver: "← Zurück zu den Kategorien",
+        verTodo: "📋 Alles anzeigen", iaBtn: "KI-Kellner", iaTitle: "KI-Kellner 👨‍🍳", iaPlaceholder: "Hier tippen...",
+        iaSend: "Senden", iaGreeting: "Hallo! Ich bin Ihr intelligenter Assistent. Fragen Sie mich etwas 😊",
+        btnLlamar: "Kellner", txtPlatos: "artikel", verCesta: "Warenkorb ↗", ingLabel: "🍅 Zutaten:",
+        extrasLabel: "Verfügbare Extras:", notasLabel: "Notizen für die Küche:", notasPlaceholder: "Bsp: Keine Zwiebeln, Fleisch gut durch...",
+        btnAdd: "+ Hinzufügen", cestaTitle: "Ihre Bestellung", cestaTotal: "Gesamt:", btnProceder: "Zur Bestellung",
+        mesaPreguntaLlamada: "Von welchem Tisch rufen Sie an?", mesaPreguntaPedido: "Wie lautet Ihre Tischnummer?",
+        btnLlamarMesa: "Kellner rufen", btnEnviarCocina: "In die Küche senden", btnConfirmar: "Bestätigen",
+        btnCancelar: "Abbrechen", mesaPlaceholder: "Bsp: 4",
+        alertMesa: "Bitte geben Sie Ihre Tischnummer ein.", alertLlamadaOk: "🔔 Verstanden! Ein Kellner kommt sofort an Ihren Tisch.",
+        alertPedidoOk: "✅ Ihre Bestellung wurde erfolgreich in die Küche gesendet!", alertError: "Netzwerkfehler. Überprüfen Sie Ihre Internetverbindung.",
+        procesando: "Wird bearbeitet...", agotado: "AUSVERKAUFT", btnIdioma: "Sprache"
       }
     };
 
-    // SUSTITUCIÓN POR GIFs ANIMADOS (Enlaces directos i.giphy.com para asegurar carga siempre)
-    const pz = "https://i.giphy.com/aBHeVnAieOEEg.gif"; // Pizza
-    const pep = "https://i.giphy.com/11q2f8DsG3Mww8.gif"; // Pizza Pepperoni
-    const mar = "https://i.giphy.com/l1LcfwDkEw0jGozh6.gif"; // Seafood/Pasta
-    const vg = "https://i.giphy.com/3o7TKW6oX2b9x1E2xW.gif"; // Veggie/Salad
-    const cr = "https://i.giphy.com/iZgWZISoXV4x3Ghlg1.gif"; // Meat/Entrecot
-    const po = "https://i.giphy.com/l0HlHOw6H7I7A8Gbe.gif"; // Chicken/Escalope
-    const ps = "https://i.giphy.com/xT0Gqn3JEvT6KkE1bO.gif"; // Fish/Gambas
-    const bg = "https://i.giphy.com/3o7aDft4M2V0kEN3qM.gif"; // Burger
-    const en = "https://i.giphy.com/xT1R9B7cgalypD2a2s.gif"; // Starters/Croquetas
-    const ens = "https://i.giphy.com/26xBxZI9fL3KirfkA.gif"; // Salad
-    const wk = "https://i.giphy.com/3o7TKM8gK46Xv4K624.gif"; // Wok/Pasta
-    const pa_r = "https://i.giphy.com/xT1R9I7nmb4hK8kXOU.gif"; // Pasta Tomato
-    const pa_b = "https://i.giphy.com/3o7qDQ4kcSD1REZYpW.gif"; // Pasta White
-    const po_ta = "https://i.giphy.com/3o6Zt47bYt48Jt6Eyk.gif"; // Cake
-    const po_ic = "https://i.giphy.com/1nCq6J8Yn3uB1yR6XQ.gif"; // Icecream
-    const cf = "https://i.giphy.com/3o85xwxr06YNoFdSbm.gif"; // Coffee
-    const vid_choc = "que_el_chocolate_se_mueva.mp4"; // Video de la Tarta de chocolate subido
+    // IMÁGENES ORIGINALES UNSPLASH
+    const im = id => `https://images.unsplash.com/photo-${id}?w=400&q=80`;
+    const pz=im('1513104890138-7c749659a591'), pep=im('1628840042765-356cda07504e'), mar=im('1565299624946-b28f40a0ae38'), vg=im('1511689660979-1b451b22d661');
+    const cr=im('1544025162-8315db866752'), po=im('1604908176997-125f25cc6f3d'), bg=im('1568901346375-23c9450c58cd');
+    const ps=im('1519708227418-c8fd9a32b7a2'), pa_r=im('1622973536968-3ead9e780960'), pa_b=im('1612874742237-6526221588e3');
+    const en=im('1599507684074-13e2bb9e7631'), ens=im('1512621776951-a57141f2eefd'), wk=im('1552611052-33e04de081de');
+    const po_ic=im('1553787762-b5f528e0e989'), po_ta=im('1578985545062-69928b1d9587'), cf=im('1511920170033-f8396924c348');
+    
+    // EL VÍDEO DE LA TARTA: ASEGÚRATE DE ESTAR EN VERCEL
+    const vid_choc = "que_el_chocolate_se_mueva.mp4"; 
 
     const extrasPizzas = [
-      { n: {es: "Ingrediente extra", en: "Extra ingredient", de: "Zusätzliche Zutat"}, p: 2.85 },
-      { n: {es: "Suplemento gambas", en: "Extra prawns", de: "Extra Garnelen"}, p: 4.25 },
-      { n: {es: "Hacer Calzone", en: "Make it Calzone", de: "Als Calzone"}, p: 2.00 },
-      { n: {es: "Tamaño XL (Mitad y mitad)", en: "Size XL (Half & Half)", de: "Größe XL (Halb & Halb)"}, p: 3.55 }
+      { n: {es:"Ingrediente extra", en:"Extra ingredient", de:"Zusätzliche Zutat"}, p: 2.85 },
+      { n: {es:"Suplemento gambas", en:"Prawns supplement", de:"Garnelen-Ergänzung"}, p: 4.25 },
+      { n: {es:"Hacer Calzone", en:"Make it Calzone", de:"Als Calzone"}, p: 2.00 },
+      { n: {es:"Tamaño XL (Mitad/mitad)", en:"XL Size (Half/half)", de:"XL Größe (Halb/halb)"}, p: 3.55 }
     ];
 
-    // BASE DE DATOS TRADUCIDA (Solo agregamos en/de, mantenemos los ES exactos)
+    // CARTA COMPLETA
     const menu = [
       {c:{es:"Pizzas",en:"Pizzas",de:"Pizzen"}, ic:"🍕", pl:[
-        {n:{es:"Margarita",en:"Margherita",de:"Margherita"}, in:{es:"Tomate y mozzarella",en:"Tomato and mozzarella",de:"Tomaten und Mozzarella"}, p:10.65, i:pz},
-        {n:{es:"Napolitana",en:"Napolitana",de:"Napolitana"}, in:{es:"Tomate, mozzarella, anchoas y alcaparras",en:"Tomato, mozzarella, anchovies and capers",de:"Tomaten, Mozzarella, Sardellen und Kapern"}, p:12.85, i:pz},
-        {n:{es:"Romana",en:"Romana",de:"Romana"}, in:{es:"Tomate, mozzarella, champiñones y salami",en:"Tomato, mozzarella, mushrooms and salami",de:"Tomaten, Mozzarella, Champignons und Salami"}, p:12.85, i:pep},
-        {n:{es:"Capricciosa",en:"Capricciosa",de:"Capricciosa"}, in:{es:"Tomate, mozzarella, huevo, espárragos y cebolla",en:"Tomato, mozzarella, egg, asparagus and onion",de:"Tomaten, Mozzarella, Ei, Spargel und Zwiebel"}, p:12.85, i:pz},
-        {n:{es:"Salami",en:"Salami",de:"Salami"}, in:{es:"Tomate, mozzarella, salami y pimiento",en:"Tomato, mozzarella, salami and pepper",de:"Tomaten, Mozzarella, Salami und Paprika"}, p:12.85, i:pep},
-        {n:{es:"Prosciutto",en:"Prosciutto",de:"Prosciutto"}, in:{es:"Tomate, mozzarella y jamón york",en:"Tomato, mozzarella and ham",de:"Tomaten, Mozzarella und Schinken"}, p:12.75, i:pz},
-        {n:{es:"Siciliana",en:"Siciliana",de:"Siciliana"}, in:{es:"Tomate, mozzarella, atún y anchoas",en:"Tomato, mozzarella, tuna and anchovies",de:"Tomaten, Mozzarella, Thunfisch und Sardellen"}, p:12.85, i:mar},
-        {n:{es:"Rústica",en:"Rustic",de:"Rustikal"}, in:{es:"Tomate, mozzarella, jamón york y champiñones",en:"Tomato, mozzarella, ham and mushrooms",de:"Tomaten, Mozzarella, Schinken und Champignons"}, p:12.85, i:pz},
-        {n:{es:"Frutti di mare",en:"Frutti di mare",de:"Frutti di mare"}, in:{es:"Tomate, mozzarella, gambas, atún y mejillones",en:"Tomato, mozzarella, prawns, tuna and mussels",de:"Tomaten, Mozzarella, Garnelen, Thunfisch und Muscheln"}, p:17.25, i:mar},
-        {n:{es:"Quatro Stagioni",en:"Four Seasons",de:"Vier Jahreszeiten"}, in:{es:"Tomate, mozzarella, jamón, champiñones, pimientos, espárragos verdes y aceitunas",en:"Tomato, mozzarella, ham, mushrooms, peppers, asparagus and olives",de:"Tomaten, Mozzarella, Schinken, Champignons, Paprika, Spargel und Oliven"}, p:13.85, i:pz},
-        {n:{es:"Pescatore",en:"Pescatore",de:"Pescatore"}, in:{es:"Tomate, mozzarella, cebolla, atún y champiñones",en:"Tomato, mozzarella, onion, tuna and mushrooms",de:"Tomaten, Mozzarella, Zwiebel, Thunfisch und Champignons"}, p:12.85, i:mar},
-        {n:{es:"Mafiosa",en:"Mafiosa",de:"Mafiosa"}, in:{es:"Tomate, mozzarella, champiñones, salami, huevo, guisantes y cebolla",en:"Tomato, mozzarella, mushrooms, salami, egg, peas and onion",de:"Tomaten, Mozzarella, Champignons, Salami, Ei, Erbsen und Zwiebel"}, p:12.85, i:pep},
-        {n:{es:"Super Plaza",en:"Super Plaza",de:"Super Plaza"}, in:{es:"Tomate, mozzarella, solomillo de cerdo, bacon y champiñones",en:"Tomato, mozzarella, pork tenderloin, bacon and mushrooms",de:"Tomaten, Mozzarella, Schweinefilet, Speck und Champignons"}, p:16.00, i:pz},
-        {n:{es:"Funghi",en:"Funghi",de:"Funghi"}, in:{es:"Tomate, mozzarella y champiñones",en:"Tomato, mozzarella and mushrooms",de:"Tomaten, Mozzarella und Champignons"}, p:11.85, i:vg},
-        {n:{es:"Pepperoni",en:"Pepperoni",de:"Pepperoni"}, in:{es:"Tomate, mozzarella, pepperoni y cebolla",en:"Tomato, mozzarella, pepperoni and onion",de:"Tomaten, Mozzarella, Pepperoni und Zwiebel"}, p:12.85, i:pep},
-        {n:{es:"Brassato",en:"Brassato",de:"Brassato"}, in:{es:"Tomate, mozzarella y ternera grill",en:"Tomato, mozzarella and grilled beef",de:"Tomaten, Mozzarella und gegrilltes Rindfleisch"}, p:15.00, i:pz},
+        {n:{es:"Margarita",en:"Margherita",de:"Margherita"}, in:{es:"Tomate y mozzarella",en:"Tomato and mozzarella",de:"Tomaten und Mozzarella"}, p:10.65, i:im('1574071318508-1cdbab80d002')},
+        {n:{es:"Napolitana",en:"Napoletana",de:"Neapolitanisch"}, in:{es:"Tomate, mozzarella, anchoas y alcaparras",en:"Tomato, mozzarella, anchovies and capers",de:"Tomaten, Mozzarella, Sardellen und Kapern"}, p:12.85, i:pz},
+        {n:{es:"Romana",en:"Romana",de:"Romana"}, in:{es:"Tomate, mozzarella, champiñones, salami",en:"Tomato, mozzarella, mushrooms, salami",de:"Tomaten, Mozzarella, Pilze, Salami"}, p:12.85, i:pep},
+        {n:{es:"Capricciosa",en:"Capricciosa",de:"Capricciosa"}, in:{es:"Tomate, mozzarella, huevo, espárragos y cebolla",en:"Tomato, mozzarella, egg, asparagus, onion",de:"Tomaten, Mozzarella, Ei, Spargel, Zwiebel"}, p:12.85, i:pz},
+        {n:{es:"Salami",en:"Salami",de:"Salami"}, in:{es:"Tomate, mozzarella, salami y pimiento",en:"Tomato, mozzarella, salami, pepper",de:"Tomaten, Mozzarella, Salami, Paprika"}, p:12.85, i:pep},
+        {n:{es:"Prosciutto",en:"Prosciutto",de:"Prosciutto"}, in:{es:"Tomate, mozzarella y jamón york",en:"Tomato, mozzarella, ham",de:"Tomaten, Mozzarella, Schinken"}, p:12.75, i:pz},
+        {n:{es:"Siciliana",en:"Siciliana",de:"Siciliana"}, in:{es:"Tomate, mozzarella, atún y anchoas",en:"Tomato, mozzarella, tuna, anchovies",de:"Tomaten, Mozzarella, Thunfisch, Sardellen"}, p:12.85, i:mar},
+        {n:{es:"Rústica",en:"Rustica",de:"Rustica"}, in:{es:"Tomate, mozzarella, jamón york y champiñones",en:"Tomato, mozzarella, ham, mushrooms",de:"Tomaten, Mozzarella, Schinken, Pilze"}, p:12.85, i:pz},
+        {n:{es:"Frutti di mare",en:"Seafood",de:"Meeresfrüchte"}, in:{es:"Tomate, mozzarella, gambas, atún y mejillones",en:"Tomato, mozzarella, prawns, tuna, mussels",de:"Tomaten, Mozzarella, Garnelen, Thunfisch, Muscheln"}, p:17.25, i:mar},
+        {n:{es:"Quatro Stagioni",en:"Four Seasons",de:"Vier Jahreszeiten"}, in:{es:"Tomate, mozzarella, jamón, champiñones, pimientos, espárragos, aceitunas",en:"Tomato, mozzarella, ham, mushrooms, peppers, asparagus, olives",de:"Tomaten, Mozzarella, Schinken, Pilze, Paprika, Spargel, Oliven"}, p:13.85, i:pz},
+        {n:{es:"Pescatore",en:"Pescatore",de:"Pescatore"}, in:{es:"Tomate, mozzarella, cebolla, atún y champiñones",en:"Tomato, mozzarella, onion, tuna, mushrooms",de:"Tomaten, Mozzarella, Zwiebel, Thunfisch, Pilze"}, p:12.85, i:mar},
+        {n:{es:"Mafiosa",en:"Mafiosa",de:"Mafiosa"}, in:{es:"Tomate, mozzarella, champiñones, salami, huevo, guisantes, cebolla",en:"Tomato, mozzarella, mushrooms, salami, egg, peas, onion",de:"Tomaten, Mozzarella, Pilze, Salami, Ei, Erbsen, Zwiebel"}, p:12.85, i:pep},
+        {n:{es:"Super Plaza",en:"Super Plaza",de:"Super Plaza"}, in:{es:"Tomate, mozzarella, solomillo cerdo, bacon, champiñones",en:"Tomato, mozzarella, pork tenderloin, bacon, mushrooms",de:"Tomaten, Mozzarella, Schweinefilet, Speck, Pilze"}, p:16.00, i:pz},
+        {n:{es:"Funghi",en:"Funghi",de:"Funghi"}, in:{es:"Tomate, mozzarella y champiñones",en:"Tomato, mozzarella, mushrooms",de:"Tomaten, Mozzarella, Pilze"}, p:11.85, i:vg},
+        {n:{es:"Pepperoni",en:"Pepperoni",de:"Peperoni"}, in:{es:"Tomate, mozzarella, pepperoni y cebolla",en:"Tomato, mozzarella, pepperoni, onion",de:"Tomaten, Mozzarella, Peperoni, Zwiebel"}, p:12.85, i:pep},
+        {n:{es:"Brassato",en:"Brassato",de:"Brassato"}, in:{es:"Tomate, mozzarella y ternera grill",en:"Tomato, mozzarella, grilled beef",de:"Tomaten, Mozzarella, gegrilltes Rindfleisch"}, p:15.00, i:pz},
         {n:{es:"Rúcula",en:"Arugula",de:"Rucola"}, in:{es:"Rúcula y parmesano",en:"Arugula and parmesan",de:"Rucola und Parmesan"}, p:12.85, i:vg},
         {n:{es:"Vegetal",en:"Vegetable",de:"Gemüse"}, in:{es:"Pesto, mozzarella, verduras de temporada",en:"Pesto, mozzarella, seasonal vegetables",de:"Pesto, Mozzarella, Gemüse der Saison"}, p:13.85, i:vg},
-        {n:{es:"Carpaccio",en:"Carpaccio",de:"Carpaccio"}, in:{es:"Tomate, mozzarella, carpaccio, champiñones, orégano y parmesano",en:"Tomato, mozzarella, carpaccio, mushrooms, oregano and parmesan",de:"Tomaten, Mozzarella, Carpaccio, Champignons, Oregano und Parmesan"}, p:19.35, i:pz},
-        {n:{es:"4 quesos",en:"4 Cheeses",de:"4 Käse"}, in:{es:"Tomate y 4 quesos",en:"Tomato and 4 cheeses",de:"Tomaten und 4 Käsesorten"}, p:12.85, i:pz},
-        {n:{es:"Tropical",en:"Tropical",de:"Tropisch"}, in:{es:"Tomate, mozzarella, piña natural y jamón york",en:"Tomato, mozzarella, fresh pineapple and ham",de:"Tomaten, Mozzarella, frische Ananas und Schinken"}, p:12.85, i:pz},
-        {n:{es:"Tonno",en:"Tonno",de:"Tonno"}, in:{es:"Tomate, mozzarella, atún y cebolla",en:"Tomato, mozzarella, tuna and onion",de:"Tomaten, Mozzarella, Thunfisch und Zwiebel"}, p:12.85, i:mar},
-        {n:{es:"Boloñesa",en:"Bolognese",de:"Bolognese"}, in:{es:"Tomate, mozzarella y salsa boloñesa",en:"Tomato, mozzarella and bolognese sauce",de:"Tomaten, Mozzarella und Bolognese-Sauce"}, p:13.85, i:pz},
-        {n:{es:"Marinera",en:"Marinera",de:"Marinera"}, in:{es:"Tomate, mozzarella, gambas, merluza y ajo",en:"Tomato, mozzarella, prawns, hake and garlic",de:"Tomaten, Mozzarella, Garnelen, Seehecht und Knoblauch"}, p:16.00, i:mar},
-        {n:{es:"Nativa",en:"Native",de:"Heimisch"}, in:{es:"Tomate, mozzarella, queso, sobrasada y miel",en:"Tomato, mozzarella, cheese, sobrasada and honey",de:"Tomaten, Mozzarella, Käse, Sobrasada und Honig"}, p:13.85, i:pz},
-        {n:{es:"Salmón",en:"Salmon",de:"Lachs"}, in:{es:"Tomate, mozzarella y salmón",en:"Tomato, mozzarella and salmon",de:"Tomaten, Mozzarella und Lachs"}, p:16.00, i:mar},
-        {n:{es:"Calzone Plaza",en:"Calzone Plaza",de:"Calzone Plaza"}, in:{es:"Frankfurt de Baviera con mostaza y mozzarella",en:"Bavarian Frankfurt with mustard and mozzarella",de:"Bayerische Frankfurter mit Senf und Mozzarella"}, p:11.75, i:pz},
-        {n:{es:"Nuevo México",en:"New Mexico",de:"Neu-Mexiko"}, in:{es:"Tomate, mozzarella, salsa mexicana y solomillo de cerdo",en:"Tomato, mozzarella, Mexican sauce and pork tenderloin",de:"Tomaten, Mozzarella, mexikanische Soße und Schweinefilet"}, p:13.85, i:pz},
-        {n:{es:"Varenne",en:"Varenne",de:"Varenne"}, in:{es:"Tomate, mozzarella, dátiles y cangrejo",en:"Tomato, mozzarella, dates and crab",de:"Tomaten, Mozzarella, Datteln und Krabben"}, p:12.85, i:mar},
-        {n:{es:"Jack de Mommes",en:"Jack de Mommes",de:"Jack de Mommes"}, in:{es:"Tomate, mozzarella, bacon, queso de cabra y miel",en:"Tomato, mozzarella, bacon, goat cheese and honey",de:"Tomaten, Mozzarella, Speck, Ziegenkäse und Honig"}, p:15.00, i:pz},
-        {n:{es:"Barbacoa",en:"BBQ",de:"BBQ"}, in:{es:"Tomate, mozzarella, pollo y salsa barbacoa",en:"Tomato, mozzarella, chicken and BBQ sauce",de:"Tomaten, Mozzarella, Hähnchen und BBQ-Soße"}, p:13.85, i:pz},
-        {n:{es:"Bacalao",en:"Cod",de:"Kabeljau"}, in:{es:"Tomate, mozzarella y bacalao ahumado",en:"Tomato, mozzarella and smoked cod",de:"Tomaten, Mozzarella und geräucherter Kabeljau"}, p:17.25, i:mar},
-        {n:{es:"Pulpo (XL)",en:"Octopus (XL)",de:"Oktopus (XL)"}, in:{es:"Tomate, mozzarella, pulpo y pimentón",en:"Tomato, mozzarella, octopus and paprika",de:"Tomaten, Mozzarella, Oktopus und Paprika"}, p:24.90, i:mar},
-        {n:{es:"Jamón Serrano y champiñones",en:"Serrano ham and mushrooms",de:"Serranoschinken und Pilze"}, in:{es:"Tomate, mozzarella, jamón serrano y champiñones",en:"Tomato, mozzarella, Serrano ham and mushrooms",de:"Tomaten, Mozzarella, Serranoschinken und Pilze"}, p:15.00, i:pz},
-        {n:{es:"Pizza de burrata (XL)",en:"Burrata Pizza (XL)",de:"Burrata-Pizza (XL)"}, in:{es:"Con jamón serrano y rúcula",en:"With serrano ham and arugula",de:"Mit Serranoschinken und Rucola"}, p:20.25, i:pz}
+        {n:{es:"Carpaccio",en:"Carpaccio",de:"Carpaccio"}, in:{es:"Tomate, mozzarella, carpaccio, champiñones, orégano, parmesano",en:"Tomato, mozzarella, carpaccio, mushrooms, oregano, parmesan",de:"Tomaten, Mozzarella, Carpaccio, Pilze, Oregano, Parmesan"}, p:19.35, i:pz},
+        {n:{es:"4 quesos",en:"4 cheeses",de:"4 Käsesorten"}, in:{es:"Tomate y 4 quesos",en:"Tomato and 4 cheeses",de:"Tomaten und 4 Käsesorten"}, p:12.85, i:pz},
+        {n:{es:"Tropical",en:"Tropical",de:"Tropisch"}, in:{es:"Tomate, mozzarella, piña natural y jamón york",en:"Tomato, mozzarella, natural pineapple, ham",de:"Tomaten, Mozzarella, frische Ananas, Schinken"}, p:12.85, i:pz},
+        {n:{es:"Tonno",en:"Tonno",de:"Tonno"}, in:{es:"Tomate, mozzarella, atún y cebolla",en:"Tomato, mozzarella, tuna, onion",de:"Tomaten, Mozzarella, Thunfisch, Zwiebel"}, p:12.85, i:mar},
+        {n:{es:"Boloñesa",en:"Bolognese",de:"Bolognese"}, in:{es:"Tomate, mozzarella y salsa boloñesa",en:"Tomato, mozzarella, bolognese sauce",de:"Tomaten, Mozzarella, Bolognesesauce"}, p:13.85, i:pz},
+        {n:{es:"Marinera",en:"Marinera",de:"Marinera"}, in:{es:"Tomate, mozzarella, gambas, merluza y ajo",en:"Tomato, mozzarella, prawns, hake, garlic",de:"Tomaten, Mozzarella, Garnelen, Seehecht, Knoblauch"}, p:16.00, i:mar},
+        {n:{es:"Nativa",en:"Nativa",de:"Nativa"}, in:{es:"Tomate, mozzarella, queso, sobrasada y miel",en:"Tomato, mozzarella, cheese, sobrasada, honey",de:"Tomaten, Mozzarella, Käse, Sobrasada, Honig"}, p:13.85, i:pz},
+        {n:{es:"Salmón",en:"Salmon",de:"Lachs"}, in:{es:"Tomate, mozzarella y salmón",en:"Tomato, mozzarella, salmon",de:"Tomaten, Mozzarella, Lachs"}, p:16.00, i:mar},
+        {n:{es:"Calzone Plaza",en:"Calzone Plaza",de:"Calzone Plaza"}, in:{es:"Frankfurt de Baviera con mostaza y mozzarella",en:"Bavarian frankfurt, mustard, mozzarella",de:"Bayerische Frankfurt, Senf, Mozzarella"}, p:11.75, i:pz},
+        {n:{es:"Nuevo México",en:"New Mexico",de:"Neu-Mexiko"}, in:{es:"Tomate, mozzarella, salsa mexicana y solomillo de cerdo",en:"Tomato, mozzarella, mexican sauce, pork tenderloin",de:"Tomaten, Mozzarella, mexikanische Sauce, Schweinefilet"}, p:13.85, i:pz},
+        {n:{es:"Varenne",en:"Varenne",de:"Varenne"}, in:{es:"Tomate, mozzarella, dátiles y cangrejo",en:"Tomato, mozzarella, dates, crab",de:"Tomaten, Mozzarella, Datteln, Krabben"}, p:12.85, i:mar},
+        {n:{es:"Jack de Mommes",en:"Jack de Mommes",de:"Jack de Mommes"}, in:{es:"Tomate, mozzarella, bacon, queso de cabra y miel",en:"Tomato, mozzarella, bacon, goat cheese, honey",de:"Tomaten, Mozzarella, Speck, Ziegenkäse, Honig"}, p:15.00, i:pz},
+        {n:{es:"Barbacoa",en:"BBQ Chicken",de:"BBQ Hähnchen"}, in:{es:"Tomate, mozzarella, pollo y salsa barbacoa",en:"Tomato, mozzarella, chicken and BBQ sauce",de:"Tomaten, Mozzarella, Hähnchen und BBQ-Sauce"}, p:13.85, i:pz},
+        {n:{es:"Bacalao",en:"Cod",de:"Kabeljau"}, in:{es:"Tomate, mozzarella y bacalao ahumado",en:"Tomato, mozzarella, smoked cod",de:"Tomaten, Mozzarella, geräucherter Kabeljau"}, p:17.25, i:mar},
+        {n:{es:"Pulpo (XL)",en:"Octopus (XL)",de:"Oktopus (XL)"}, in:{es:"Tomate, mozzarella, pulpo y pimentón",en:"Tomato, mozzarella, octopus, paprika",de:"Tomaten, Mozzarella, Oktopus, Paprika"}, p:24.90, i:mar},
+        {n:{es:"Jamón Serrano y champiñones",en:"Serrano ham and mushrooms",de:"Serrano-Schinken und Pilze"}, in:{es:"Tomate, mozzarella, jamón serrano y champiñones",en:"Tomato, mozzarella, serrano ham, mushrooms",de:"Tomaten, Mozzarella, Serrano-Schinken, Pilze"}, p:15.00, i:pz},
+        {n:{es:"Pizza de burrata (XL)",en:"Burrata Pizza (XL)",de:"Burrata Pizza (XL)"}, in:{es:"Con jamón serrano y rúcula",en:"With serrano ham and arugula",de:"Mit Serrano-Schinken und Rucola"}, p:20.25, i:pz}
       ]},
-      {c:{es:"Carnes",en:"Meats",de:"Fleischgerichte"}, ic:"🥩", pl:[
-        {n:{es:"Tagliata de entrecot",en:"Entrecôte Tagliata",de:"Entrecôte-Tagliata"}, in:{es:"Rúcula y parmesano",en:"Arugula and parmesan",de:"Rucola und Parmesan"}, p:23.25, i:cr},
-        {n:{es:"Entrecot",en:"Entrecôte",de:"Entrecôte"}, in:{es:"Entrecot a la plancha",en:"Grilled Entrecôte",de:"Gegrilltes Entrecôte"}, p:22.75, i:cr},
+      {c:{es:"Carnes",en:"Meats",de:"Fleisch"}, ic:"🥩", pl:[
+        {n:{es:"Tagliata de entrecot",en:"Entrecote tagliata",de:"Entrecote Tagliata"}, in:{es:"Rúcula y parmesano",en:"Arugula and parmesan",de:"Rucola und Parmesan"}, p:23.25, i:cr},
+        {n:{es:"Entrecot",en:"Entrecote",de:"Entrecote"}, in:{es:"Entrecot a la plancha",en:"Grilled entrecote",de:"Gegrilltes Entrecote"}, p:22.75, i:cr},
         {n:{es:"Escalope",en:"Escalope",de:"Schnitzel"}, in:{es:"Carne empanada",en:"Breaded meat",de:"Paniertes Fleisch"}, p:15.50, i:po},
-        {n:{es:"Escalope Cordon Bleu",en:"Cordon Bleu Escalope",de:"Cordon-Bleu-Schnitzel"}, in:{es:"Carne rellena de jamón y queso",en:"Meat stuffed with ham and cheese",de:"Fleisch gefüllt mit Schinken und Käse"}, p:16.50, i:po},
-        {n:{es:"Escalopines Marsala",en:"Marsala Escalopes",de:"Marsala-Schnitzel"}, in:{es:"Con salsa Marsala",en:"With Marsala sauce",de:"Mit Marsala-Soße"}, p:19.35, i:cr},
-        {n:{es:"Escalopines Plaza",en:"Plaza Escalopes",de:"Plaza-Schnitzel"}, in:{es:"Jamón serrano y mozzarella",en:"Serrano ham and mozzarella",de:"Serranoschinken und Mozzarella"}, p:19.35, i:cr},
-        {n:{es:"Medallones de solomillo",en:"Sirloin Medallions",de:"Lendenmedaillons"}, in:{es:"Al vino tinto con ciruelas",en:"In red wine with plums",de:"In Rotwein mit Pflaumen"}, p:20.40, i:cr},
-        {n:{es:"Pechuga de pollo plancha",en:"Grilled chicken breast",de:"Gegrillte Hähnchenbrust"}, in:{es:"Suplemento salsa pimienta o roquefort 4.05€ (indicar en notas)",en:"Pepper or Roquefort sauce supplement 4.05€ (add in notes)",de:"Pfeffer- oder Roquefortsoße Zuschlag 4.05€ (in Notizen angeben)"}, p:14.00, i:po}
+        {n:{es:"Escalope Cordon Bleu",en:"Cordon Bleu Escalope",de:"Cordon Bleu Schnitzel"}, in:{es:"Carne rellena de jamón y queso",en:"Meat stuffed with ham and cheese",de:"Fleisch gefüllt mit Schinken und Käse"}, p:16.50, i:po},
+        {n:{es:"Escalopines Marsala",en:"Marsala Escalopes",de:"Marsala Schnitzel"}, in:{es:"Con salsa Marsala",en:"With Marsala sauce",de:"Mit Marsala-Sauce"}, p:19.35, i:cr},
+        {n:{es:"Escalopines Plaza",en:"Plaza Escalopes",de:"Plaza Schnitzel"}, in:{es:"Jamón serrano y mozzarella",en:"Serrano ham and mozzarella",de:"Serrano-Schinken und Mozzarella"}, p:19.35, i:cr},
+        {n:{es:"Medallones de solomillo",en:"Sirloin medallions",de:"Lendenmedaillons"}, in:{es:"Al vino tinto con ciruelas",en:"In red wine with plums",de:"In Rotwein mit Pflaumen"}, p:20.40, i:cr},
+        {n:{es:"Pechuga de pollo plancha",en:"Grilled chicken breast",de:"Gegrillte Hähnchenbrust"}, in:{es:"Suplemento salsa pimienta o roquefort 4.05€",en:"Pepper or roquefort sauce supplement 4.05€",de:"Pfeffer- oder Roquefortsauce Ergänzung 4.05€"}, p:14.00, i:po}
       ]},
       {c:{es:"Pescados",en:"Fish",de:"Fisch"}, ic:"🐟", pl:[
-        {n:{es:"Gambas al ajillo",en:"Garlic prawns",de:"Knoblauchgarnelen"}, in:{es:"Gambas, ajo, guindilla, aceite",en:"Prawns, garlic, chilli, oil",de:"Garnelen, Knoblauch, Chili, Öl"}, p:20.25, i:ps},
+        {n:{es:"Gambas al ajillo",en:"Garlic prawns",de:"Knoblauchgarnelen"}, in:{es:"Gambas, ajo, guindilla, aceite",en:"Prawns, garlic, chili, oil",de:"Garnelen, Knoblauch, Chili, Öl"}, p:20.25, i:ps},
         {n:{es:"Calamar nacional plancha",en:"Grilled national squid",de:"Gegrillter nationaler Tintenfisch"}, in:{es:"Calamar fresco, ajo, perejil",en:"Fresh squid, garlic, parsley",de:"Frischer Tintenfisch, Knoblauch, Petersilie"}, p:20.40, i:ps},
-        {n:{es:"Calamar a la romana",en:"Roman-style squid",de:"Tintenfisch nach römischer Art"}, in:{es:"Calamar rebozado",en:"Battered squid",de:"Panierter Tintenfisch"}, p:17.25, i:ps}
+        {n:{es:"Calamar a la romana",en:"Roman style squid",de:"Tintenfisch nach römischer Art"}, in:{es:"Calamar rebozado",en:"Breaded squid",de:"Panierter Tintenfisch"}, p:17.25, i:ps}
       ]},
       {c:{es:"Opciones Veganas",en:"Vegan Options",de:"Vegane Optionen"}, ic:"🌱", pl:[
-        {n:{es:"Hamburguesa Vegana",en:"Vegan Burger",de:"Veganer Burger"}, in:{es:"Carne 100% vegetal de soja en pan pita con tomate, cebolla caramelizada y rúcula",en:"100% soy plant meat in pita bread with tomato, caramelized onion and arugula",de:"100% pflanzliches Sojafleisch im Fladenbrot mit Tomate, karamellisierter Zwiebel und Rucola"}, p:14.00, i:bg},
-        {n:{es:"Merluza vegana",en:"Vegan Hake",de:"Veganer Seehecht"}, in:{es:"Alternativa vegetal sabor mar",en:"Sea-flavored vegetable alternative",de:"Pflanzliche Alternative mit Meeresgeschmack"}, p:12.90, i:ps}
+        {n:{es:"Hamburguesa Vegana",en:"Vegan Burger",de:"Veganer Burger"}, in:{es:"Carne 100% vegetal en pan pita, tomate, cebolla, rúcula",en:"100% plant-based meat in pita bread, tomato, onion, arugula",de:"100% pflanzliches Fleisch im Fladenbrot, Tomaten, Zwiebeln, Rucola"}, p:14.00, i:bg},
+        {n:{es:"Merluza vegana",en:"Vegan hake",de:"Veganer Seehecht"}, in:{es:"Alternativa vegetal sabor mar",en:"Plant-based seafood alternative",de:"Pflanzliche Meeresfrüchte-Alternative"}, p:12.90, i:ps}
       ]},
       {c:{es:"Entrantes",en:"Starters",de:"Vorspeisen"}, ic:"🧆", pl:[
         {n:{es:"Pan de pizza",en:"Pizza bread",de:"Pizzabrot"}, in:{es:"Masa horneada con aceite y orégano",en:"Baked dough with oil and oregano",de:"Gebackener Teig mit Öl und Oregano"}, p:5.35, i:en},
-        {n:{es:"Mozarillo Plaza",en:"Plaza Mozarillo",de:"Plaza Mozarillo"}, in:{es:"Nuestra especialidad",en:"Our specialty",de:"Unsere Spezialität"}, p:6.40, i:en},
-        {n:{es:"Surtido croquetas",en:"Assorted croquettes",de:"Krokettenauswahl"}, in:{es:"Pollo, jamón, espinacas y bacalao",en:"Chicken, ham, spinach and cod",de:"Huhn, Schinken, Spinat und Kabeljau"}, p:10.60, i:en}
+        {n:{es:"Mozarillo Plaza",en:"Mozarillo Plaza",de:"Mozarillo Plaza"}, in:{es:"Nuestra especialidad",en:"Our specialty",de:"Unsere Spezialität"}, p:6.40, i:en},
+        {n:{es:"Surtido croquetas",en:"Assorted croquettes",de:"Verschiedene Kroketten"}, in:{es:"Pollo, jamón, espinacas y bacalao",en:"Chicken, ham, spinach, cod",de:"Hähnchen, Schinken, Spinat, Kabeljau"}, p:10.60, i:en}
       ]},
       {c:{es:"Ensaladas",en:"Salads",de:"Salate"}, ic:"🥗", pl:[
-        {n:{es:"Mixta",en:"Mixed",de:"Gemischt"}, in:{es:"Lechuga, tomate, cebolla, jamón york",en:"Lettuce, tomato, onion, ham",de:"Salat, Tomate, Zwiebel, Schinken"}, p:10.60, i:ens},
+        {n:{es:"Mixta",en:"Mixed",de:"Gemischt"}, in:{es:"Lechuga, tomate, cebolla, jamón york",en:"Lettuce, tomato, onion, ham",de:"Salat, Tomaten, Zwiebeln, Schinken"}, p:10.60, i:ens},
         {n:{es:"Capresse",en:"Caprese",de:"Caprese"}, in:{es:"Tomate, mozzarella, albahaca",en:"Tomato, mozzarella, basil",de:"Tomaten, Mozzarella, Basilikum"}, p:13.95, i:ens}
       ]},
       {c:{es:"Woks",en:"Woks",de:"Woks"}, ic:"🥢", pl:[
-        {n:{es:"Wok pollo",en:"Chicken wok",de:"Hähnchen-Wok"}, in:{es:"Verduras, pollo, soja",en:"Vegetables, chicken, soy",de:"Gemüse, Hähnchen, Soja"}, p:16.05, i:wk},
-        {n:{es:"Wok pulpo",en:"Octopus wok",de:"Oktopus-Wok"}, in:{es:"Verduras, pulpo",en:"Vegetables, octopus",de:"Gemüse, Oktopus"}, p:20.35, i:wk}
+        {n:{es:"Wok pollo",en:"Chicken Wok",de:"Hähnchen Wok"}, in:{es:"Verduras, pollo, soja",en:"Vegetables, chicken, soy",de:"Gemüse, Hähnchen, Soja"}, p:16.05, i:wk},
+        {n:{es:"Wok pulpo",en:"Octopus Wok",de:"Oktopus Wok"}, in:{es:"Verduras, pulpo",en:"Vegetables, octopus",de:"Gemüse, Oktopus"}, p:20.35, i:wk}
       ]},
-      {c:{es:"Pastas",en:"Pastas",de:"Pasta"}, ic:"🍝", pl:[
-        {n:{es:"Espaguetis boloñesa",en:"Spaghetti bolognese",de:"Spaghetti Bolognese"}, in:{es:"Pasta, salsa boloñesa con carne",en:"Pasta, meat bolognese sauce",de:"Pasta, Fleisch-Bolognese-Soße"}, p:12.00, i:pa_r},
+      {c:{es:"Pastas",en:"Pasta",de:"Nudeln"}, ic:"🍝", pl:[
+        {n:{es:"Espaguetis boloñesa",en:"Spaghetti Bolognese",de:"Spaghetti Bolognese"}, in:{es:"Pasta, salsa boloñesa con carne",en:"Pasta, bolognese sauce with meat",de:"Pasta, Bolognesesauce mit Fleisch"}, p:12.00, i:pa_r},
         {n:{es:"Carbonara",en:"Carbonara",de:"Carbonara"}, in:{es:"Pasta, nata, bacon, pimienta",en:"Pasta, cream, bacon, pepper",de:"Pasta, Sahne, Speck, Pfeffer"}, p:12.90, i:pa_b}
       ]},
       {c:{es:"Tartas Caseras",en:"Homemade Cakes",de:"Hausgemachte Kuchen"}, ic:"🍰", pl:[
         {n:{es:"Queso con arándanos",en:"Blueberry cheese",de:"Blaubeer-Käse"}, in:{es:"Tarta de queso y mermelada",en:"Cheesecake and jam",de:"Käsekuchen und Marmelade"}, p:5.65, i:po_ta},
         {n:{es:"Banoffee",en:"Banoffee",de:"Banoffee"}, in:{es:"Plátano, toffee, galleta",en:"Banana, toffee, biscuit",de:"Banane, Toffee, Keks"}, p:5.65, i:po_ta},
+        
+        // AQUI ESTA LA TARTA DE CHOCOLATE CON EL VÍDEO MP4
         {n:{es:"Tarta de chocolate",en:"Chocolate cake",de:"Schokoladenkuchen"}, in:{es:"Bizcocho y cacao",en:"Sponge cake and cocoa",de:"Biskuit und Kakao"}, p:5.65, i:vid_choc}, 
+        
         {n:{es:"Tiramisú",en:"Tiramisu",de:"Tiramisu"}, in:{es:"Mascarpone, café, cacao",en:"Mascarpone, coffee, cocoa",de:"Mascarpone, Kaffee, Kakao"}, p:5.90, i:po_ta}
       ]},
-      {c:{es:"Helados",en:"Ice Creams",de:"Eiscreme"}, ic:"🍨", pl:[
-        {n:{es:"Coulant de chocolate",en:"Chocolate fondant",de:"Schokoladenfondant"}, in:{es:"Con helado de vainilla",en:"With vanilla ice cream",de:"Mit Vanilleeis"}, p:5.95, i:po_ic},
-        {n:{es:"Copa Plaza",en:"Plaza Cup",de:"Plaza-Becher"}, in:{es:"Vainilla, caramelo, nata y nueces",en:"Vanilla, caramel, cream and walnuts",de:"Vanille, Karamell, Sahne und Walnüsse"}, p:6.85, i:po_ic}
+      {c:{es:"Helados",en:"Ice Creams",de:"Eis"}, ic:"🍨", pl:[
+        {n:{es:"Coulant de chocolate",en:"Chocolate coulant",de:"Schokoladen-Coulant"}, in:{es:"Con helado de vainilla",en:"With vanilla ice cream",de:"Mit Vanilleeis"}, p:5.95, i:po_ic},
+        {n:{es:"Copa Plaza",en:"Plaza Cup",de:"Plaza Becher"}, in:{es:"Vainilla, caramelo, nata y nueces",en:"Vanilla, caramel, cream, walnuts",de:"Vanille, Karamell, Sahne, Walnüsse"}, p:6.85, i:po_ic}
       ]},
       {c:{es:"Café",en:"Coffee",de:"Kaffee"}, ic:"☕", pl:[
         {n:{es:"Café solo",en:"Espresso",de:"Espresso"}, in:{es:"Café arábica",en:"Arabica coffee",de:"Arabica-Kaffee"}, p:1.60, i:cf}
       ]}
     ];
     
-    // Transformamos los datos al formato que esperaba tu código original (ahora contienen objetos de idiomas)
-    const menuData = menu.map(c => ({categoriaObj: c.c, icono: c.ic, platos: c.pl.map(p => ({ nombreObj: p.n, precio: p.p, img: p.i, ingredientesObj: p.in||"" }))}));
-    
-    // FUNCION PARA SELECCIONAR IDIOMA Y CARGAR TODO
+    const menuData = menu.map(c => ({
+      categoriaObj: c.c, icono: c.ic, 
+      platos: c.pl.map(p => ({ nombreObj: p.n, precio: p.p, img: p.i, ingredientesObj: p.in }))
+    }));
+
+    // GESTIÓN DE IDIOMAS
     function seleccionarIdioma(lang) {
       currentLang = lang;
+      document.getElementById('pantalla-idiomas').style.display = 'none';
+      document.getElementById('contenido-principal').style.display = 'block';
+      document.querySelector('.btn-cambiar-idioma').style.display = 'block';
       
-      // Actualizar Textos UI (Interfaz Estática)
-      document.getElementById('ui-volver').innerText = i18n[lang].volver;
-      document.getElementById('ui-queApe').innerText = i18n[lang].queApe;
-      document.getElementById('ui-camarero-btn').innerText = i18n[lang].camarero;
-      document.getElementById('ui-platos-text').innerText = i18n[lang].platos;
-      document.getElementById('ui-ver-cesta').innerText = i18n[lang].verCesta;
-      document.getElementById('ui-ing-label').innerText = i18n[lang].ingLabel;
-      document.getElementById('ui-extras-label').innerText = i18n[lang].extrasLabel;
-      document.getElementById('ui-notas-label').innerText = i18n[lang].notasLabel;
-      document.getElementById('detNotas').placeholder = i18n[lang].notasHolder;
-      document.getElementById('ui-add-btn').innerText = i18n[lang].addBtn;
-      document.getElementById('ui-pedido-title').innerText = i18n[lang].pedidoTitle;
-      document.getElementById('ui-total-label').innerText = i18n[lang].totalLabel;
-      document.getElementById('ui-proceder-btn').innerText = i18n[lang].procederBtn;
-      document.getElementById('ui-cancelar-btn').innerText = i18n[lang].cancelarBtn;
-      document.getElementById('btnAccionMesa').innerText = i18n[lang].confirmarBtn;
-      document.getElementById('numMesa').placeholder = i18n[lang].placeholderMesa || "Ej: 4";
-      document.getElementById('ui-ia-btn').innerText = `✨ ${i18n[lang].iaTitle}`;
-      document.getElementById('ui-chat-title').innerText = i18n[lang].iaTitle;
-      document.getElementById('ui-chat-welcome').innerText = i18n[lang].iaWelcome;
-      document.getElementById('userInput').placeholder = i18n[lang].iaInput;
-      document.getElementById('ui-chat-send').innerText = i18n[lang].iaSend;
-      
-      // Mostrar botón de cambiar idioma
-      let btnLang = document.getElementById('btn-cambiar-idioma');
-      if(btnLang) btnLang.style.display = 'block';
-
-      // Inicializar y mostrar categorías
+      actualizarTextosInterfaz();
       inicializarCategorias();
-      document.getElementById('seccion-idiomas').style.display = 'none';
-      document.getElementById('seccion-categorias').style.display = 'block';
-    }
-
-    function mostrarPantallaIdiomas() {
-      // Volver a mostrar el menú de banderas y ocultar el resto
-      document.getElementById('seccion-idiomas').style.display = 'flex';
-      document.getElementById('seccion-categorias').style.display = 'none';
-      document.getElementById('seccion-platos').style.display = 'none';
       
-      // Ocultar el botón de cambiar idioma mientras ya estamos en esa pantalla
-      let btnLang = document.getElementById('btn-cambiar-idioma');
-      if(btnLang) btnLang.style.display = 'none';
-      window.scrollTo(0,0);
+      let chat = document.getElementById('chatBody');
+      chat.innerHTML = `<div class="bot-msg">${i18n[currentLang].iaGreeting}</div>`;
     }
 
+    function volverAIdiomas() {
+      document.getElementById('pantalla-idiomas').style.display = 'flex';
+      document.getElementById('contenido-principal').style.display = 'none';
+      document.querySelector('.btn-cambiar-idioma').style.display = 'none';
+    }
+
+    function actualizarTextosInterfaz() {
+      let t = i18n[currentLang];
+      document.getElementById('ui-subtitle').innerText = t.subtitle;
+      document.getElementById('ui-que-apetece').innerText = t.queApetece;
+      document.getElementById('ui-volver').innerText = t.volver;
+      document.getElementById('ui-ia-btn').innerText = t.iaBtn;
+      document.getElementById('ui-ia-title').innerText = t.iaTitle;
+      document.getElementById('userInput').placeholder = t.iaPlaceholder;
+      document.getElementById('ui-ia-send').innerText = t.iaSend;
+      document.getElementById('ui-btn-llamar').innerText = t.btnLlamar;
+      document.getElementById('ui-txt-platos').innerText = t.txtPlatos;
+      document.getElementById('ui-ver-cesta').innerText = t.verCesta;
+      document.getElementById('ui-ing-label').innerText = t.ingLabel;
+      document.getElementById('ui-extras-label').innerText = t.extrasLabel;
+      document.getElementById('ui-notas-label').innerText = t.notasLabel;
+      document.getElementById('detNotas').placeholder = t.notasPlaceholder;
+      document.getElementById('ui-btn-add').innerText = t.btnAdd;
+      document.getElementById('ui-cesta-title').innerText = t.cestaTitle;
+      document.getElementById('ui-cesta-total').innerText = t.cestaTotal;
+      document.getElementById('ui-btn-proceder').innerText = t.btnProceder;
+      document.getElementById('numMesa').placeholder = t.mesaPlaceholder;
+      document.getElementById('ui-btn-cancelar').innerText = t.btnCancelar;
+      document.getElementById('ui-btn-lang').innerText = t.btnIdioma;
+    }
+    
     function inicializarCategorias(){
       let g=document.getElementById('gridCategoriasInicio');
       g.innerHTML=`<div class="cat-inicio-card" onclick="mostrarTodosPlatos()"><div class="cat-icono">📋</div><h3>${i18n[currentLang].verTodo}</h3></div>`;
@@ -389,7 +396,7 @@
         g.innerHTML+=`<div class="cat-inicio-card" onclick="mostrarCategoria(${i})"><div class="cat-icono">${s.icono}</div><h3>${s.categoriaObj[currentLang]}</h3></div>`
       });
     }
-    
+
     function mostrarCategoria(i){
       document.getElementById('seccion-categorias').style.display='none';
       document.getElementById('seccion-platos').style.display='block';
@@ -398,7 +405,7 @@
       renderizarSeccion(menuData[i],c,i);
       window.scrollTo(0,0)
     }
-    
+
     function mostrarTodosPlatos(){
       document.getElementById('seccion-categorias').style.display='none';
       document.getElementById('seccion-platos').style.display='block';
@@ -415,10 +422,11 @@
       let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '[]');
 
       s.platos.forEach((p,pIdx)=>{
-        // LA COCINA BUSCA POR NOMBRE EN ESPAÑOL, POR ESO USAMOS p.nombreObj.es AQUÍ
+        // La cocina maneja nombres en ESPAÑOL, usamos obj.es para verificar agotados
         let claseAgotado = agotados.includes(p.nombreObj.es) ? 'agotado' : '';
         let textoAgotado = i18n[currentLang].agotado;
 
+        // SOPORTE PARA VÍDEO (.mp4) O IMAGEN ESTÁNDAR
         let mediaHtml = p.img.endsWith('.mp4') 
           ? `<video src="${p.img}" class="plato-img" autoplay loop muted playsinline></video>` 
           : `<img src="${p.img}" class="plato-img">`;
@@ -428,7 +436,7 @@
           <div class="plato-info">
             <h3>${p.nombreObj[currentLang]}</h3>
             <div class="precio-fila"><div class="precio">${p.precio.toFixed(2)} €</div>
-            <button class="btn-info">${i18n[currentLang].info}</button></div>
+            <button class="btn-info">+ Info</button></div>
           </div>
         </div>`
       });
@@ -440,6 +448,7 @@
       let plato = platoAbiertoActual;
       
       let mediaContainer = document.getElementById('detMediaContainer');
+      // SOPORTE PARA VÍDEO EN EL DETALLE
       if (plato.img.endsWith('.mp4')) {
           mediaContainer.innerHTML = `<video class="detalle-img" src="${plato.img}" autoplay loop muted playsinline></video>`;
       } else {
@@ -453,9 +462,10 @@
       
       let contenedorExtras = document.getElementById('contenedorExtras');
       let listaExtras = document.getElementById('listaExtras');
-      if (menuData[catIdx].categoriaObj.es === "Pizzas") { // Siempre verificamos contra español por lógica interna
+      
+      if (menuData[catIdx].categoriaObj.es === "Pizzas") {
         contenedorExtras.style.display = "block";
-        listaExtras.innerHTML = extrasPizzas.map((e, idx) => `<label><input type="checkbox" class="chk-extra" value="${e.n.es}" data-valorui="${e.n[currentLang]}" data-p="${e.p}"> ${e.n[currentLang]} (+${e.p.toFixed(2)}€)</label>`).join('');
+        listaExtras.innerHTML = extrasPizzas.map((e, idx) => `<label><input type="checkbox" class="chk-extra" value="${e.n.es}" data-p="${e.p}"> ${e.n[currentLang]} (+${e.p.toFixed(2)}€)</label>`).join('');
       } else {
         contenedorExtras.style.display = "none";
         listaExtras.innerHTML = "";
@@ -465,37 +475,24 @@
     }
 
     function añadirAlCarritoDesdeModal() {
-      let extrasSeleccionadosUI = [];
-      let extrasSeleccionadosES = []; // Para la cocina
+      let extrasSeleccionados = [];
       let extraPrecioTotal = 0;
       document.querySelectorAll('.chk-extra:checked').forEach(c => {
-         extrasSeleccionadosUI.push(c.dataset.valorui);
-         extrasSeleccionadosES.push(c.value); // El value interno es español
+         extrasSeleccionados.push(c.value); // Guardamos el nombre en ESPAÑOL para la cocina
          extraPrecioTotal += parseFloat(c.dataset.p);
       });
       
       let notas = document.getElementById('detNotas').value.trim();
-      let nombreCestaUI = platoAbiertoActual.nombreObj[currentLang];
-      let nombreCestaES = platoAbiertoActual.nombreObj.es; // ¡ESTO VA A LA COCINA!
+      // IMPORTANTE: GUARDAR EN EL CARRITO CON EL NOMBRE EN ESPAÑOL PARA LA COCINA
+      let nombreCesta = platoAbiertoActual.nombreObj.es; 
       
-      if (extrasSeleccionadosUI.length > 0) {
-        nombreCestaUI += " (" + extrasSeleccionadosUI.join(", ") + ")";
-        nombreCestaES += " (" + extrasSeleccionadosES.join(", ") + ")";
-      }
-      if (notas !== "") {
-        nombreCestaUI += " [Notas: " + notas + "]";
-        nombreCestaES += " [Notas: " + notas + "]";
-      }
+      if (extrasSeleccionados.length > 0) nombreCesta += " (" + extrasSeleccionados.join(", ") + ")";
+      if (notas !== "") nombreCesta += " [Notas: " + notas + "]";
       
       let precioFinal = platoAbiertoActual.precio + extraPrecioTotal;
-      // Buscamos por el ID interno en español para que no se dupliquen si cambia de idioma
-      let f = carrito.find(i => i.nombreInterno === nombreCestaES);
-      if(f) {
-        f.cantidad++; 
-        f.nombreUI = nombreCestaUI; // Actualizamos el nombre visual por si cambió de idioma
-      } else {
-        carrito.push({nombreInterno: nombreCestaES, nombreUI: nombreCestaUI, precio: precioFinal, cantidad: 1});
-      }
+      
+      let f = carrito.find(i => i.nombre === nombreCesta);
+      if(f) f.cantidad++; else carrito.push({nombre: nombreCesta, nombreMostrar: platoAbiertoActual.nombreObj[currentLang], precio: precioFinal, cantidad: 1});
       
       actualizarBarraCarrito();
       mostrarListaCesta();
@@ -503,94 +500,41 @@
       lanzarSugerenciaAutomatica(platoAbiertoActual.nombreObj[currentLang]);
     }
 
-    function mostrarCategorias(){
-      document.getElementById('seccion-platos').style.display='none';
-      document.getElementById('seccion-categorias').style.display='block';
-      window.scrollTo(0,0)
-    }
-    
-    function cambiarCantidad(nInt,c){
-      let i=carrito.find(x=>x.nombreInterno===nInt);
-      if(i){
-        i.cantidad+=c;
-        if(i.cantidad<=0) carrito=carrito.filter(x=>x.nombreInterno!==nInt)
-      }
-      actualizarBarraCarrito();
-      mostrarListaCesta();
-    }
+    function mostrarCategorias(){document.getElementById('seccion-platos').style.display='none';document.getElementById('seccion-categorias').style.display='block';window.scrollTo(0,0)}
+    function cambiarCantidad(n,c){let i=carrito.find(x=>x.nombre===n);if(i){i.cantidad+=c;if(i.cantidad<=0)carrito=carrito.filter(x=>x.nombre!==n)}actualizarBarraCarrito();mostrarListaCesta()}
     
     function actualizarBarraCarrito(){
-      let b=document.getElementById('carritoBar');
-      let tp=carrito.reduce((s,i)=>s+i.cantidad,0);
-      let tpr=carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
-      if(tp>0){
-        b.style.display='flex';
-        document.getElementById('cantPlatos').innerText=tp;
-        document.getElementById('totalPrecio').innerText=tpr.toFixed(2)+' €'
-      }else{
-        b.style.display='none';
-        cerrarCesta()
-      }
+      let b=document.getElementById('carritoBar'),tp=carrito.reduce((s,i)=>s+i.cantidad,0),tpr=carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+      if(tp>0){b.style.display='flex';document.getElementById('cantPlatos').innerText=tp;document.getElementById('totalPrecio').innerText=tpr.toFixed(2)+' €'}
+      else{b.style.display='none';cerrarCesta()}
     }
     
-    function abrirCesta(){
-      mostrarListaCesta();
-      document.getElementById('modalCesta').style.display='flex'
-    }
+    function abrirCesta(){mostrarListaCesta();document.getElementById('modalCesta').style.display='flex'}
     function cerrarCesta(){document.getElementById('modalCesta').style.display='none'}
     
     function mostrarListaCesta(){
-      let l=document.getElementById('cestaLista'),t=0;
-      l.innerHTML="";
+      let l=document.getElementById('cestaLista'),t=0;l.innerHTML="";
       carrito.forEach(i=>{
         t+=i.precio*i.cantidad;
-        // Escapamos apóstrofes para el evento onclick
-        let stringSeguro = i.nombreInterno.replace(/'/g,"\\'");
-        l.innerHTML+=`<div class="cesta-item"><div><strong style="color:var(--primary)">${i.nombreUI}</strong><br><small>${i.precio.toFixed(2)} € x ${i.cantidad}</small></div><div class="controles-item"><button class="btn-control" onclick="cambiarCantidad('${stringSeguro}',-1)">-</button><span>${i.cantidad}</span><button class="btn-control" onclick="cambiarCantidad('${stringSeguro}',1)">+</button></div></div>`
+        l.innerHTML+=`<div class="cesta-item"><div><strong style="color:var(--primary)">${i.nombreMostrar}</strong><br><small>${i.precio.toFixed(2)} € x ${i.cantidad}</small></div><div class="controles-item"><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',-1)">-</button><span>${i.cantidad}</span><button class="btn-control" onclick="cambiarCantidad('${i.nombre.replace(/'/g,"\\'")}',1)">+</button></div></div>`
       });
       document.getElementById('cestaTotalPrecio').innerText=t.toFixed(2)+' €'
     }
     
     function toggleChat(){let c=document.getElementById('chatWindow');c.style.display=c.style.display==='flex'?'none':'flex'}
     
-    // --- NUEVAS FUNCIONES IMPULSADAS POR GEMINI ---
-    
-    // 1. Extraemos todo el menú en formato texto para que la IA lo lea
-    function obtenerContextoMenu() {
-      let ctx = "Menú de Pizzería Plaza:\n";
-      menu.forEach(cat => {
-        ctx += `[${cat.c.es}]: `;
-        // Mapeamos los platos con nombre, precio e ingredientes
-        ctx += cat.pl.map(p => `${p.n.es} (${p.p}€) - Ingredientes: ${p.in.es}`).join(" | ");
-        ctx += "\n";
-      });
-      return ctx;
-    }
-    
-    // 2. Chatbot consciente del menú
+    // IA CONEXIÓN MEJORADA (Contexto de Menú)
     async function enviarMensajeUsuario(){
       let i=document.getElementById('userInput'), t=i.value.trim(), b=document.getElementById('chatBody');
       if(!t)return;
       b.innerHTML+=`<div class="user-msg">${t}</div>`; i.value=''; b.scrollTop=b.scrollHeight;
-      
-      b.innerHTML+=`<div class="bot-msg" id="typing">Pensando...</div>`; b.scrollTop=b.scrollHeight;
+      b.innerHTML+=`<div class="bot-msg" id="typing">${i18n[currentLang].procesando}</div>`; b.scrollTop=b.scrollHeight;
       
       try {
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`;
+        let menuContext = menuData.map(c => `${c.categoriaObj[currentLang]}: ` + c.platos.map(p => `${p.nombreObj[currentLang]} (${p.precio}€)`).join(', ')).join('. ');
+        let p = `Eres el camarero virtual de la Pizzería Plaza. Responde SIEMPRE en el idioma: ${currentLang}. Sé amable, muy breve y servicial. Usa este menú real para responder: ${menuContext}. El cliente dice: ${t}`;
         
-        const systemPrompt = `Eres el camarero virtual experto de la Pizzería Plaza. 
-        Responde SIEMPRE en el idioma: ${currentLang.toUpperCase()}. 
-        Sé breve, amable y muy servicial. Usa emojis acordes al contexto.
-        Basa tus respuestas ÚNICAMENTE en el siguiente menú real del restaurante:
-        ${obtenerContextoMenu()}
-        Si el cliente te pide algo que no está en el menú, sugiere amablemente la alternativa más parecida que sí ofrezcamos. Nunca inventes platos o precios.`;
-
-        const payload = {
-            contents: [{ parts: [{ text: t }] }],
-            systemInstruction: { parts: [{ text: systemPrompt }] }
-        };
-
-        let res = await fetch(apiUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+        let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: p}]}]}) });
         let data = await res.json();
         
         if(document.getElementById('typing')) document.getElementById('typing').remove();
@@ -604,32 +548,23 @@
       b.scrollTop=b.scrollHeight;
     }
     
-    // 3. Sugerencias dinámicas y personalizadas de Gemini al añadir al carrito
-    async function lanzarSugerenciaAutomatica(n){
-      let c=document.getElementById('chatWindow'),b=document.getElementById('chatBody');
+    async function lanzarSugerenciaAutomatica(nombrePlatoUserLang){
+      let c=document.getElementById('chatWindow'), b=document.getElementById('chatBody');
       c.style.display='flex';
-      
-      let typingId = 'sugg-' + Date.now();
-      b.innerHTML+=`<div class="bot-msg" id="${typingId}">Pensando una sugerencia para ti...</div>`;
+      b.innerHTML+=`<div class="bot-msg" id="typingSug">${i18n[currentLang].procesando}</div>`;
       b.scrollTop=b.scrollHeight;
 
       try {
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`;
-        const prompt = `El cliente acaba de añadir "${n}" a su pedido.
-        Genera una frase muy breve (1-2 líneas máximo) y entusiasta recomendando un postre, bebida o entrante específico de nuestra carta que combine perfectamente con su elección.
-        Basa tu recomendación en este menú: ${obtenerContextoMenu()}.
-        DEBES responder en este idioma: ${currentLang.toUpperCase()}. No uses formato markdown.`;
-
-        const payload = { contents: [{ parts: [{ text: prompt }] }] };
-        let res = await fetch(apiUrl, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+        let menuContext = menuData.map(c => c.platos.map(p => p.nombreObj[currentLang]).join(', ')).join('. ');
+        let p = `Eres un camarero experto. El cliente acaba de pedir "${nombrePlatoUserLang}". Sugiérele brevemente UN SOLO acompañamiento (bebida, postre o entrante) que pegue bien con eso, usando platos de esta lista: ${menuContext}. Responde en idioma: ${currentLang}. Sé entusiasma y breve (1-2 frases).`;
+        
+        let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({contents:[{parts:[{text: p}]}]}) });
         let data = await res.json();
         
-        if(data.error) throw new Error(data.error.message);
-        let textoSugerencia = data.candidates[0].content.parts[0].text.replace(/\n/g,"<br>");
-        document.getElementById(typingId).innerHTML = textoSugerencia;
+        if(document.getElementById('typingSug')) document.getElementById('typingSug').remove();
+        if(!data.error) b.innerHTML+=`<div class="bot-msg">👨‍🍳 ${data.candidates[0].content.parts[0].text.replace(/\n/g,"<br>")}</div>`;
       } catch(e) {
-        // Fallback al texto estático original si falla la IA o la red
-        document.getElementById(typingId).innerHTML = `${i18n[currentLang].iaSugg} <b>${n}</b>! 👨‍🍳<br>${i18n[currentLang].iaSugg2}`;
+         if(document.getElementById('typingSug')) document.getElementById('typingSug').remove();
       }
       b.scrollTop=b.scrollHeight;
     }
@@ -637,54 +572,46 @@
     function abrirModalMesa(t){
       tipoAccionMesa=t;
       cerrarCesta();
-      document.getElementById('tituloModalMesa').innerText=t==='llamada' ? i18n[currentLang].llamadaPregunta : i18n[currentLang].mesaPregunta;
-      document.getElementById('btnAccionMesa').innerText=t==='llamada' ? i18n[currentLang].llamarBtn : i18n[currentLang].enviarCocinaBtn;
-      document.getElementById('modalMesa').style.display='flex'
+      document.getElementById('tituloModalMesa').innerText = t==='llamada' ? i18n[currentLang].mesaPreguntaLlamada : i18n[currentLang].mesaPreguntaPedido;
+      document.getElementById('btnAccionMesa').innerText = t==='llamada' ? i18n[currentLang].btnLlamarMesa : i18n[currentLang].btnEnviarCocina;
+      document.getElementById('modalMesa').style.display='flex';
     }
     
     function ejecutarAccionMesa(){
-      let m=document.getElementById('numMesa').value,b=document.getElementById('btnAccionMesa');
-      if(!m)return alert(i18n[currentLang].alertaMesa);
-      b.innerText="Procesando...";
+      let m=document.getElementById('numMesa').value, b=document.getElementById('btnAccionMesa');
+      if(!m) return alert(i18n[currentLang].alertMesa);
+      b.innerText = i18n[currentLang].procesando;
       b.disabled=true;
       
-      let d={mesa:m,hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
-      
+      let d={mesa:m, hora:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
       if(tipoAccionMesa==='llamada'){
-        d.tipo="ATENCIÓN CAMARERO REQUERIDA"
+        d.tipo="ATENCIÓN CAMARERO REQUERIDA";
       }else{
         let p=[];
-        // LA COCINA RECIBIRÁ LOS NOMBRES EN ESPAÑOL PARA NO VOLVERSE LOCA
-        carrito.forEach(i=>{
-          for(let j=0;j<i.cantidad;j++) p.push({nombre: i.nombreInterno, precio: i.precio})
-        });
+        carrito.forEach(i=>{for(let j=0;j<i.cantidad;j++) p.push({nombre:i.nombre,precio:i.precio})});
         d.platos=p;
         d.total=p.reduce((s,i)=>s+i.precio,0)
       }
       
       fetch(DB_URL,{method:'POST',body:JSON.stringify(d)}).then(()=>{
-        alert(tipoAccionMesa==='llamada' ? i18n[currentLang].alertaLlamada : i18n[currentLang].alertaPedido);
+        alert(tipoAccionMesa==='llamada' ? i18n[currentLang].alertLlamadaOk : i18n[currentLang].alertPedidoOk);
         if(tipoAccionMesa==='pedido'){carrito=[];actualizarBarraCarrito()}
         document.getElementById('modalMesa').style.display='none';
-        b.innerText=i18n[currentLang].confirmarBtn;
+        b.innerText = i18n[currentLang].btnConfirmar;
         b.disabled=false
       }).catch(()=>{
-        alert(i18n[currentLang].alertaRed);
-        b.innerText=i18n[currentLang].confirmarBtn;
+        alert(i18n[currentLang].alertError);
+        b.innerText = i18n[currentLang].btnConfirmar;
         b.disabled=false
       })
     }
     
-    // RECARGA AUTOMÁTICA SI LA COCINA APAGA UN PLATO
     window.addEventListener('storage', function(e) {
       if(e.key === 'platosAgotados') {
         let menuAbierto = document.getElementById('seccion-platos').style.display === 'block';
-        if (menuAbierto) mostrarTodosPlatos(); // Refresca la lista sin parpadear
+        if (menuAbierto) mostrarTodosPlatos();
       }
     });
-
-    // En vez de iniciar el menú, la app empieza en la pantalla de idiomas
-    // window.onload=inicializarCategorias; 
   </script>
 </body>
 </html>
