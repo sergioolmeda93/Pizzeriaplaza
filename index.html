@@ -121,7 +121,7 @@
   <div class="modal-detalle" id="modalDetalle">
     <div class="detalle-content">
       <span onclick="document.getElementById('modalDetalle').style.display='none'" style="position:absolute;top:10px;right:15px;font-size:1.5rem;cursor:pointer;background:white;border-radius:50%;width:30px;height:30px;text-align:center;line-height:30px;box-shadow:0 2px 5px rgba(0,0,0,0.2);z-index:10;color:#333;">✖</span>
-      <img id="detImg" class="detalle-img" src="">
+      <div id="detMediaContainer"></div>
       <h2 id="detNombre" style="margin:0 0 5px 0;color:var(--primary);font-size:1.4rem;"></h2>
       
       <div class="detalle-tag" style="border-left:3px solid var(--primary);"><strong id="ui-ing-label">🍅 Ingredientes:</strong><br><span id="detIng" style="color:#555;"></span></div>
@@ -231,6 +231,7 @@
     const po_ta = "https://i.giphy.com/3o6Zt47bYt48Jt6Eyk.gif"; // Cake
     const po_ic = "https://i.giphy.com/1nCq6J8Yn3uB1yR6XQ.gif"; // Icecream
     const cf = "https://i.giphy.com/3o85xwxr06YNoFdSbm.gif"; // Coffee
+    const vid_choc = "que_el_chocolate_se_mueva.mp4"; // Video de la Tarta de chocolate subido
 
     const extrasPizzas = [
       { n: {es: "Ingrediente extra", en: "Extra ingredient", de: "Zusätzliche Zutat"}, p: 2.85 },
@@ -317,7 +318,7 @@
       {c:{es:"Tartas Caseras",en:"Homemade Cakes",de:"Hausgemachte Kuchen"}, ic:"🍰", pl:[
         {n:{es:"Queso con arándanos",en:"Blueberry cheese",de:"Blaubeer-Käse"}, in:{es:"Tarta de queso y mermelada",en:"Cheesecake and jam",de:"Käsekuchen und Marmelade"}, p:5.65, i:po_ta},
         {n:{es:"Banoffee",en:"Banoffee",de:"Banoffee"}, in:{es:"Plátano, toffee, galleta",en:"Banana, toffee, biscuit",de:"Banane, Toffee, Keks"}, p:5.65, i:po_ta},
-        {n:{es:"Tarta de chocolate",en:"Chocolate cake",de:"Schokoladenkuchen"}, in:{es:"Bizcocho y cacao",en:"Sponge cake and cocoa",de:"Biskuit und Kakao"}, p:5.65, i:po_ta}, 
+        {n:{es:"Tarta de chocolate",en:"Chocolate cake",de:"Schokoladenkuchen"}, in:{es:"Bizcocho y cacao",en:"Sponge cake and cocoa",de:"Biskuit und Kakao"}, p:5.65, i:vid_choc}, 
         {n:{es:"Tiramisú",en:"Tiramisu",de:"Tiramisu"}, in:{es:"Mascarpone, café, cacao",en:"Mascarpone, coffee, cocoa",de:"Mascarpone, Kaffee, Kakao"}, p:5.90, i:po_ta}
       ]},
       {c:{es:"Helados",en:"Ice Creams",de:"Eiscreme"}, ic:"🍨", pl:[
@@ -418,8 +419,12 @@
         let claseAgotado = agotados.includes(p.nombreObj.es) ? 'agotado' : '';
         let textoAgotado = i18n[currentLang].agotado;
 
+        let mediaHtml = p.img.endsWith('.mp4') 
+          ? `<video src="${p.img}" class="plato-img" autoplay loop muted playsinline></video>` 
+          : `<img src="${p.img}" class="plato-img">`;
+
         g.innerHTML+=`<div class="plato-card ${claseAgotado}" data-agotado="${textoAgotado}" onclick="abrirDetalle(${catIdx},${pIdx})">
-          <div class="img-container"><img src="${p.img}" class="plato-img"></div>
+          <div class="img-container">${mediaHtml}</div>
           <div class="plato-info">
             <h3>${p.nombreObj[currentLang]}</h3>
             <div class="precio-fila"><div class="precio">${p.precio.toFixed(2)} €</div>
@@ -433,7 +438,14 @@
     function abrirDetalle(catIdx, pIdx) {
       platoAbiertoActual = menuData[catIdx].platos[pIdx];
       let plato = platoAbiertoActual;
-      document.getElementById('detImg').src = plato.img;
+      
+      let mediaContainer = document.getElementById('detMediaContainer');
+      if (plato.img.endsWith('.mp4')) {
+          mediaContainer.innerHTML = `<video class="detalle-img" src="${plato.img}" autoplay loop muted playsinline></video>`;
+      } else {
+          mediaContainer.innerHTML = `<img class="detalle-img" src="${plato.img}">`;
+      }
+      
       document.getElementById('detNombre').innerText = plato.nombreObj[currentLang];
       document.getElementById('detIng').innerText = typeof plato.ingredientesObj === 'object' ? (plato.ingredientesObj[currentLang] || "") : "Consulta con el camarero.";
       document.getElementById('detPrecio').innerText = plato.precio.toFixed(2) + " €";
