@@ -79,20 +79,15 @@
     </div>
   </header>
 
-  <!-- VISTA COMANDAS -->
   <section id="view-comandas" class="view-section active">
     <div id="loading-orders" class="loader"></div>
     <div id="orders-grid" class="orders-grid" style="display:none;"></div>
   </section>
 
-  <!-- VISTA STOCK -->
   <section id="view-stock" class="view-section">
-    <div class="stock-container" id="stock-container">
-      <!-- Se genera por JS -->
-    </div>
+    <div class="stock-container" id="stock-container"></div>
   </section>
 
-  <!-- VISTA ESTADISTICAS -->
   <section id="view-stats" class="view-section">
     <div class="stats-container">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -124,9 +119,7 @@
         </div>
         <div class="chart-card">
           <h3>📝 Últimas Acciones (Log)</h3>
-          <div id="stat-log" style="font-family:monospace; color:#94a3b8; font-size:0.9rem; max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-            <!-- Log de eventos -->
-          </div>
+          <div id="stat-log" style="font-family:monospace; color:#94a3b8; font-size:0.9rem; max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
         </div>
       </div>
     </div>
@@ -135,7 +128,6 @@
   <script>
     const DB_URL = "https://pizzeria-plaza-63f10-default-rtdb.europe-west1.firebasedatabase.app/pedidos.json";
     
-    // MENÚ COMPLETO (SOLO NOMBRES PARA EL STOCK, SACADO DE TU CARTA)
     const categoriasStock = [
       { n: "Pizzas", p: ["Margarita", "Napolitana", "Romana", "Capricciosa", "Salami", "Prosciutto", "Siciliana", "Rústica", "Frutti di mare", "Quatro Stagioni", "Pescatore", "Mafiosa", "Super Plaza", "Funghi", "Pepperoni", "Brassato", "Rúcula", "Vegetal", "Carpaccio", "4 quesos", "Tropical", "Tonno", "Boloñesa", "Marinera", "Nativa", "Salmón", "Calzone Plaza", "Nuevo México", "Varenne", "Jack de Mommes", "Barbacoa", "Bacalao", "Pulpo (XL)", "Jamón Serrano y champiñones", "Pizza de burrata (XL)"] },
       { n: "Carnes", p: ["Tagliata de entrecot", "Entrecot", "Escalope", "Escalope Cordon Bleu", "Escalopines Marsala", "Escalopines Plaza", "Medallones de solomillo", "Pechuga de pollo plancha"] },
@@ -146,12 +138,11 @@
       { n: "Woks", p: ["Wok pollo", "Wok pulpo"] },
       { n: "Pastas", p: ["Espaguetis boloñesa", "Carbonara"] },
       { n: "Tartas Caseras", p: ["Queso con arándanos", "Banoffee", "Tarta de chocolate", "Tiramisú"] },
-      { n: "Helados y Café", p: ["Coulant de chocolate", "Copa Plaza", "Café solo"] }
+      { n: "Bebidas y Helados", p: ["Refresco (Cola/Naranja/Limón)", "Coulant de chocolate", "Copa Plaza", "Café solo"] }
     ];
 
     let allOrdersData = {};
 
-    // NAVEGACIÓN
     function switchTab(tabId, btn) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -161,7 +152,6 @@
       if(tabId === 'stats') procesarEstadisticas();
     }
 
-    // --- SISTEMA DE COMANDAS Y BD ---
     function fetchPedidos() {
       fetch(DB_URL)
         .then(res => res.json())
@@ -169,7 +159,7 @@
           allOrdersData = data || {};
           renderizarComandas(allOrdersData);
           if (document.getElementById('view-stats').classList.contains('active')) {
-            procesarEstadisticas(); // Refrescar stats si la pestaña está abierta
+            procesarEstadisticas();
           }
         })
         .catch(err => console.error("Error BD:", err));
@@ -184,7 +174,6 @@
 
       for (let id in data) {
         let p = data[id];
-        // SOLO MOSTRAR PEDIDOS QUE NO ESTÉN COMPLETADOS
         if (p.estado === 'completado') continue;
         
         hayPendientes = true;
@@ -218,7 +207,7 @@
             <button class="btn-completar" onclick="marcarCompletado('${id}', '${p.mesa}')">✔ Completar</button>
           </div>
         `;
-        grid.prepend(card); // Los nuevos primero
+        grid.prepend(card); 
       }
 
       loader.style.display = 'none';
@@ -231,26 +220,21 @@
     }
 
     function marcarCompletado(id, mesa) {
-      // EN LUGAR DE BORRAR (DELETE), ACTUALIZAMOS A COMPLETADO PARA GUARDAR ESTADÍSTICAS
       let urlActualizar = DB_URL.replace('.json', `/${id}.json`);
-      
       fetch(urlActualizar, {
         method: 'PATCH',
         body: JSON.stringify({ estado: 'completado', completadoEn: new Date().toISOString() })
       }).then(() => {
-        fetchPedidos(); // Recargar datos
-        console.log(`Mesa ${mesa} completada.`);
+        fetchPedidos();
       }).catch(err => alert("Error al completar el pedido."));
     }
 
-    // --- SISTEMA DE STOCK ---
     function renderizarStock() {
       const container = document.getElementById('stock-container');
       let agotados = JSON.parse(localStorage.getItem('platosAgotados') || '[]');
       
       categoriasStock.forEach(cat => {
         let details = document.createElement('details');
-        // Abrir la primera categoría por defecto
         if(cat.n === "Pizzas") details.open = true; 
         
         let summary = document.createElement('summary');
@@ -268,14 +252,13 @@
           btn.onclick = () => {
             let index = agotados.indexOf(plato);
             if (index > -1) {
-              agotados.splice(index, 1); // Quitar de agotados
+              agotados.splice(index, 1); 
               btn.classList.remove('agotado');
             } else {
-              agotados.push(plato); // Poner en agotados
+              agotados.push(plato); 
               btn.classList.add('agotado');
             }
             localStorage.setItem('platosAgotados', JSON.stringify(agotados));
-            // Forzar disparo del evento storage para la carta abierta en la misma tablet/ordenador
             window.dispatchEvent(new Event('storage'));
           };
           grid.appendChild(btn);
@@ -287,35 +270,28 @@
       });
     }
 
-    // --- SISTEMA DE ESTADÍSTICAS ---
     function procesarEstadisticas() {
       let ingresosTotales = 0;
       let pedidosComidaTotales = 0;
       let conteoPlatos = {};
       let logHtml = "";
       
-      // Recorremos TODO el historial de la BD
-      let ordersArray = Object.values(allOrdersData).reverse(); // Más recientes primero para el log
+      let ordersArray = Object.values(allOrdersData).reverse();
       
       ordersArray.forEach(p => {
-        // Ignorar las llamadas al camarero simples para las finanzas
         if(p.tipo === "ATENCIÓN CAMARERO REQUERIDA" || p.tipo === "CUENTA SOLICITADA") {
             logHtml += `<div>[${p.hora || '-'}] Mesa ${p.mesa} - ${p.tipo}</div>`;
             return;
         }
 
-        // Sumar pedidos de comida
         pedidosComidaTotales++;
         if(p.total) ingresosTotales += parseFloat(p.total);
 
         logHtml += `<div>[${p.hora || '-'}] Mesa ${p.mesa} pidió ${p.platos ? p.platos.length : 0} items (${(p.total || 0).toFixed(2)}€) - Estado: ${p.estado || 'Activo'}</div>`;
 
-        // Contar platos para el Ranking
         if(p.platos && Array.isArray(p.platos)) {
           p.platos.forEach(platoObj => {
-             let nombreReal = platoObj.nombre;
-             // Limpiar si tiene extras en el nombre Ej: "Margarita (Ingrediente extra) [Notas: Sin cebolla]"
-             let nombreBase = nombreReal.split('(')[0].split('[')[0].trim();
+             let nombreBase = platoObj.nombre.split('(')[0].split('[')[0].trim();
              
              if(conteoPlatos[nombreBase]) {
                conteoPlatos[nombreBase]++;
@@ -326,14 +302,12 @@
         }
       });
 
-      // Actualizar KPIs
       document.getElementById('stat-ingresos').innerText = ingresosTotales.toFixed(2) + " €";
       document.getElementById('stat-pedidos').innerText = pedidosComidaTotales;
       let ticketMedio = pedidosComidaTotales > 0 ? (ingresosTotales / pedidosComidaTotales) : 0;
       document.getElementById('stat-ticket').innerText = ticketMedio.toFixed(2) + " €";
       document.getElementById('stat-log').innerHTML = logHtml || "No hay registros.";
 
-      // Ordenar y mostrar Top 5 Platos
       let arrayPlatos = Object.keys(conteoPlatos).map(nombre => {
         return { nombre: nombre, cantidad: conteoPlatos[nombre] };
       });
@@ -341,7 +315,7 @@
       arrayPlatos.sort((a, b) => b.cantidad - a.cantidad);
       let top5 = arrayPlatos.slice(0, 5);
       
-      let maxVentas = top5.length > 0 ? top5[0].cantidad : 1; // Para el 100% de la barra
+      let maxVentas = top5.length > 0 ? top5[0].cantidad : 1;
       
       let rankingHtml = "";
       if(top5.length === 0) rankingHtml = "<div class='empty-state' style='padding:10px;'>Sin datos de ventas aún.</div>";
@@ -361,11 +335,9 @@
       document.getElementById('stat-top-platos').innerHTML = rankingHtml;
     }
 
-    // INICIAR LA APP
     renderizarStock();
     fetchPedidos();
-    setInterval(fetchPedidos, 5000); // Polling cada 5 segundos
-
+    setInterval(fetchPedidos, 5000); 
   </script>
 </body>
 </html>
